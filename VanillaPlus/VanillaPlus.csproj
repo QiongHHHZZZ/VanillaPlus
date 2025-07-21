@@ -3,4 +3,7 @@
     <Version>0.0.0.1</Version>
     <Language>Preview</Language>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KamiToolKit\KamiToolKit.csproj" />
+  </ItemGroup>
 </Project>
