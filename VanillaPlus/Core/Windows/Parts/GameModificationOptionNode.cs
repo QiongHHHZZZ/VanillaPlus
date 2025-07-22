@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
@@ -24,7 +25,6 @@ public class GameModificationOptionNode : SimpleComponentNode {
             BottomOffset = 6,
             LeftOffset = 16,
             RightOffset = 1,
-            EnableEventFlags = true,
             IsVisible = false,
         };
         System.NativeController.AttachNode(hoveredBackgroundNode, this);
@@ -41,7 +41,6 @@ public class GameModificationOptionNode : SimpleComponentNode {
         };
         System.NativeController.AttachNode(selectedBackgroundNode, this);
         
-        // todo: why isn't this interactable
         checkboxNode = new CheckboxNode {
             Origin = new Vector2(8.0f, 8.0f),
             Scale = new Vector2(2.0f, 2.0f),
@@ -72,6 +71,25 @@ public class GameModificationOptionNode : SimpleComponentNode {
             Icon = ButtonIcon.GearCog,
         };
         System.NativeController.AttachNode(configButtonNode, this);
+        
+        CollisionNode.AddEvent(AddonEventType.MouseOver, _ => {
+            IsHovered = true;
+        });
+        
+        CollisionNode.AddEvent(AddonEventType.MouseDown, _ => {
+            if (IsSelected) {
+                IsSelected = false;
+                IsHovered = true;
+            }
+            else {
+                IsSelected = true;
+                IsHovered = false;
+            }
+        });
+        
+        CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
+            IsHovered = false;
+        });
     }
 
     public required LoadedModification Modification {

@@ -51,28 +51,19 @@ public class ModificationBrowserNode : SimpleComponentNode {
                 IsVisible = true,
                 Label = category.Key.GetDescription(),
             };
-            
-            CategoryNodes.Add(newCategoryNode);
-            OptionContainer.ContentNode.AddCategoryNode(newCategoryNode);
 
             foreach (var mod in category) {
                 var newOptionNode = new GameModificationOptionNode {
                     Height = 64.0f,
                     Modification = mod,
                     IsVisible = true,
-                    EnableEventFlags = true,
                 };
-                
-                newOptionNode.AddEvent(AddonEventType.MouseOver, _ => {
-                    newOptionNode.IsHovered = true;
-                });
-                
-                newOptionNode.AddEvent(AddonEventType.MouseOut, _ => {
-                    newOptionNode.IsHovered = false;
-                });
-                
+
                 newCategoryNode.AddNode(newOptionNode);
             }
+            
+            CategoryNodes.Add(newCategoryNode);
+            OptionContainer.ContentNode.AddCategoryNode(newCategoryNode);
         }
         
         DescriptionContainer = new ResNode {
