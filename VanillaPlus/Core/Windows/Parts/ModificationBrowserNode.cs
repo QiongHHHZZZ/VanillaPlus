@@ -1,46 +1,85 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Text.SeStringHandling;
-using FFXIVClientStructs.FFXIV.Client.LayoutEngine;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
-using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Core.Windows.Parts;
 
 public class ModificationBrowserNode : SimpleComponentNode {
 
-    private readonly HorizontalFlexNode SearchContainer;
-    private readonly TextInputNode SearchBox;
-    private readonly ScrollingAreaNode<TreeListNode> OptionContainer;
-    private readonly ResNode DescriptionContainer;
-    private readonly List<TreeListCategoryNode> CategoryNodes = [];
+    private readonly HorizontalFlexNode searchContainerNode;
+    private readonly TextInputNode searchBoxNode;
+    private readonly ScrollingAreaNode<TreeListNode> optionContainerNode;
+    private readonly ResNode descriptionContainerNode;
+    private readonly ImGuiImageNode descriptionImageNode;
+    private readonly TextNode descriptionImageTextNode;
+    private readonly TextNode descriptionTextNode;
+    private readonly TextNode descriptionVersionTextNode;
 
     private const float ItemPadding = 5.0f;
 
+    private GameModificationOptionNode? selectedOption;
+
+    private readonly List<TreeListCategoryNode> categoryNodes = [];
+    private readonly List<GameModificationOptionNode> modificationOptionNodes = [];
+
     public ModificationBrowserNode() {
-        SearchContainer = new HorizontalFlexNode {
+        searchContainerNode = new HorizontalFlexNode {
             AlignmentFlags = FlexFlags.FitHeight | FlexFlags.FitWidth,
             IsVisible = true,
         };
-        System.NativeController.AttachNode(SearchContainer, this);
+        System.NativeController.AttachNode(searchContainerNode, this);
 
-        SearchBox = new TextInputNode {
+        searchBoxNode = new TextInputNode {
             String = "Search . . . ",
             IsVisible = true,
             OnInputReceived = OnSearchBoxInputReceived,
         };
-        SearchContainer.AddNode(SearchBox);
+        searchContainerNode.AddNode(searchBoxNode);
 
-        OptionContainer = new ScrollingAreaNode<TreeListNode> {
+        optionContainerNode = new ScrollingAreaNode<TreeListNode> {
             IsVisible = true,
             ContentHeight = 1000.0f,
             ScrollSpeed = 100,
         };
-        System.NativeController.AttachNode(OptionContainer, this);
+        System.NativeController.AttachNode(optionContainerNode, this);
+
+        descriptionContainerNode = new ResNode {
+            IsVisible = true,
+        };
+        System.NativeController.AttachNode(descriptionContainerNode, this);
+        
+        descriptionImageNode = new ImGuiImageNode {
+            IsVisible = true,
+        };
+        System.NativeController.AttachNode(descriptionImageNode, descriptionContainerNode);
+
+        descriptionTextNode = new TextNode {
+            IsVisible = true,
+            AlignmentType = AlignmentType.Center,
+            TextFlags = TextFlags.WordWrap | TextFlags.MultiLine,
+            FontSize = 16,
+            LineSpacing = 18,
+            FontType = FontType.Axis,
+            
+        };
+        System.NativeController.AttachNode(descriptionTextNode, descriptionContainerNode);
+        
+        descriptionImageTextNode = new TextNode {
+            IsVisible = true,
+        };
+        System.NativeController.AttachNode(descriptionImageTextNode, descriptionContainerNode);
+
+        descriptionVersionTextNode = new TextNode {
+            IsVisible = true,
+            AlignmentType = AlignmentType.BottomRight,
+            TextColor = ColorHelper.GetColor(3),
+        };
+        System.NativeController.AttachNode(descriptionVersionTextNode, descriptionContainerNode);
 
         var groupedOptions = System.ModificationManager.LoadedModifications
                                .Select(option => option)
@@ -50,6 +89,12 @@ public class ModificationBrowserNode : SimpleComponentNode {
             var newCategoryNode = new TreeListCategoryNode {
                 IsVisible = true,
                 Label = category.Key.GetDescription(),
+                OnToggle = isVisible => {
+                    if (!isVisible) {
+                        ClearSelection();
+                    }
+                    RecalculateScrollableAreaSize();
+                },
             };
 
             foreach (var mod in category) {
@@ -59,32 +104,74 @@ public class ModificationBrowserNode : SimpleComponentNode {
                     IsVisible = true,
                 };
 
+                newOptionNode.OnClick = () => OnOptionClicked(newOptionNode);
+
                 newCategoryNode.AddNode(newOptionNode);
+                modificationOptionNodes.Add(newOptionNode);
             }
             
-            CategoryNodes.Add(newCategoryNode);
-            OptionContainer.ContentNode.AddCategoryNode(newCategoryNode);
+            categoryNodes.Add(newCategoryNode);
+            optionContainerNode.ContentNode.AddCategoryNode(newCategoryNode);
         }
-        
-        DescriptionContainer = new ResNode {
-            IsVisible = true,
-        };
-        System.NativeController.AttachNode(DescriptionContainer, this);
+
+        RecalculateScrollableAreaSize();
     }
 
     private void OnSearchBoxInputReceived(SeString searchTerms) {
         
     }
 
-    protected override void OnSizeChanged() {
-        SearchContainer.Size = new Vector2(Width, 32.0f);
-        OptionContainer.Position = new Vector2(0.0f, SearchContainer.Height + ItemPadding);
-        OptionContainer.Size = new Vector2(Width * 3.0f / 5.0f - ItemPadding, Height - SearchContainer.Height - ItemPadding);
-        DescriptionContainer.Position = new Vector2(Width * 3.0f / 5.0f, SearchContainer.Height + ItemPadding);
-        DescriptionContainer.Size = new Vector2(Width * 2.0f / 5.0f, Height - SearchContainer.Height - ItemPadding);
+    private void OnOptionClicked(GameModificationOptionNode option) {
+        ClearSelection();
+        
+        selectedOption = option;
+        selectedOption.IsSelected = true;
 
-        foreach (var node in CategoryNodes) {
-            node.Width = OptionContainer.ContentNode.Width;
+        descriptionContainerNode.IsVisible = true;
+
+        if (selectedOption.Modification.Modification.GetDescriptionImage() is { } image) {
+            descriptionImageNode.LoadTexture(image);
+        }
+        else {
+            descriptionImageNode.IsVisible = false;
+            descriptionTextNode.Text = selectedOption.Modification.Modification.ModificationInfo.Description;
+        }
+
+        descriptionVersionTextNode.Text = $"Version {selectedOption.Modification.Modification.ModificationInfo.Version}";
+    }
+
+    private void ClearSelection() {
+        selectedOption = null;
+        foreach (var node in modificationOptionNodes) {
+            node.IsSelected = false;
+            node.IsHovered = false;
+        }
+
+        descriptionContainerNode.IsVisible = false;
+    }
+
+    private void RecalculateScrollableAreaSize() {
+        optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height);
+    }
+
+    protected override void OnSizeChanged() {
+        searchContainerNode.Size = new Vector2(Width, 32.0f);
+        optionContainerNode.Position = new Vector2(0.0f, searchContainerNode.Height + ItemPadding);
+        optionContainerNode.Size = new Vector2(Width * 3.0f / 5.0f - ItemPadding, Height - searchContainerNode.Height - ItemPadding);
+        descriptionContainerNode.Position = new Vector2(Width * 3.0f / 5.0f, searchContainerNode.Height + ItemPadding);
+        descriptionContainerNode.Size = new Vector2(Width * 2.0f / 5.0f, Height - searchContainerNode.Height - ItemPadding);
+
+        descriptionImageNode.Size = new Vector2(descriptionContainerNode.Width * 0.66f, descriptionContainerNode.Width * 0.66f);
+        descriptionImageNode.Position = new Vector2(descriptionContainerNode.Width * 0.33f / 2.0f, descriptionContainerNode.Width * 0.33f / 4.0f);
+
+        descriptionTextNode.Size = descriptionContainerNode.Size - new Vector2(16.0f, 16.0f);
+        descriptionTextNode.Position = new Vector2(8.0f, 8.0f);
+
+        descriptionVersionTextNode.Size = new Vector2(200.0f, 28.0f);
+        descriptionVersionTextNode.Position = descriptionContainerNode.Size - descriptionVersionTextNode.Size - new Vector2(8.0f, 8.0f);
+        
+        foreach (var node in categoryNodes) {
+            node.Width = optionContainerNode.ContentNode.Width;
         }
     }
 }

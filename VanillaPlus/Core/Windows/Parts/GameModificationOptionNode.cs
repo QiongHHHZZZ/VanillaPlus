@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
@@ -67,24 +68,19 @@ public class GameModificationOptionNode : SimpleComponentNode {
         System.NativeController.AttachNode(authorNamesNode, this);
 
         configButtonNode = new CircleButtonNode {
-            Scale = new Vector2(0.5f, 0.5f),
             Icon = ButtonIcon.GearCog,
+            Tooltip = "Open configuration window",
         };
         System.NativeController.AttachNode(configButtonNode, this);
         
         CollisionNode.AddEvent(AddonEventType.MouseOver, _ => {
-            IsHovered = true;
+            if (!IsSelected) {
+                IsHovered = true;
+            }
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseDown, _ => {
-            if (IsSelected) {
-                IsSelected = false;
-                IsHovered = true;
-            }
-            else {
-                IsSelected = true;
-                IsHovered = false;
-            }
+            OnClick?.Invoke();
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
@@ -98,7 +94,13 @@ public class GameModificationOptionNode : SimpleComponentNode {
             field = value;
             modificationNameNode.Text = value.Modification.ModificationInfo.DisplayName;
             authorNamesNode.Text = $"By {string.Join(", ", value.Modification.ModificationInfo.Authors)}";
-            configButtonNode.IsVisible = value.Modification.OpenConfig?.GetInvocationList().Length is not 0;
+
+            if (value.Modification.OpenConfig is not null) {
+                if (value.Modification.OpenConfig.GetInvocationList().Length != 0) {
+                    configButtonNode.IsVisible = true;
+                }
+            }
+            
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;
         }
     }
@@ -112,6 +114,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
         }
     }
 
+    public Action? OnClick { get; set; }
+    
     public bool IsHovered {
         get => hoveredBackgroundNode.IsVisible;
         set => hoveredBackgroundNode.IsVisible = value;
@@ -137,5 +141,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
         
         authorNamesNode.Height = Height / 2.0f;
         authorNamesNode.Position = new Vector2(Height + Height / 2.0f, Height / 2.0f);
+
+        configButtonNode.Size = new Vector2(Height / 2.0f, Height / 2.0f);
+        configButtonNode.Position = new Vector2(Width - Height, Height / 2.0f - configButtonNode.Height / 2.0f);
     }
 }

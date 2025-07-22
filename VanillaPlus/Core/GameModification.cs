@@ -17,10 +17,7 @@ public abstract class GameModification {
     /// </summary>
     public Action? OpenConfig;
 
-    public Func<IDalamudTextureWrap>? LoadImage;
-
-    public IDalamudTextureWrap? GetDescriptionImage() 
-        => null;
+    public IDalamudTextureWrap? GetDescriptionImage() => null;
     
     public string Name => LongName.Split(".").Last();
     private string LongName => GetType().ToString();
