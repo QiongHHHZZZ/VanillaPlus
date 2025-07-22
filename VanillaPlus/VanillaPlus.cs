@@ -33,7 +33,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
         System.ModificationManager = new ModificationManager(pluginInterface);
         
         #if DEBUG
-        Services.Framework.RunOnTick(OpenModificationBrowser);
+        Services.Framework.RunOnTick(OpenModificationBrowser, delayTicks: 5);
         #endif
     }
 
