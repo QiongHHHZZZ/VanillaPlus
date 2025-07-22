@@ -9,7 +9,7 @@ namespace VanillaPlus.Core;
 
 public class ModificationManager : IDisposable {
 
-    private readonly List<LoadedModification> loadedModifications = [];
+    public readonly List<LoadedModification> LoadedModifications = [];
     private readonly List<GameModification> gameModifications;
 
     public ModificationManager(IDalamudPluginInterface pluginInterface) {
@@ -18,20 +18,62 @@ public class ModificationManager : IDisposable {
 
         foreach (var gameMod in gameModifications) {
             pluginInterface.Inject(gameMod);
-            
-            loadedModifications.Add(new LoadedModification(gameMod, LoadedState.Disabled));
 
-            if (System.SystemConfig.EnabledModifications.Contains(gameMod.ModificationInfo.DisplayName)) {
-                gameMod.OnEnable();
+            var newLoadedModification = new LoadedModification(gameMod, LoadedState.Disabled);
+            
+            LoadedModifications.Add(newLoadedModification);
+
+            if (System.SystemConfig.EnabledModifications.Contains(gameMod.Name)) {
+                TryEnableModification(newLoadedModification);
             }
         }
     }
 
     public void Dispose() {
-        foreach (var loadedMod in loadedModifications) {
+        foreach (var loadedMod in LoadedModifications) {
             if (loadedMod.State is LoadedState.Enabled) {
                 loadedMod.Modification.OnDisable();
             }
+        }
+    }
+
+    public void TryEnableModification(LoadedModification modification) {
+        if (modification.State is LoadedState.Errored) {
+            Services.PluginLog.Error("Attempted to enable errored modification");
+            return;
+        }
+        
+        try {
+            modification.Modification.OnEnable();
+        }
+        catch (Exception e) {
+            modification.State = LoadedState.Errored;
+            Services.PluginLog.Error(e, $"Enabling {modification.Name} has errored.");
+        } finally {
+            modification.State = LoadedState.Enabled;
+            Services.PluginLog.Info($"{modification.Name} has been enabled.");
+            System.SystemConfig.EnabledModifications.Add(modification.Name);
+            System.SystemConfig.Save();
+        }
+    }
+
+    public void TryDisableModification(LoadedModification modification) {
+        if (modification.State is LoadedState.Errored) {
+            Services.PluginLog.Error("Attempted to disable errored modification");
+            return;
+        }
+
+        try {
+            modification.Modification.OnDisable();
+        }
+        catch (Exception e) {
+            modification.State = LoadedState.Errored;
+            Services.PluginLog.Error(e, $"Failed to disable modification: {modification.Name}");
+        } finally {
+            modification.State = LoadedState.Disabled;
+            Services.PluginLog.Info($"{modification.Name} has been disabled.");
+            System.SystemConfig.EnabledModifications.Remove(modification.Name);
+            System.SystemConfig.Save();
         }
     }
 

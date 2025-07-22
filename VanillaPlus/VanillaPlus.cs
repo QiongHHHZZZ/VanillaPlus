@@ -9,14 +9,12 @@ using VanillaPlus.Core.Windows;
 namespace VanillaPlus;
 
 public sealed class VanillaPlus : IDalamudPlugin {
-    private readonly ModificationManager gameModificationManager;
-
     public VanillaPlus(IDalamudPluginInterface pluginInterface) {
         pluginInterface.Create<Services>();
 
         System.NativeController = new NativeController(pluginInterface);
 
-        System.ModificationBrowser = new ModificationBrowser {
+        System.AddonModificationBrowser = new ModificationBrowser {
             NativeController = System.NativeController,
             InternalName = "VanillaPlusConfig",
             Title = "Vanilla Plus Modification Browser",
@@ -32,7 +30,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
         Services.PluginInterface.UiBuilder.Draw += System.WindowSystem.Draw;
         Services.PluginInterface.UiBuilder.OpenConfigUi += OpenModificationBrowser;
 
-        gameModificationManager = new ModificationManager(pluginInterface);
+        System.ModificationManager = new ModificationManager(pluginInterface);
         
         #if DEBUG
         Services.Framework.RunOnTick(OpenModificationBrowser);
@@ -42,16 +40,16 @@ public sealed class VanillaPlus : IDalamudPlugin {
     private void Handler(string command, string arguments) {
         switch (command, arguments) {
             case { command: "/vanillaplus", arguments: "" }:
-                System.ModificationBrowser.Open();
+                System.AddonModificationBrowser.Open();
                 break;
         }
     }
 
     private void OpenModificationBrowser()
-        => System.ModificationBrowser.Open();
+        => System.AddonModificationBrowser.Open();
 
     public void Dispose() {
-        gameModificationManager.Dispose();
+        System.ModificationManager.Dispose();
 
         Services.PluginInterface.UiBuilder.OpenConfigUi -= OpenModificationBrowser;
         Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
@@ -59,7 +57,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
         Services.CommandManager.RemoveHandler("/vanillaplus");
 
-        System.ModificationBrowser.Dispose();
+        System.AddonModificationBrowser.Dispose();
 
         System.NativeController.Dispose();
     }

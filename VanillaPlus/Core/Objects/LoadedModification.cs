@@ -1,3 +1,8 @@
 ﻿namespace VanillaPlus.Core.Objects;
 
-public record LoadedModification(GameModification Modification, LoadedState State = LoadedState.Unknown);
+public class LoadedModification(GameModification modification, LoadedState state = LoadedState.Unknown) {
+    public GameModification Modification { get; set; } = modification;
+    public LoadedState State { get; set; } = state;
+    
+    public string Name => Modification.Name;
+}
