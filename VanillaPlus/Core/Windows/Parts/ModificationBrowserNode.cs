@@ -5,6 +5,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
+using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Core.Windows.Parts;
@@ -85,12 +86,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
             var newCategoryNode = new TreeListCategoryNode {
                 IsVisible = true,
                 Label = category.Key.GetDescription(),
-                OnToggle = isVisible => {
-                    if (!isVisible) {
-                        ClearSelection();
-                    }
-                    RecalculateScrollableAreaSize();
-                },
+                OnToggle = isVisible => OnCategoryToggled(isVisible, category.Key),
             };
 
             foreach (var mod in category) {
@@ -113,6 +109,16 @@ public class ModificationBrowserNode : SimpleComponentNode {
         RecalculateScrollableAreaSize();
     }
 
+    private void OnCategoryToggled(bool isVisible, ModificationType type) {
+        var selectionCategory = selectedOption?.Modification.Modification.ModificationInfo.Type;
+        if (selectionCategory is null) return;
+                    
+        if (!isVisible && selectionCategory == type) {
+            ClearSelection();
+        }
+        RecalculateScrollableAreaSize();
+    }
+    
     private void OnSearchBoxInputReceived(SeString searchTerms) {
         
     }
