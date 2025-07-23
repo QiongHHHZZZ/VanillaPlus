@@ -13,6 +13,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
     private readonly NineGridNode hoveredBackgroundNode;
     private readonly NineGridNode selectedBackgroundNode;
     private readonly CheckboxNode checkboxNode;
+    private readonly IconImageNode erroringImageNode;
     private readonly TextNode modificationNameNode;
     private readonly TextNode authorNamesNode;
     private readonly CircleButtonNode configButtonNode;
@@ -50,6 +51,16 @@ public class GameModificationOptionNode : SimpleComponentNode {
         };
         System.NativeController.AttachNode(checkboxNode, this);
 
+        erroringImageNode = new IconImageNode {
+            Scale = new Vector2(2.0f, 2.0f),
+            Origin = new Vector2(8.0f, 8.0f),
+            IconId = 61502,
+            ImageNodeFlags = 0,
+            WrapMode = 2,
+            Tooltip = "Failed to load, this module has been disabled",
+        };
+        System.NativeController.AttachNode(erroringImageNode, this);
+
         modificationNameNode = new TextNode {
             IsVisible = true,
             TextFlags = TextFlags.AutoAdjustNodeSize,
@@ -60,6 +71,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
         authorNamesNode = new TextNode {
             IsVisible = true,
+            FontType = FontType.Axis,
             TextFlags = TextFlags.AutoAdjustNodeSize,
             TextFlags2 = TextFlags2.Ellipsis,
             AlignmentType = AlignmentType.TopLeft,
@@ -102,6 +114,12 @@ public class GameModificationOptionNode : SimpleComponentNode {
             }
             
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;
+
+            if (value.State is LoadedState.Errored) {
+                checkboxNode.IsEnabled = false;
+                IsErrored = true;
+                erroringImageNode.EnableEventFlags = true;
+            }
         }
     }
     
@@ -112,6 +130,13 @@ public class GameModificationOptionNode : SimpleComponentNode {
         else if (!shouldEnableModification && Modification.State is LoadedState.Enabled) {
             System.ModificationManager.TryDisableModification(Modification);
         }
+
+        if (Modification.State is LoadedState.Errored) {
+            checkboxNode.IsEnabled = false;
+            IsErrored = true;
+        }
+
+        checkboxNode.IsChecked = Modification.State is LoadedState.Enabled;
     }
 
     public Action? OnClick { get; set; }
@@ -129,6 +154,11 @@ public class GameModificationOptionNode : SimpleComponentNode {
         }
     }
 
+    public bool IsErrored {
+        get => erroringImageNode.IsVisible;
+        set => erroringImageNode.IsVisible = value;
+    }
+
     protected override void OnSizeChanged() {
         hoveredBackgroundNode.Size = Size;
         selectedBackgroundNode.Size = Size;
@@ -144,5 +174,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
         configButtonNode.Size = new Vector2(Height / 2.0f, Height / 2.0f);
         configButtonNode.Position = new Vector2(Width - Height, Height / 2.0f - configButtonNode.Height / 2.0f);
+        
+        erroringImageNode.Size = checkboxNode.Size - new Vector2(4.0f, 4.0f);
+        erroringImageNode.Position = checkboxNode.Position + new Vector2(5.0f, 8.0f);
     }
 }

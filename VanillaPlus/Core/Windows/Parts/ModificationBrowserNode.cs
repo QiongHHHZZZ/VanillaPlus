@@ -53,25 +53,21 @@ public class ModificationBrowserNode : SimpleComponentNode {
         };
         System.NativeController.AttachNode(descriptionContainerNode, this);
         
-        descriptionImageNode = new ImGuiImageNode {
-            IsVisible = true,
-        };
+        descriptionImageNode = new ImGuiImageNode();
         System.NativeController.AttachNode(descriptionImageNode, descriptionContainerNode);
 
         descriptionTextNode = new TextNode {
-            IsVisible = true,
             AlignmentType = AlignmentType.Center,
             TextFlags = TextFlags.WordWrap | TextFlags.MultiLine,
             FontSize = 16,
-            LineSpacing = 18,
+            LineSpacing = 24,
             FontType = FontType.Axis,
-            
+            IsVisible = true,
+            Text = "Please select an option on the left",
         };
         System.NativeController.AttachNode(descriptionTextNode, descriptionContainerNode);
         
-        descriptionImageTextNode = new TextNode {
-            IsVisible = true,
-        };
+        descriptionImageTextNode = new TextNode();
         System.NativeController.AttachNode(descriptionImageTextNode, descriptionContainerNode);
 
         descriptionVersionTextNode = new TextNode {
@@ -127,16 +123,20 @@ public class ModificationBrowserNode : SimpleComponentNode {
         selectedOption = option;
         selectedOption.IsSelected = true;
 
-        descriptionContainerNode.IsVisible = true;
-
         if (selectedOption.Modification.Modification.GetDescriptionImage() is { } image) {
             descriptionImageNode.LoadTexture(image);
+            descriptionImageNode.IsVisible = true;
+            descriptionImageTextNode.IsVisible = true;
+            descriptionTextNode.IsVisible = false;
         }
         else {
             descriptionImageNode.IsVisible = false;
+            descriptionImageTextNode.IsVisible = false;
+            descriptionTextNode.IsVisible = true;
             descriptionTextNode.Text = selectedOption.Modification.Modification.ModificationInfo.Description;
         }
 
+        descriptionVersionTextNode.IsVisible = true;
         descriptionVersionTextNode.Text = $"Version {selectedOption.Modification.Modification.ModificationInfo.Version}";
     }
 
@@ -147,7 +147,11 @@ public class ModificationBrowserNode : SimpleComponentNode {
             node.IsHovered = false;
         }
 
-        descriptionContainerNode.IsVisible = false;
+        descriptionTextNode.Text = "Please select an option on the left";
+
+        descriptionImageNode.IsVisible = false;
+        descriptionImageTextNode.IsVisible = false;
+        descriptionVersionTextNode.IsVisible = false;
     }
 
     private void RecalculateScrollableAreaSize() {

@@ -7,7 +7,7 @@ namespace VanillaPlus.GameModifications.DutyTimer;
 public class DutyTimer : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Duty Timer",
-        Description = "When completing a duty, prints the time the duty took to chat.",
+        Description = "When completing a duty, prints the time the duty took to chat",
         Authors = [ "MidoriKami" ],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
