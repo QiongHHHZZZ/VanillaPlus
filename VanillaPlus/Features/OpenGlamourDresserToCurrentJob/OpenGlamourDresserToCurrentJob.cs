@@ -4,7 +4,7 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 
-namespace VanillaPlus.GameModifications.OpenGlamourDresserToCurrentJob;
+namespace VanillaPlus.Features.OpenGlamourDresserToCurrentJob;
 
 public class OpenGlamourDresserToCurrentJob : GameModification {
     public override ModificationInfo ModificationInfo => new() {

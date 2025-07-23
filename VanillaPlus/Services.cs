@@ -13,4 +13,5 @@ public class Services {
     [PluginService] public static IChatGui ChatGui { get; set; } = null!;
     [PluginService] public static ICommandManager CommandManager { get; set; } = null!; 
     [PluginService] public static IFramework Framework { get; set; } = null!;
+    [PluginService] public static IDataManager DataManager { get; set; } = null!;
 }

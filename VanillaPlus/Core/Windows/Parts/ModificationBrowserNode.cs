@@ -59,8 +59,8 @@ public class ModificationBrowserNode : SimpleComponentNode {
         descriptionTextNode = new TextNode {
             AlignmentType = AlignmentType.Center,
             TextFlags = TextFlags.WordWrap | TextFlags.MultiLine,
-            FontSize = 16,
-            LineSpacing = 24,
+            FontSize = 14,
+            LineSpacing = 22,
             FontType = FontType.Axis,
             IsVisible = true,
             Text = "Please select an option on the left",
@@ -168,11 +168,11 @@ public class ModificationBrowserNode : SimpleComponentNode {
         descriptionImageNode.Size = new Vector2(descriptionContainerNode.Width * 0.66f, descriptionContainerNode.Width * 0.66f);
         descriptionImageNode.Position = new Vector2(descriptionContainerNode.Width * 0.33f / 2.0f, descriptionContainerNode.Width * 0.33f / 4.0f);
 
-        descriptionTextNode.Size = descriptionContainerNode.Size - new Vector2(16.0f, 16.0f);
-        descriptionTextNode.Position = new Vector2(8.0f, 8.0f);
-
         descriptionVersionTextNode.Size = new Vector2(200.0f, 28.0f);
         descriptionVersionTextNode.Position = descriptionContainerNode.Size - descriptionVersionTextNode.Size - new Vector2(8.0f, 8.0f);
+        
+        descriptionTextNode.Size = descriptionContainerNode.Size - new Vector2(16.0f, 16.0f) - new Vector2(0.0f, descriptionVersionTextNode.Height);
+        descriptionTextNode.Position = new Vector2(8.0f, 8.0f);
         
         foreach (var node in categoryNodes) {
             node.Width = optionContainerNode.ContentNode.Width;
