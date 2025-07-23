@@ -109,6 +109,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
             if (value.Modification.HasConfigWindow) {
                 configButtonNode.IsVisible = true;
+                configButtonNode.OnClick = value.Modification.OpenConfigWindow;
             }
             
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;
