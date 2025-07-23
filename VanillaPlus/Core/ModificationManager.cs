@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Dalamud.Plugin;
 using VanillaPlus.Core.Objects;
 
 namespace VanillaPlus.Core;
@@ -12,12 +11,12 @@ public class ModificationManager : IDisposable {
     public readonly List<LoadedModification> LoadedModifications = [];
     private readonly List<GameModification> gameModifications;
 
-    public ModificationManager(IDalamudPluginInterface pluginInterface) {
+    public ModificationManager() {
         System.SystemConfig = SystemConfiguration.Load();
         gameModifications = GetGameModifications();
 
         foreach (var gameMod in gameModifications) {
-            pluginInterface.Inject(gameMod);
+            Services.PluginInterface.Inject(gameMod);
 
             var newLoadedModification = new LoadedModification(gameMod, LoadedState.Disabled);
             
