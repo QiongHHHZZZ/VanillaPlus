@@ -107,10 +107,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
             modificationNameNode.Text = value.Modification.ModificationInfo.DisplayName;
             authorNamesNode.Text = $"By {string.Join(", ", value.Modification.ModificationInfo.Authors)}";
 
-            if (value.Modification.OpenConfig is not null) {
-                if (value.Modification.OpenConfig.GetInvocationList().Length != 0) {
-                    configButtonNode.IsVisible = true;
-                }
+            if (value.Modification.HasConfigWindow) {
+                configButtonNode.IsVisible = true;
             }
             
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;

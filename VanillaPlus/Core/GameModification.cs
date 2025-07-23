@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Dalamud.Interface.Textures.TextureWraps;
 using VanillaPlus.Core.Objects;
 
@@ -11,11 +10,8 @@ public abstract class GameModification {
     public abstract void OnEnable();
     public abstract void OnDisable();
 
-    /// <summary>
-    /// If implemented, this will add a button that when clicked will call
-    /// this to open whatever kind of config window you set up.
-    /// </summary>
-    public Action? OpenConfig;
+    public virtual bool HasConfigWindow => false;
+    public virtual void OpenConfigWindow() { }
 
     public IDalamudTextureWrap? GetDescriptionImage() => null;
     
