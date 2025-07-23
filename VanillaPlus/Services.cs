@@ -14,4 +14,9 @@ public class Services {
     [PluginService] public static ICommandManager CommandManager { get; set; } = null!; 
     [PluginService] public static IFramework Framework { get; set; } = null!;
     [PluginService] public static IDataManager DataManager { get; set; } = null!;
+    [PluginService] public static IGameInteropProvider GameInteropProvider { get; set; } = null!;
+
+    // I dislike the name GameInteropProvider, so this is my mini rebellion on a bad name.
+    // It's just an alias, use whichever you want.
+    public static IGameInteropProvider Hooker => GameInteropProvider;
 }

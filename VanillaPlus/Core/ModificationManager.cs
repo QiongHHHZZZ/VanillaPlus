@@ -17,6 +17,7 @@ public class ModificationManager : IDisposable {
 
         foreach (var gameMod in gameModifications) {
             Services.PluginInterface.Inject(gameMod);
+            Services.Hooker.InitializeFromAttributes(gameMod);
 
             var newLoadedModification = new LoadedModification(gameMod, LoadedState.Disabled);
             
