@@ -21,15 +21,25 @@ public class ModificationBrowserNode : SimpleComponentNode {
     private readonly TextNode descriptionImageTextNode;
     private readonly TextNode descriptionTextNode;
     private readonly TextNode descriptionVersionTextNode;
+    private readonly TextButtonNode changelogButtonNode;
 
     private const float ItemPadding = 5.0f;
 
     private GameModificationOptionNode? selectedOption;
+    
+    private ChangelogBrowser? changelogBrowser;
 
     private readonly List<TreeListCategoryNode> categoryNodes = [];
     private readonly List<GameModificationOptionNode> modificationOptionNodes = [];
 
     public ModificationBrowserNode() {
+        changelogBrowser = new ChangelogBrowser {
+            InternalName = "VPChangelog",
+            Title = "Vanilla Plus Changelog Browser",
+            NativeController = System.NativeController,
+            Size = new Vector2(400.0f, 600.0f),
+        };
+        
         searchContainerNode = new HorizontalFlexNode {
             AlignmentFlags = FlexFlags.FitHeight | FlexFlags.FitWidth,
             IsVisible = true,
@@ -89,6 +99,12 @@ public class ModificationBrowserNode : SimpleComponentNode {
         descriptionImageTextNode = new TextNode();
         System.NativeController.AttachNode(descriptionImageTextNode, descriptionContainerNode);
 
+        changelogButtonNode = new TextButtonNode {
+            Label = "Changelog",
+            OnClick = OnChangelogButtonClicked,
+        };
+        System.NativeController.AttachNode(changelogButtonNode, descriptionContainerNode);
+        
         descriptionVersionTextNode = new TextNode {
             IsVisible = true,
             AlignmentType = AlignmentType.BottomRight,
@@ -177,6 +193,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
             descriptionTextNode.Text = selectedOption.Modification.Modification.ModificationInfo.Description;
         }
 
+        changelogButtonNode.IsVisible = true;
         descriptionVersionTextNode.IsVisible = true;
         descriptionVersionTextNode.Text = $"Version {selectedOption.Modification.Modification.ModificationInfo.Version}";
     }
@@ -193,6 +210,18 @@ public class ModificationBrowserNode : SimpleComponentNode {
         descriptionImageNode.IsVisible = false;
         descriptionImageTextNode.IsVisible = false;
         descriptionVersionTextNode.IsVisible = false;
+        changelogButtonNode.IsVisible = false;
+    }
+
+    private void OnChangelogButtonClicked() {
+        if (changelogBrowser is not null && selectedOption is not null) {
+            if (changelogBrowser.IsOpen) {
+                changelogBrowser.Close();
+            }
+
+            changelogBrowser.Modification = selectedOption.Modification.Modification;
+            changelogBrowser.Open();
+        }
     }
 
     private void RecalculateScrollableAreaSize() {
@@ -221,6 +250,9 @@ public class ModificationBrowserNode : SimpleComponentNode {
         descriptionImageNode.Size = new Vector2(descriptionContainerNode.Width * 0.66f, descriptionContainerNode.Width * 0.66f);
         descriptionImageNode.Position = new Vector2(descriptionContainerNode.Width * 0.33f / 2.0f, descriptionContainerNode.Width * 0.33f / 4.0f);
 
+        changelogButtonNode.Size = new Vector2(125.0f, 28.0f);
+        changelogButtonNode.Position = new Vector2(0.0f, descriptionContainerNode.Height - changelogButtonNode.Height - ItemPadding);
+        
         descriptionVersionTextNode.Size = new Vector2(200.0f, 28.0f);
         descriptionVersionTextNode.Position = descriptionContainerNode.Size - descriptionVersionTextNode.Size - new Vector2(8.0f, 8.0f);
         
