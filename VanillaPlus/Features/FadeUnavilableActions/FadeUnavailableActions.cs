@@ -18,7 +18,8 @@ namespace VanillaPlus.Features.FadeUnavilableActions;
 public unsafe class FadeUnavailableActions : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Fade Unavailable Actions",
-        Description = "Fades hotbar slots when the action is not able to be cast due to missing resources, out of range, or just on cooldown",
+        Description = "Fades hotbar slots when the action is not able to be cast due to missing resources, out of range, or just on cooldown\n\n" +
+                      "Additionally fades actions that are not available because you are sync'd down",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [
