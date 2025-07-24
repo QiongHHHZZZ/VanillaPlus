@@ -13,7 +13,9 @@ public unsafe class SelectNextLootItem : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Automatically Select Next Loot Item",
         Description = "When clicking Need, Greed, or Pass automatically selects the next " +
-                      "available loot item so you can then need, greed, or pass on that item more easily",
+                      "available loot item so you can then need, greed, or pass on that item more easily\n\n" +
+                      "Note: this feature complies with Dalamud's Automation and Safety policy as no network " +
+                      "data transmissions are directly caused by this game modification",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         Version = 1,
