@@ -100,6 +100,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
         });
     }
 
+    public ModificationInfo ModificationInfo => Modification.Modification.ModificationInfo;
+    
     public required LoadedModification Modification {
         get;
         set {
