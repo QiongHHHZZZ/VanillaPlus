@@ -14,6 +14,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
 
     private readonly HorizontalFlexNode searchContainerNode;
     private readonly TextInputNode searchBoxNode;
+    private readonly TextNode searchLabelNode;
     private readonly ScrollingAreaNode<TreeListNode> optionContainerNode;
     private readonly ResNode descriptionContainerNode;
     private readonly ImGuiImageNode descriptionImageNode;
@@ -36,11 +37,28 @@ public class ModificationBrowserNode : SimpleComponentNode {
         System.NativeController.AttachNode(searchContainerNode, this);
 
         searchBoxNode = new TextInputNode {
-            String = "Search . . . ",
             IsVisible = true,
             OnInputReceived = OnSearchBoxInputReceived,
         };
         searchContainerNode.AddNode(searchBoxNode);
+
+        searchLabelNode = new TextNode {
+            Position = new Vector2(10.0f, 6.0f),
+            IsVisible = true,
+            TextColor = ColorHelper.GetColor(3),
+            Text = "Search . . .",
+        };
+        System.NativeController.AttachNode(searchLabelNode, searchBoxNode);
+
+        searchBoxNode.OnFocused += () => {
+            searchLabelNode.IsVisible = false;
+        };
+
+        searchBoxNode.OnUnfocused += () => {
+            if (searchBoxNode.String.ToString() is "") {
+                searchLabelNode.IsVisible = true;
+            }
+        };
 
         optionContainerNode = new ScrollingAreaNode<TreeListNode> {
             IsVisible = true,
@@ -119,8 +137,24 @@ public class ModificationBrowserNode : SimpleComponentNode {
         RecalculateScrollableAreaSize();
     }
     
-    private void OnSearchBoxInputReceived(SeString searchTerms) {
+    private void OnSearchBoxInputReceived(SeString searchTerm) {
+        List<GameModificationOptionNode> validOptions = [];
         
+        foreach (var option in modificationOptionNodes) {
+            var isTarget = option.ModificationInfo.IsMatch(searchTerm.ToString());
+            option.IsVisible = isTarget;
+
+            if (isTarget) {
+                validOptions.Add(option);
+            }
+        }
+
+        foreach (var categoryNode in categoryNodes) {
+            categoryNode.IsVisible = validOptions.Any(option => option.ModificationInfo.Type.GetDescription() == categoryNode.Label.ToString());
+            categoryNode.RecalculateLayout();
+        }
+        
+        optionContainerNode.ContentNode.RefreshLayout();
     }
 
     private void OnOptionClicked(GameModificationOptionNode option) {
@@ -164,8 +198,20 @@ public class ModificationBrowserNode : SimpleComponentNode {
         optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height);
     }
 
+    private void ResetSearch() {
+        foreach (var category in categoryNodes) {
+            category.IsCollapsed = false;
+        }
+
+        foreach (var option in modificationOptionNodes) {
+            option.IsVisible = true;
+        }
+        
+        optionContainerNode.ContentNode.RefreshLayout();
+    }
+
     protected override void OnSizeChanged() {
-        searchContainerNode.Size = new Vector2(Width, 32.0f);
+        searchContainerNode.Size = new Vector2(Width, 28.0f);
         optionContainerNode.Position = new Vector2(0.0f, searchContainerNode.Height + ItemPadding);
         optionContainerNode.Size = new Vector2(Width * 3.0f / 5.0f - ItemPadding, Height - searchContainerNode.Height - ItemPadding);
         descriptionContainerNode.Position = new Vector2(Width * 3.0f / 5.0f, searchContainerNode.Height + ItemPadding);
