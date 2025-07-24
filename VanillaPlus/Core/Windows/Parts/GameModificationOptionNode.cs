@@ -110,6 +110,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
             if (value.Modification.HasConfigWindow) {
                 configButtonNode.IsVisible = true;
                 configButtonNode.OnClick = value.Modification.OpenConfigWindow;
+
+                configButtonNode.IsEnabled = value.State is LoadedState.Enabled;
             }
             
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;
@@ -136,6 +138,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         }
 
         checkboxNode.IsChecked = Modification.State is LoadedState.Enabled;
+        configButtonNode.IsEnabled = Modification.State is LoadedState.Enabled;
     }
 
     public Action? OnClick { get; set; }
