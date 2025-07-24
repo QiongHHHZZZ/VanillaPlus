@@ -30,30 +30,31 @@ public unsafe class EnhancedLootWindow : GameModification {
 
     public override bool HasConfigWindow => true;
 
-    private EnhancedLootWindowConfigWindow? configWindow;
-    private EnhancedLootWindowConfig? config;
-    private AddonController<AddonNeedGreed>? needGreedController;
+    private EnhancedLootWindowConfigWindow configWindow = null!;
+    private EnhancedLootWindowConfig config = null!;
+    private AddonController<AddonNeedGreed> needGreedController = null!;
 
     private readonly List<ImageNode> crossNodes = [];
     private readonly List<ImageNode> padlockNodes = [];
-    
-    public override void OpenConfigWindow() {
-        if (configWindow is not null) {
-            configWindow.IsOpen = !configWindow.IsOpen;
-        }
-    }
+
+    public override void OpenConfigWindow()
+        => configWindow.ToggleWindow();
 
     public override void OnEnable() {
         config = EnhancedLootWindowConfig.Load();
-
         configWindow = new EnhancedLootWindowConfigWindow(config);
-        System.WindowSystem.AddWindow(configWindow);
+        configWindow.AddToWindowSystem();
 
         needGreedController = new AddonController<AddonNeedGreed>(Services.PluginInterface, "NeedGreed");
         needGreedController.OnAttach += AttachNodes;
         needGreedController.OnDetach += DetachNodes;
         needGreedController.OnRefresh += RefreshNodes;
         needGreedController.Enable();
+    }
+
+    public override void OnDisable() {
+        needGreedController.Dispose();
+        configWindow.RemoveFromWindowSystem();
     }
 
     private void AttachNodes(AddonNeedGreed* addon) {
@@ -139,7 +140,7 @@ public unsafe class EnhancedLootWindow : GameModification {
                 
             switch (itemData) {
                 // Item is unique, and has no unlock action, and is unobtainable if we have any in our inventory
-                case { IsUnique: true, ItemAction.RowId: 0 } when PlayerHasItem(itemInfo.ItemId):
+                case { IsUnique: true, ItemAction.RowId: 0 } when InventoryManager.Instance()->PlayerHasItem(itemInfo.ItemId):
                         
                 // Item is unobtainable if it's a minion/mount and already unlocked
                 case { ItemUICategory.RowId: MinionCategory } when IsItemAlreadyUnlocked(itemInfo.ItemId):
@@ -163,44 +164,8 @@ public unsafe class EnhancedLootWindow : GameModification {
         }
     }
 
-    public override void OnDisable() {
-        needGreedController?.Dispose();
-
-        if (configWindow is not null) {
-            System.WindowSystem.RemoveWindow(configWindow);
-        }
-    }
-
     private bool IsItemAlreadyUnlocked(uint itemId) {
         var exdItem = ExdModule.GetItemRowById(itemId);
         return exdItem is null || UIState.Instance()->IsItemActionUnlocked(exdItem) is 1;
-    }
-    
-    private bool PlayerHasItem(uint itemId) {
-        // Only check main inventories, don't include any special inventories
-        var inventories = new List<InventoryType> {
-            InventoryType.Inventory1,
-            InventoryType.Inventory2,
-            InventoryType.Inventory3,
-            InventoryType.Inventory4,
-            
-            InventoryType.EquippedItems,
-            
-            InventoryType.ArmoryMainHand,
-            InventoryType.ArmoryHead,
-            InventoryType.ArmoryBody,
-            InventoryType.ArmoryHands,
-            InventoryType.ArmoryWaist,
-            InventoryType.ArmoryLegs,
-            InventoryType.ArmoryFeets,
-
-            InventoryType.ArmoryOffHand,
-            InventoryType.ArmoryEar,
-            InventoryType.ArmoryNeck,
-            InventoryType.ArmoryWrist,
-            InventoryType.ArmoryRings,
-        };
-
-        return inventories.Sum(inventory => InventoryManager.Instance()->GetItemCountInContainer(itemId, inventory)) > 0;
     }
 }
