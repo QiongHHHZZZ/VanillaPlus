@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit.Extensions;
 using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
@@ -52,6 +54,8 @@ public unsafe class FadeUnavailableActions : GameModification {
     public override void OnDisable() {
         onHotBarSlotUpdateHook?.Dispose();
         configWindow.RemoveFromWindowSystem();
+        
+        ResetAllHotbars();
     }
     
     private void OnHotBarSlotUpdate(AddonActionBarBase* addon, ActionBarSlot* hotBarSlotData, NumberArrayData* numberArray, StringArrayData* stringArray, int numberArrayIndex, int stringArrayIndex) {
@@ -127,6 +131,25 @@ public unsafe class FadeUnavailableActions : GameModification {
         icon->Color.A = fade ? (byte)(0xFF * ((100 - config.FadePercentage) / 100.0f)) : (byte)0xFF;
 
         frame->Color.A = fade ? config.ApplyToFrame ? (byte)(0xFF * ((100 - config.FadePercentage) / 100.0f)) : (byte) 0xFF : (byte)0xFF;
+    }
+
+    private void ResetAllHotbars() {
+        foreach (var addon in RaptureAtkUnitManager.Instance()->AllLoadedUnitsList.Entries) {
+            if (addon.Value is null) continue;
+            if (addon.Value->NameString.Contains("_Action")) {
+                var actionBar = (AddonActionBarBase*)addon.Value;
+
+                foreach (var slot in actionBar->ActionBarSlotVector) {
+                    if (slot.Icon is not null) {
+                        var iconComponent = (AtkComponentIcon*) slot.Icon->Component;
+                        if (iconComponent is null) continue;
+
+                        iconComponent->IconImage->Color = Vector4.One.ToByteColor();
+                        iconComponent->Frame->Color = Vector4.One.ToByteColor();
+                    }
+                }
+            }
+        }
     }
 
     private enum NumberArrayActionType : uint {
