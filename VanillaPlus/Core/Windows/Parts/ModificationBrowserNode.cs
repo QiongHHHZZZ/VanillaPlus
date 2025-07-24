@@ -155,6 +155,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
         }
         
         optionContainerNode.ContentNode.RefreshLayout();
+        RecalculateScrollableAreaSize();
     }
 
     private void OnOptionClicked(GameModificationOptionNode option) {
