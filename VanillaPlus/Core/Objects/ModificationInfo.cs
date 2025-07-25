@@ -12,12 +12,14 @@ public class ModificationInfo {
     public required string[] Authors { get; init; }
     public required ModificationType Type { get; init; }
     public List<ChangeLogInfo> ChangeLog { get; init; } = [];
+    public List<string> Tags { get; init; } = [];
 
     public bool IsMatch(string searchTerm) {
         if (DisplayName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) return true;
         // if (Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) return true; // Probably not a good idea to use this without a fuzzy matcher.
         if (Authors.Any(author => author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))) return true;
         if (Type.GetDescription().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) return true;
+        if (Tags.Any(tag => tag.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))) return true;
         
         return false;
     }
