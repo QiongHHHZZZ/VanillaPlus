@@ -145,11 +145,12 @@ public class ModificationBrowserNode : SimpleComponentNode {
 
     private void OnCategoryToggled(bool isVisible, ModificationType type) {
         var selectionCategory = selectedOption?.Modification.Modification.ModificationInfo.Type;
-        if (selectionCategory is null) return;
-                    
-        if (!isVisible && selectionCategory == type) {
-            ClearSelection();
+        if (selectionCategory is not null) {
+            if (!isVisible && selectionCategory == type) {
+                ClearSelection();
+            }
         }
+
         RecalculateScrollableAreaSize();
     }
     
@@ -230,7 +231,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
     }
 
     private void RecalculateScrollableAreaSize() {
-        optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height);
+        optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height) + 5.0f;
     }
 
     private void ResetSearch() {
