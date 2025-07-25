@@ -31,6 +31,11 @@ public sealed class VanillaPlus : IDalamudPlugin {
             ShowInHelp = true,
             HelpMessage = "Open Game Modification Browser",
         });
+        
+        Services.CommandManager.AddHandler("/plus", new CommandInfo(Handler) {
+            ShowInHelp = true,
+            HelpMessage = "Open Game Modification Browser",
+        });
 
         System.WindowSystem = new WindowSystem("VanillaPlus");
         Services.PluginInterface.UiBuilder.Draw += System.WindowSystem.Draw;
@@ -45,7 +50,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
     private void Handler(string command, string arguments) {
         switch (command, arguments) {
-            case { command: "/vanillaplus", arguments: "" }:
+            case { command: "/vanillaplus" or "/plus", arguments: "" }:
                 System.AddonModificationBrowser.Open();
                 break;
         }
