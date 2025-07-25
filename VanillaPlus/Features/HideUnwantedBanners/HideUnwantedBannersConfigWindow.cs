@@ -78,4 +78,7 @@ public class HideUnwantedBannersConfigWindow : Window {
         ImGui.SetCursorPos(Vector2.Zero);
         ImGui.Image(texture.ImGuiHandle, texture.Size / ratio);
     }
+    
+    public override void OnClose()
+        => config.Save();
 }

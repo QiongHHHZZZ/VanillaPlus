@@ -15,4 +15,7 @@ public class ForcedCutsceneSoundsConfigWindow(ForcedCutsceneSoundsConfig config)
         if (ImGui.Checkbox("Unmute System Sounds", ref config.HandleSystem)) config.Save();
         if (ImGui.Checkbox("Unmute Performance", ref config.HandlePerform)) config.Save();
     }
+    
+    public override void OnClose()
+        => config.Save();
 }

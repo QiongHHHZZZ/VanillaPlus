@@ -14,4 +14,7 @@ public class FasterScrollConfigWindow(FasterScrollConfig config) : Window("Faste
             config.Save();
         }
     }
+    
+    public override void OnClose()
+        => config.Save();
 }
