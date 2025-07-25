@@ -1,8 +1,8 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
-using VanillaPlus.Core.Windows.Parts;
+using VanillaPlus.Windows.Parts;
 
-namespace VanillaPlus.Core.Windows;
+namespace VanillaPlus.Windows;
 
 public class ModificationBrowser : NativeAddon {
     protected override unsafe void OnSetup(AtkUnitBase* addon) {

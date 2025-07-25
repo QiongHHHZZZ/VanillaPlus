@@ -3,8 +3,9 @@ using System.Linq;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
+using VanillaPlus.Core;
 
-namespace VanillaPlus.Core.Windows;
+namespace VanillaPlus.Windows;
 
 public class ChangelogBrowser : NativeAddon {
 

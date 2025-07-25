@@ -8,7 +8,7 @@ using KamiToolKit.Nodes;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Core.Windows.Parts;
+namespace VanillaPlus.Windows.Parts;
 
 public class ModificationBrowserNode : SimpleComponentNode {
 
@@ -43,7 +43,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
         optionContainerNode = new ScrollingAreaNode<TreeListNode> {
             IsVisible = true,
             ContentHeight = 1000.0f,
-            ScrollSpeed = 100,
+            ScrollSpeed = 24,
         };
         System.NativeController.AttachNode(optionContainerNode, this);
 

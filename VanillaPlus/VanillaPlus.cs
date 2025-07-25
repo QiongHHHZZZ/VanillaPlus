@@ -5,7 +5,7 @@ using Dalamud.Plugin;
 using KamiToolKit;
 using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
-using VanillaPlus.Core.Windows;
+using VanillaPlus.Windows;
 
 namespace VanillaPlus;
 
