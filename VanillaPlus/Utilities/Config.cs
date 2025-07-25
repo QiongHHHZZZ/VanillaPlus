@@ -9,6 +9,12 @@ namespace VanillaPlus.Utilities;
 /// Configuration File Utilities
 /// </summary>
 public static class Configuration {
+    public static string ConfigPath => GetFileInfo("Configs").FullName;
+    public static string CharacterConfigPath => GetFileInfo("Configs", GetCharacterPath()).FullName;
+
+    public static string DataPath => GetFileInfo("Data").FullName;
+    public static string CharacterDataPath => GetFileInfo("Data", GetCharacterPath()).FullName;
+
     /// <summary>
     /// Loads a configuration file from PluginConfigs\VanillaPlus\Configs\{FileName}
     /// Creates a `new T()` if the file can't be loaded
@@ -74,7 +80,7 @@ public static class Configuration {
             }
         }
 
-        return new FileInfo(Path.Combine(directory.FullName, path[path.Length - 1]));
+        return new FileInfo(Path.Combine(directory.FullName, path[^1]));
     }
 
     private static string GetCharacterPath() {
