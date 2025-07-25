@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
+using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Text.SeStringHandling;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using VanillaPlus.Core;
 using VanillaPlus.Extensions;
+using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Windows.Parts;
 
@@ -47,41 +51,6 @@ public class ModificationBrowserNode : SimpleComponentNode {
         };
         System.NativeController.AttachNode(optionContainerNode, this);
 
-        descriptionContainerNode = new ResNode {
-            IsVisible = true,
-        };
-        System.NativeController.AttachNode(descriptionContainerNode, this);
-        
-        descriptionImageNode = new ImGuiImageNode();
-        System.NativeController.AttachNode(descriptionImageNode, descriptionContainerNode);
-
-        descriptionTextNode = new TextNode {
-            AlignmentType = AlignmentType.Center,
-            TextFlags = TextFlags.WordWrap | TextFlags.MultiLine,
-            FontSize = 14,
-            LineSpacing = 22,
-            FontType = FontType.Axis,
-            IsVisible = true,
-            Text = "Please select an option on the left",
-        };
-        System.NativeController.AttachNode(descriptionTextNode, descriptionContainerNode);
-        
-        descriptionImageTextNode = new TextNode();
-        System.NativeController.AttachNode(descriptionImageTextNode, descriptionContainerNode);
-
-        changelogButtonNode = new TextButtonNode {
-            Label = "Changelog",
-            OnClick = OnChangelogButtonClicked,
-        };
-        System.NativeController.AttachNode(changelogButtonNode, descriptionContainerNode);
-        
-        descriptionVersionTextNode = new TextNode {
-            IsVisible = true,
-            AlignmentType = AlignmentType.BottomRight,
-            TextColor = ColorHelper.GetColor(3),
-        };
-        System.NativeController.AttachNode(descriptionVersionTextNode, descriptionContainerNode);
-                
         searchContainerNode = new HorizontalFlexNode {
             AlignmentFlags = FlexFlags.FitHeight | FlexFlags.FitWidth,
             IsVisible = true,
@@ -111,6 +80,62 @@ public class ModificationBrowserNode : SimpleComponentNode {
                 searchLabelNode.IsVisible = true;
             }
         };
+        
+        descriptionContainerNode = new ResNode {
+            IsVisible = true,
+        };
+        System.NativeController.AttachNode(descriptionContainerNode, this);
+
+        descriptionTextNode = new TextNode {
+            AlignmentType = AlignmentType.Center,
+            TextFlags = TextFlags.WordWrap | TextFlags.MultiLine,
+            FontSize = 14,
+            LineSpacing = 22,
+            FontType = FontType.Axis,
+            IsVisible = true,
+            Text = "Please select an option on the left",
+        };
+        System.NativeController.AttachNode(descriptionTextNode, descriptionContainerNode);
+        
+        descriptionImageTextNode = new TextNode {
+            AlignmentType = AlignmentType.TopLeft,
+            TextFlags = TextFlags.WordWrap | TextFlags.MultiLine,
+            FontSize = 14,
+            LineSpacing = 22,
+            FontType = FontType.Axis,
+            IsVisible = true,
+        };
+        System.NativeController.AttachNode(descriptionImageTextNode, descriptionContainerNode);
+
+        changelogButtonNode = new TextButtonNode {
+            Label = "Changelog",
+            OnClick = OnChangelogButtonClicked,
+        };
+        System.NativeController.AttachNode(changelogButtonNode, descriptionContainerNode);
+        
+        descriptionVersionTextNode = new TextNode {
+            IsVisible = true,
+            AlignmentType = AlignmentType.BottomRight,
+            TextColor = ColorHelper.GetColor(3),
+        };
+        System.NativeController.AttachNode(descriptionVersionTextNode, descriptionContainerNode);
+                        
+        descriptionImageNode = new ImGuiImageNode {
+            WrapMode = 2,
+            ImageNodeFlags = 0,
+            EventFlagsSet = true,
+        };
+        
+        descriptionImageNode.AddEvent(AddonEventType.MouseClick, _ => {
+            if (descriptionImageNode.Scale == Vector2.One * 2.5f) {
+                descriptionImageNode.Scale = Vector2.One;
+            }
+            else {
+                descriptionImageNode.Scale = new Vector2(2.5f, 2.5f);
+            }
+        });
+        
+        System.NativeController.AttachNode(descriptionImageNode, descriptionContainerNode);
 
         var groupedOptions = System.ModificationManager.LoadedModifications
                                .Select(option => option)
@@ -181,11 +206,13 @@ public class ModificationBrowserNode : SimpleComponentNode {
         selectedOption = option;
         selectedOption.IsSelected = true;
 
-        if (selectedOption.Modification.Modification.GetDescriptionImage() is { } image) {
-            descriptionImageNode.LoadTexture(image);
+        if (selectedOption.Modification.Modification.ImageAssetName is { } assetName) {
+            Task.Run(() => LoadModuleImage(assetName));
+            
             descriptionImageNode.IsVisible = true;
             descriptionImageTextNode.IsVisible = true;
             descriptionTextNode.IsVisible = false;
+            descriptionImageTextNode.Text = selectedOption.Modification.Modification.ModificationInfo.Description;
         }
         else {
             descriptionImageNode.IsVisible = false;
@@ -199,6 +226,19 @@ public class ModificationBrowserNode : SimpleComponentNode {
         descriptionVersionTextNode.Text = $"Version {selectedOption.Modification.Modification.ModificationInfo.Version}";
     }
 
+    private async void LoadModuleImage(string assetName) {
+        try {
+            var assetPath = Assets.GetAssetPath(assetName);
+            var texture = await Services.TextureProvider.GetFromFile(assetPath).RentAsync();
+            Assets.LoadedTextures.Add(texture);
+            descriptionImageNode.LoadTexture(texture);
+            descriptionImageNode.TextureSize = texture.Size;
+        }
+        catch (Exception e) {
+            Services.PluginLog.Error(e, "Exception while loading Module Image");
+        }
+    }
+
     private void ClearSelection() {
         selectedOption = null;
         foreach (var node in modificationOptionNodes) {
@@ -208,6 +248,8 @@ public class ModificationBrowserNode : SimpleComponentNode {
 
         descriptionTextNode.Text = "Please select an option on the left";
 
+        descriptionImageNode.Scale = Vector2.One;
+        
         descriptionImageNode.IsVisible = false;
         descriptionImageTextNode.IsVisible = false;
         descriptionVersionTextNode.IsVisible = false;
@@ -254,6 +296,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
         descriptionContainerNode.Size = new Vector2(Width * 2.0f / 5.0f, Height - searchContainerNode.Height - ItemPadding);
 
         descriptionImageNode.Size = new Vector2(descriptionContainerNode.Width * 0.66f, descriptionContainerNode.Width * 0.66f);
+        descriptionImageNode.Origin = descriptionImageNode.Size / 2.0f;
         descriptionImageNode.Position = new Vector2(descriptionContainerNode.Width * 0.33f / 2.0f, descriptionContainerNode.Width * 0.33f / 4.0f);
 
         changelogButtonNode.Size = new Vector2(125.0f, 28.0f);
@@ -261,6 +304,9 @@ public class ModificationBrowserNode : SimpleComponentNode {
         
         descriptionVersionTextNode.Size = new Vector2(200.0f, 28.0f);
         descriptionVersionTextNode.Position = descriptionContainerNode.Size - descriptionVersionTextNode.Size - new Vector2(8.0f, 8.0f);
+
+        descriptionImageTextNode.Size = new Vector2(descriptionContainerNode.Width - 16.0f, descriptionContainerNode.Height - descriptionImageNode.Y - descriptionImageNode.Height - descriptionVersionTextNode.Height - 10.0f);
+        descriptionImageTextNode.Position = new Vector2(8.0f, descriptionImageNode.Position.Y + descriptionImageNode.Height + 4.0f);
         
         descriptionTextNode.Size = descriptionContainerNode.Size - new Vector2(16.0f, 16.0f) - new Vector2(0.0f, descriptionVersionTextNode.Height);
         descriptionTextNode.Position = new Vector2(8.0f, 8.0f);
