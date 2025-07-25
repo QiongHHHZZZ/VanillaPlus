@@ -112,7 +112,11 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
             if (value.Modification.HasConfigWindow) {
                 configButtonNode.IsVisible = true;
-                configButtonNode.OnClick = value.Modification.OpenConfigWindow;
+                configButtonNode.OnClick = null;
+                configButtonNode.OnClick = () => {
+                    value.Modification.OpenConfigWindow();
+                    OnClick?.Invoke();
+                };
 
                 configButtonNode.IsEnabled = value.State is LoadedState.Enabled;
             }
