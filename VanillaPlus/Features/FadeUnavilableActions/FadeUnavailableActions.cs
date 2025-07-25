@@ -41,7 +41,7 @@ public unsafe class FadeUnavailableActions : GameModification {
     public override bool HasConfigWindow => true;
 
     public override void OpenConfigWindow()
-        => configWindow.ToggleWindow();
+        => configWindow.Toggle();
 
     public override void OnEnable() {
         config = FadeUnavailableActionsConfig.Load();

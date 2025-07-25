@@ -51,6 +51,7 @@ public class ModificationManager : IDisposable {
                 }
             }
             
+            Services.PluginLog.Info($"Enabling {modification.Name}");
             modification.Modification.OnEnable();
             modification.State = LoadedState.Enabled;
             Services.PluginLog.Info($"{modification.Name} has been enabled");
@@ -80,6 +81,7 @@ public class ModificationManager : IDisposable {
         }
 
         try {
+            Services.PluginLog.Info($"Disabling {modification.Name}");
             modification.Modification.OnDisable();
         }
         catch (Exception e) {

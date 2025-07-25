@@ -44,7 +44,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     public override bool HasConfigWindow => true;
 
     public override void OpenConfigWindow()
-        => configWindow.ToggleWindow();
+        => configWindow.Toggle();
 
     public override void OnEnable() {
         config = ForcedCutsceneSoundsConfig.Load();

@@ -3,13 +3,10 @@
 namespace VanillaPlus.Extensions;
 
 public static class WindowExtensions {
-    public static void OpenWindow(this Window window)
+    public static void Open(this Window window)
         => window.IsOpen = true;
 
-    public static void ToggleWindow(this Window window)
-        => window.IsOpen = !window.IsOpen;
-
-    public static void CloseWindow(this Window window)
+    public static void Close(this Window window)
         => window.IsOpen = false;
 
     public static void RemoveFromWindowSystem(this Window window)

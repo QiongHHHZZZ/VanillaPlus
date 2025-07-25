@@ -38,7 +38,7 @@ public unsafe class EnhancedLootWindow : GameModification {
     private readonly List<ImageNode> padlockNodes = [];
 
     public override void OpenConfigWindow()
-        => configWindow.ToggleWindow();
+        => configWindow.Toggle();
 
     public override void OnEnable() {
         config = EnhancedLootWindowConfig.Load();
