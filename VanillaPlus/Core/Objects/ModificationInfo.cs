@@ -11,7 +11,7 @@ public class ModificationInfo {
     public required string Description { get; init; }
     public required string[] Authors { get; init; }
     public required ModificationType Type { get; init; }
-    public List<ChangeLogInfo> ChangeLog { get; init; } = [];
+    public required List<ChangeLogInfo> ChangeLog { get; init; } = [];
     public List<string> Tags { get; init; } = [];
     
     /// <summary>
