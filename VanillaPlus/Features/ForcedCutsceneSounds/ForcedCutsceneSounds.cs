@@ -4,7 +4,6 @@ using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 using VanillaPlus.Core;
-using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.ForcedCutsceneSounds;

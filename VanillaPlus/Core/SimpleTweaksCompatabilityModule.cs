@@ -3,11 +3,11 @@ using System.IO;
 using Dalamud.Utility;
 using Newtonsoft.Json.Linq;
 
-namespace VanillaPlus.Core.Objects;
+namespace VanillaPlus.Core;
 
-public class HaselTweaksCompatabilityModule(string moduleName) : CompatabilityModule {
-    public override string TargetModule => moduleName;
-    public override string TargetPluginInternalName => "HaselTweaks";
+public class SimpleTweaksCompatabilityModule(string targetModuleName) : CompatabilityModule {
+    public override string TargetModule => targetModuleName;
+    public override string TargetPluginInternalName => "SimpleTweaksPlugin";
 
     protected override List<string> GetTargetPluginLoadedModules() {
         var configFileInfo = GetConfigFileInfo();
@@ -31,9 +31,9 @@ public class HaselTweaksCompatabilityModule(string moduleName) : CompatabilityMo
 
         return [];
     }
-    
+
     private string GetConfigFilePath()
-        => Path.Combine(Services.PluginInterface.GetPluginConfigDirectory().Replace("VanillaPlus", "HaselTweaks.json"));
+        => Path.Combine(Services.PluginInterface.GetPluginConfigDirectory().Replace("VanillaPlus", "SimpleTweaksPlugin.json"));
     
     private FileInfo GetConfigFileInfo()
         => new(GetConfigFilePath());

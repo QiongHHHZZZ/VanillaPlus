@@ -2,7 +2,6 @@
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using VanillaPlus.Core;
-using VanillaPlus.Core.Objects;
 
 namespace VanillaPlus.OpenGlamourDresserToCurrentJob;
 

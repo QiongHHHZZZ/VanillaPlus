@@ -11,7 +11,6 @@ using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
 using VanillaPlus.Core;
-using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.EnhancedLootWindow;

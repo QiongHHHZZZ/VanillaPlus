@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using VanillaPlus.Core.Objects;
+using VanillaPlus.Core;
 
 namespace VanillaPlus.HideUnwantedBanners;
 

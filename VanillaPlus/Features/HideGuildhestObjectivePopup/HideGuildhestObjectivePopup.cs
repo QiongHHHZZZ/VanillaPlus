@@ -3,7 +3,6 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel.Sheets;
 using VanillaPlus.Core;
-using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.HideGuildhestObjectivePopup;

@@ -1,4 +1,4 @@
-﻿using VanillaPlus.Core.Objects;
+﻿using VanillaPlus.Core;
 
 namespace VanillaPlus.ForcedCutsceneSounds;
 

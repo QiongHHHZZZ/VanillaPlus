@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Dalamud.Interface.Textures.TextureWraps;
-using VanillaPlus.Core.Objects;
 
 namespace VanillaPlus.Core;
 

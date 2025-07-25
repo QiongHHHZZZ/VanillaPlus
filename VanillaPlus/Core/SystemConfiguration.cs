@@ -2,7 +2,7 @@
 using System.Numerics;
 using VanillaPlus.Utilities;
 
-namespace VanillaPlus.Core.Objects;
+namespace VanillaPlus.Core;
 
 public class SystemConfiguration {
     public int Version = 1;

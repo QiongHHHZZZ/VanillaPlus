@@ -5,7 +5,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
-using VanillaPlus.Core.Objects;
+using VanillaPlus.Core;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Windows.Parts;

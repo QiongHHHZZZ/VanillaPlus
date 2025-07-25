@@ -3,7 +3,7 @@ using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
-using VanillaPlus.Core.Objects;
+using VanillaPlus.Core;
 using Action = System.Action;
 using Addon = VanillaPlus.Utilities.Addon;
 
