@@ -4,6 +4,9 @@ using Dalamud.Plugin.Services;
 
 namespace VanillaPlus;
 
+/// <summary>
+/// Add any dalamud services that your modifications require here
+/// </summary>
 public class Services {
     [PluginService] public static IDalamudPluginInterface PluginInterface { get; set; } = null!;
     [PluginService] public static IClientState ClientState { get; set; } = null!;
