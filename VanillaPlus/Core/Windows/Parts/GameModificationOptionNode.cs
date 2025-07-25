@@ -171,12 +171,12 @@ public class GameModificationOptionNode : SimpleComponentNode {
         checkboxNode.Position = new Vector2(Height / 4.0f + checkboxNode.Width / 2.0f, Height / 2.0f - checkboxNode.Height / 2.0f - 4.0f);
 
         modificationNameNode.Height = Height / 2.0f;
-        modificationNameNode.Position = new Vector2(Height, 0.0f);
+        modificationNameNode.Position = new Vector2(Height + Height / 3.0f, 0.0f);
         
         authorNamesNode.Height = Height / 2.0f;
-        authorNamesNode.Position = new Vector2(Height + Height / 2.0f, Height / 2.0f);
+        authorNamesNode.Position = new Vector2(Height * 2.0f, Height / 2.0f);
 
-        configButtonNode.Size = new Vector2(Height / 2.0f, Height / 2.0f);
+        configButtonNode.Size = new Vector2(Height * 2.0f / 3.0f, Height * 2.0f / 3.0f);
         configButtonNode.Position = new Vector2(Width - Height, Height / 2.0f - configButtonNode.Height / 2.0f);
         
         erroringImageNode.Size = checkboxNode.Size - new Vector2(4.0f, 4.0f);

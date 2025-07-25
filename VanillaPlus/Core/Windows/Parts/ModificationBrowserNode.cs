@@ -125,7 +125,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
 
             foreach (var mod in category) {
                 var newOptionNode = new GameModificationOptionNode {
-                    Height = 64.0f,
+                    Height = 42.0f,
                     Modification = mod,
                     IsVisible = true,
                 };
