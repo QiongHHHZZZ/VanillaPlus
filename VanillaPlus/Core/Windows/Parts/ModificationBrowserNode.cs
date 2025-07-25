@@ -123,7 +123,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
                 OnToggle = isVisible => OnCategoryToggled(isVisible, category.Key),
             };
 
-            foreach (var mod in category) {
+            foreach (var mod in category.OrderBy(modification => modification.Modification.ModificationInfo.DisplayName)) {
                 var newOptionNode = new GameModificationOptionNode {
                     Height = 42.0f,
                     Modification = mod,
