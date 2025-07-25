@@ -25,6 +25,7 @@ public unsafe class EnhancedLootWindow : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
         ],
+        CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@LootWindowDuplicateUniqueItemIndicator"),
     };
 
     public override bool HasConfigWindow => true;

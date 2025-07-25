@@ -17,7 +17,8 @@ public class HideGuildhestObjectivePopup : GameModification {
         Type = ModificationType.GameBehavior,
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
-        ]
+        ],
+        CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@HideGuildhestObjectivePopup"),
     };
     
     public override void OnEnable()

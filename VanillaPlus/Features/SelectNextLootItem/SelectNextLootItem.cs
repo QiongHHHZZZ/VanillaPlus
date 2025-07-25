@@ -12,15 +12,14 @@ namespace VanillaPlus.Features.SelectNextLootItem;
 public unsafe class SelectNextLootItem : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Automatically Select Next Loot Item",
-        Description = "When clicking Need, Greed, or Pass automatically selects the next " +
-                      "available loot item so you can then need, greed, or pass on that item more easily\n\n" +
-                      "Note: this feature complies with Dalamud's Automation and Safety policy as no network " +
-                      "data transmissions are directly caused by this game modification",
+        Description = "Automatically advance to the next loot item after clicking Need, Greed, or Pass\n\n" +
+                      "Note: this modification does not automatically roll on loot",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
         ],
+        CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@LootWindowSelectNext"),
     };
     
     public override void OnEnable() {

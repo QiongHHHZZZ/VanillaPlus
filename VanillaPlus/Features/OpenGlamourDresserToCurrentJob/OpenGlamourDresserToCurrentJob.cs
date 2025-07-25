@@ -15,7 +15,8 @@ public class OpenGlamourDresserToCurrentJob : GameModification {
         Authors = ["MidoriKami"],
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
-        ]
+        ],
+        CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@OpenGlamourDresserToCurrentJob"),
     };
     
     public override void OnEnable()
