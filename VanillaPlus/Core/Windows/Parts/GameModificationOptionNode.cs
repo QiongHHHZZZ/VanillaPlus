@@ -1,10 +1,11 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using VanillaPlus.Core.Objects;
+using Action = System.Action;
+using Addon = VanillaPlus.Utilities.Addon;
 
 namespace VanillaPlus.Core.Windows.Parts;
 
@@ -120,8 +121,11 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
             if (value.State is LoadedState.Errored) {
                 checkboxNode.IsEnabled = false;
-                IsErrored = true;
+                erroringImageNode.IsVisible = true;
                 erroringImageNode.EnableEventFlags = true;
+                erroringImageNode.Tooltip = Modification.ErrorMessage;
+
+                Addon.UpdateCollisionForNode(this);
             }
         }
     }
@@ -136,7 +140,11 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
         if (Modification.State is LoadedState.Errored) {
             checkboxNode.IsEnabled = false;
-            IsErrored = true;
+            erroringImageNode.IsVisible = true;
+            erroringImageNode.EnableEventFlags = true;
+            erroringImageNode.Tooltip = Modification.ErrorMessage;
+
+            Addon.UpdateCollisionForNode(this);
         }
 
         checkboxNode.IsChecked = Modification.State is LoadedState.Enabled;
@@ -156,11 +164,6 @@ public class GameModificationOptionNode : SimpleComponentNode {
             selectedBackgroundNode.IsVisible = value;
             hoveredBackgroundNode.IsVisible = !value;
         }
-    }
-
-    public bool IsErrored {
-        get => erroringImageNode.IsVisible;
-        set => erroringImageNode.IsVisible = value;
     }
 
     protected override void OnSizeChanged() {
