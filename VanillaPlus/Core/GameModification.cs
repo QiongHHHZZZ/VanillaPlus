@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Dalamud.Interface.Textures.TextureWraps;
 
 namespace VanillaPlus.Core;
 
@@ -12,8 +11,8 @@ public abstract class GameModification {
     public virtual bool HasConfigWindow => false;
     public virtual void OpenConfigWindow() { }
 
-    public IDalamudTextureWrap? GetDescriptionImage() => null;
-    
+    public virtual string? ImageAssetName => null;
+
     public string Name => LongName.Split(".").Last();
     private string LongName => GetType().ToString();
 }
