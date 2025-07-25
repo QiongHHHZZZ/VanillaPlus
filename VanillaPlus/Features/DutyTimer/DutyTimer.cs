@@ -2,7 +2,7 @@
 using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 
-namespace VanillaPlus.Features.DutyTimer;
+namespace VanillaPlus.DutyTimer;
 
 public class DutyTimer : GameModification {
     public override ModificationInfo ModificationInfo => new() {

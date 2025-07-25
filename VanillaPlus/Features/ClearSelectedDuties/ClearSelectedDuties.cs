@@ -6,7 +6,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.ClearSelectedDuties;
+namespace VanillaPlus.ClearSelectedDuties;
 
 public class ClearSelectedDuties : GameModification {
     public override ModificationInfo ModificationInfo => new() {

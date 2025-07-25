@@ -6,7 +6,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.HideUnwantedBanners;
+namespace VanillaPlus.HideUnwantedBanners;
 
 public unsafe class HideUnwantedBanners : GameModification {
     public override ModificationInfo ModificationInfo => new() {

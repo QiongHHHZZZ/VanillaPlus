@@ -3,7 +3,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace VanillaPlus.Features.FasterScroll;
+namespace VanillaPlus.FasterScroll;
 
 public class FasterScrollConfigWindow(FasterScrollConfig config) : Window("Faster Scroll Config", ImGuiWindowFlags.AlwaysAutoResize) {
     public override void Draw() {

@@ -7,7 +7,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.ForcedCutsceneSounds;
+namespace VanillaPlus.ForcedCutsceneSounds;
 
 public unsafe class ForcedCutsceneSounds : GameModification {
     public override ModificationInfo ModificationInfo => new() {

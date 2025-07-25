@@ -6,7 +6,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.HideGuildhestObjectivePopup;
+namespace VanillaPlus.HideGuildhestObjectivePopup;
 
 public class HideGuildhestObjectivePopup : GameModification {
     public override ModificationInfo ModificationInfo => new() {

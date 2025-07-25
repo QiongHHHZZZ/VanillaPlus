@@ -14,7 +14,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.EnhancedLootWindow;
+namespace VanillaPlus.EnhancedLootWindow;
 
 public unsafe class EnhancedLootWindow : GameModification {
     public override ModificationInfo ModificationInfo => new() {

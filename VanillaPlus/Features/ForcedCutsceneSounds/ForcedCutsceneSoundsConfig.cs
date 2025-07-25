@@ -1,6 +1,6 @@
 ﻿using VanillaPlus.Core.Objects;
 
-namespace VanillaPlus.Features.ForcedCutsceneSounds;
+namespace VanillaPlus.ForcedCutsceneSounds;
 
 public class ForcedCutsceneSoundsConfig : GameModificationConfig<ForcedCutsceneSoundsConfig> {
     protected override string FileName => "ForcedCutsceneSounds.config.json";

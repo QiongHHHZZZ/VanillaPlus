@@ -5,7 +5,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace VanillaPlus.Features.HideUnwantedBanners;
+namespace VanillaPlus.HideUnwantedBanners;
 
 public class HideUnwantedBannersConfigWindow : Window {
     private readonly List<int> banners = [

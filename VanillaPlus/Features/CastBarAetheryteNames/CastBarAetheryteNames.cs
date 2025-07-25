@@ -9,7 +9,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.CastBarAetheryteNames;
+namespace VanillaPlus.CastBarAetheryteNames;
 
 public unsafe class CastBarAetheryteNames : GameModification {
     public override ModificationInfo ModificationInfo => new() {

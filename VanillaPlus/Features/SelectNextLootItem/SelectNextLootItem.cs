@@ -7,7 +7,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.SelectNextLootItem;
+namespace VanillaPlus.SelectNextLootItem;
 
 public unsafe class SelectNextLootItem : GameModification {
     public override ModificationInfo ModificationInfo => new() {

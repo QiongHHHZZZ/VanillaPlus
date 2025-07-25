@@ -5,7 +5,7 @@ using VanillaPlus.Core;
 using VanillaPlus.Core.Objects;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Features.FasterScroll;
+namespace VanillaPlus.FasterScroll;
 
 public class FasterScroll : GameModification {
     public override ModificationInfo ModificationInfo => new() {

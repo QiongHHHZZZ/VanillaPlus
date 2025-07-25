@@ -1,6 +1,6 @@
 ﻿using VanillaPlus.Core.Objects;
 
-namespace VanillaPlus.Features.FasterScroll;
+namespace VanillaPlus.FasterScroll;
 
 public class FasterScrollConfig : GameModificationConfig<FasterScrollConfig> {
     protected override string FileName => "FasterScroll.config.json";
