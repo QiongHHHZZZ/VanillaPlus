@@ -19,6 +19,7 @@ public class Services {
     [PluginService] public static IDataManager DataManager { get; set; } = null!;
     [PluginService] public static IGameInteropProvider GameInteropProvider { get; set; } = null!;
     [PluginService] public static IGameConfig GameConfig { get; set; } = null!;
+    [PluginService] public static ITextureProvider TextureProvider { get; set; } = null!;
     
 #pragma warning disable SeStringEvaluator
     [PluginService] public static ISeStringEvaluator SeStringEvaluator { get; set; } = null!;
