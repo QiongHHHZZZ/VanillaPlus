@@ -16,7 +16,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
         System.NativeController = new NativeController(pluginInterface);
 
-        System.AddonModificationBrowser = new ModificationBrowser {
+        System.AddonModificationBrowser = new AddonModificationBrowser {
             NativeController = System.NativeController,
             InternalName = "VanillaPlusConfig",
             Title = "Vanilla Plus Modification Browser",

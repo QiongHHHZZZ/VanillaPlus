@@ -4,7 +4,7 @@ using VanillaPlus.Windows.Parts;
 
 namespace VanillaPlus.Windows;
 
-public class ModificationBrowser : NativeAddon {
+public class AddonModificationBrowser : NativeAddon {
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
         AttachNode(new ModificationBrowserNode {
             Position = ContentStartPosition,

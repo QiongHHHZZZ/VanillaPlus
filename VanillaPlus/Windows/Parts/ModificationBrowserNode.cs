@@ -27,13 +27,13 @@ public class ModificationBrowserNode : SimpleComponentNode {
 
     private GameModificationOptionNode? selectedOption;
     
-    private ChangelogBrowser? changelogBrowser;
+    private AddonChangelogBrowser? changelogBrowser;
 
     private readonly List<TreeListCategoryNode> categoryNodes = [];
     private readonly List<GameModificationOptionNode> modificationOptionNodes = [];
 
     public ModificationBrowserNode() {
-        changelogBrowser = new ChangelogBrowser {
+        changelogBrowser = new AddonChangelogBrowser {
             InternalName = "VPChangelog",
             Title = "Vanilla Plus Changelog Browser",
             NativeController = System.NativeController,

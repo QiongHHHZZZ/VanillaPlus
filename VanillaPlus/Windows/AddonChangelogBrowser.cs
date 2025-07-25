@@ -7,7 +7,7 @@ using VanillaPlus.Core;
 
 namespace VanillaPlus.Windows;
 
-public class ChangelogBrowser : NativeAddon {
+public class AddonChangelogBrowser : NativeAddon {
 
     private ScrollingAreaNode<TreeListNode>? scrollingAreaNode;
     
