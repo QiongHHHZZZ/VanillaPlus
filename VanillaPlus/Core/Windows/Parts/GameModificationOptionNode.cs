@@ -149,6 +149,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
         checkboxNode.IsChecked = Modification.State is LoadedState.Enabled;
         configButtonNode.IsEnabled = Modification.State is LoadedState.Enabled;
+        
+        OnClick?.Invoke();
     }
 
     public Action? OnClick { get; set; }
