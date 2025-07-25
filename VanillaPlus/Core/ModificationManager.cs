@@ -45,7 +45,8 @@ public class ModificationManager : IDisposable {
             if (modification.Modification.ModificationInfo.CompatabilityModule is { } compatabilityModule) {
                 if (!compatabilityModule.ShouldLoadGameModification()) {
                     modification.State = LoadedState.Errored;
-                    modification.ErrorMessage = $"The original version of this feature is already active in {compatabilityModule.TargetPluginInternalName}";
+                    modification.ErrorMessage = $"The original version of this feature is already active in {compatabilityModule.TargetPluginInternalName}\n\n" +
+                                                $"ModuleId: {compatabilityModule.TargetModule}";
                     Services.PluginLog.Warning($"Attempted to load {modification.Name}, but it's already enabled in {compatabilityModule.TargetPluginInternalName}");
                     return;
                 }

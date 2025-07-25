@@ -4,7 +4,7 @@ using System.Linq;
 namespace VanillaPlus.Core.Objects;
 
 public abstract class CompatabilityModule {
-    protected abstract string TargetModule { get; }
+    public abstract string TargetModule { get; }
     public abstract string TargetPluginInternalName { get; }
     
     public bool ShouldLoadGameModification() {

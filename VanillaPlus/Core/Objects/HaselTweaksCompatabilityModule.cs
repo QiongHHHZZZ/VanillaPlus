@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 namespace VanillaPlus.Core.Objects;
 
 public class HaselTweaksCompatabilityModule(string moduleName) : CompatabilityModule {
-    protected override string TargetModule => moduleName;
+    public override string TargetModule => moduleName;
     public override string TargetPluginInternalName => "HaselTweaks";
 
     protected override List<string> GetTargetPluginLoadedModules() {
