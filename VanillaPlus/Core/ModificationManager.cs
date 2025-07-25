@@ -12,7 +12,6 @@ public class ModificationManager : IDisposable {
     private readonly List<GameModification> gameModifications;
 
     public ModificationManager() {
-        System.SystemConfig = SystemConfiguration.Load();
         gameModifications = GetGameModifications();
 
         foreach (var gameMod in gameModifications) {

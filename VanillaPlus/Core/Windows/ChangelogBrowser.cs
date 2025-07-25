@@ -10,7 +10,7 @@ public class ChangelogBrowser : NativeAddon {
 
     private ScrollingAreaNode<TreeListNode>? scrollingAreaNode;
     
-    private List<TreeListCategoryNode> categoryNodes = [];
+    private readonly List<TreeListCategoryNode> categoryNodes = [];
 
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
         scrollingAreaNode = new ScrollingAreaNode<TreeListNode> {
@@ -55,6 +55,11 @@ public class ChangelogBrowser : NativeAddon {
             scrollingAreaNode.ContentHeight = categoryNodes.Sum(node => node.Height);
         }
     }
-    
+
+    protected override unsafe void OnHide(AtkUnitBase* addon) {
+        System.SystemConfig.ChangelogWindowPosition = Position;
+        System.SystemConfig.Save();
+    }
+
     public GameModification? Modification { get; set; }
 }

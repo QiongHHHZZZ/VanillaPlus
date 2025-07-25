@@ -4,6 +4,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using KamiToolKit;
 using VanillaPlus.Core;
+using VanillaPlus.Core.Objects;
 using VanillaPlus.Core.Windows;
 
 namespace VanillaPlus;
@@ -11,6 +12,7 @@ namespace VanillaPlus;
 public sealed class VanillaPlus : IDalamudPlugin {
     public VanillaPlus(IDalamudPluginInterface pluginInterface) {
         pluginInterface.Create<Services>();
+        System.SystemConfig = SystemConfiguration.Load();
 
         System.NativeController = new NativeController(pluginInterface);
 
@@ -20,6 +22,10 @@ public sealed class VanillaPlus : IDalamudPlugin {
             Title = "Vanilla Plus Modification Browser",
             Size = new Vector2(836.0f, 560.0f),
         };
+
+        if (System.SystemConfig.BrowserWindowPosition is { } browserPosition) {
+            System.AddonModificationBrowser.Position = browserPosition;
+        }
 
         Services.CommandManager.AddHandler("/vanillaplus", new CommandInfo(Handler) {
             ShowInHelp = true,

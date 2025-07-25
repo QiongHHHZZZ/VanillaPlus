@@ -37,7 +37,7 @@ public class ModificationBrowserNode : SimpleComponentNode {
             InternalName = "VPChangelog",
             Title = "Vanilla Plus Changelog Browser",
             NativeController = System.NativeController,
-            Size = new Vector2(400.0f, 600.0f),
+            Size = new Vector2(450.0f, 400.0f),
         };
         
         searchContainerNode = new HorizontalFlexNode {
@@ -219,7 +219,12 @@ public class ModificationBrowserNode : SimpleComponentNode {
                 changelogBrowser.Close();
             }
 
+            if (System.SystemConfig.ChangelogWindowPosition is { } changelogPosition) {
+                changelogBrowser.Position = changelogPosition;
+            }
+            
             changelogBrowser.Modification = selectedOption.Modification.Modification;
+            changelogBrowser.Title = $"{selectedOption.ModificationInfo.DisplayName} Changelog";
             changelogBrowser.Open();
         }
     }

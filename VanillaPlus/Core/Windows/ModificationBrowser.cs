@@ -12,4 +12,9 @@ public class ModificationBrowser : NativeAddon {
             IsVisible = true,
         });
     }
+
+    protected override unsafe void OnHide(AtkUnitBase* addon) {
+        System.SystemConfig.BrowserWindowPosition = Position;
+        System.SystemConfig.Save();
+    }
 }
