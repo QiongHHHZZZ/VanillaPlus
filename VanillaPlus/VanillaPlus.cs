@@ -4,6 +4,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using KamiToolKit;
 using VanillaPlus.Core;
+using VanillaPlus.Utilities;
 using VanillaPlus.Windows;
 
 namespace VanillaPlus;
@@ -60,6 +61,10 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
     public void Dispose() {
         System.ModificationManager.Dispose();
+
+        foreach (var asset in Assets.LoadedTextures) {
+            asset.Dispose();
+        }
 
         Services.PluginInterface.UiBuilder.OpenConfigUi -= OpenModificationBrowser;
         Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
