@@ -6,7 +6,7 @@ using VanillaPlus.Extensions;
 namespace VanillaPlus.Core.Objects;
 
 public class ModificationInfo {
-    public int Version { get; init; } = 1;
+    public int Version => ChangeLog.Max(changelog => changelog.Version);
     public required string DisplayName { get; init; }
     public required string Description { get; init; }
     public required string[] Authors { get; init; }

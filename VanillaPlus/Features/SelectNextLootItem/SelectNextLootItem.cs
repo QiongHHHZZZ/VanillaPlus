@@ -18,7 +18,6 @@ public unsafe class SelectNextLootItem : GameModification {
                       "data transmissions are directly caused by this game modification",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
-        Version = 1,
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
         ],

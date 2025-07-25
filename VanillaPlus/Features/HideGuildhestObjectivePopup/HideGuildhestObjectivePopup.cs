@@ -15,7 +15,6 @@ public class HideGuildhestObjectivePopup : GameModification {
                       "This feature is not recommended if this is your first time doing Guildhests",
         Authors = ["MidoriKami"],
         Type = ModificationType.GameBehavior,
-        Version = 1,
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
         ]
