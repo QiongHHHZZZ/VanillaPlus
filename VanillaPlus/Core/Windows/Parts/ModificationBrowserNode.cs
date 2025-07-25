@@ -40,36 +40,6 @@ public class ModificationBrowserNode : SimpleComponentNode {
             Size = new Vector2(450.0f, 400.0f),
         };
         
-        searchContainerNode = new HorizontalFlexNode {
-            AlignmentFlags = FlexFlags.FitHeight | FlexFlags.FitWidth,
-            IsVisible = true,
-        };
-        System.NativeController.AttachNode(searchContainerNode, this);
-
-        searchBoxNode = new TextInputNode {
-            IsVisible = true,
-            OnInputReceived = OnSearchBoxInputReceived,
-        };
-        searchContainerNode.AddNode(searchBoxNode);
-
-        searchLabelNode = new TextNode {
-            Position = new Vector2(10.0f, 6.0f),
-            IsVisible = true,
-            TextColor = ColorHelper.GetColor(3),
-            Text = "Search . . .",
-        };
-        System.NativeController.AttachNode(searchLabelNode, searchBoxNode);
-
-        searchBoxNode.OnFocused += () => {
-            searchLabelNode.IsVisible = false;
-        };
-
-        searchBoxNode.OnUnfocused += () => {
-            if (searchBoxNode.String.ToString() is "") {
-                searchLabelNode.IsVisible = true;
-            }
-        };
-
         optionContainerNode = new ScrollingAreaNode<TreeListNode> {
             IsVisible = true,
             ContentHeight = 1000.0f,
@@ -111,6 +81,36 @@ public class ModificationBrowserNode : SimpleComponentNode {
             TextColor = ColorHelper.GetColor(3),
         };
         System.NativeController.AttachNode(descriptionVersionTextNode, descriptionContainerNode);
+                
+        searchContainerNode = new HorizontalFlexNode {
+            AlignmentFlags = FlexFlags.FitHeight | FlexFlags.FitWidth,
+            IsVisible = true,
+        };
+        System.NativeController.AttachNode(searchContainerNode, this);
+        
+        searchBoxNode = new TextInputNode {
+            IsVisible = true,
+            OnInputReceived = OnSearchBoxInputReceived,
+        };
+        searchContainerNode.AddNode(searchBoxNode);
+
+        searchLabelNode = new TextNode {
+            Position = new Vector2(10.0f, 6.0f),
+            IsVisible = true,
+            TextColor = ColorHelper.GetColor(3),
+            Text = "Search . . .",
+        };
+        System.NativeController.AttachNode(searchLabelNode, searchBoxNode);
+
+        searchBoxNode.OnFocused += () => {
+            searchLabelNode.IsVisible = false;
+        };
+
+        searchBoxNode.OnUnfocused += () => {
+            if (searchBoxNode.String.ToString() is "") {
+                searchLabelNode.IsVisible = true;
+            }
+        };
 
         var groupedOptions = System.ModificationManager.LoadedModifications
                                .Select(option => option)
