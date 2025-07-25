@@ -1,4 +1,5 @@
-﻿using Dalamud.IoC;
+﻿using Dalamud.Game.ClientState.Objects;
+using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 
@@ -21,6 +22,7 @@ public class Services {
     [PluginService] public static IGameConfig GameConfig { get; set; } = null!;
     [PluginService] public static ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] public static IGameGui GameGui { get; set; } = null!;
+    [PluginService] public static ITargetManager TargetManager { get; set; } = null!;
     
 #pragma warning disable SeStringEvaluator
     [PluginService] public static ISeStringEvaluator SeStringEvaluator { get; set; } = null!;
