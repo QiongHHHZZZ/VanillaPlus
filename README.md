@@ -7,7 +7,7 @@ This plugin uses the term "GameModification" to describe a singular purposed mod
 > [!IMPORTANT]  
 > All features of this plugin must comply with Dalamuds Plugin Rules and Policies
 > 
-> No automating sever interactions, no modifications that would give clear unfair advantages to other players will be accepted
+> No automating server interactions, no modifications that would give clear unfair advantages to other players will be accepted
 > 
 > No modifications that specifically target PvP parts or components of any form will be accepted
 
@@ -17,7 +17,7 @@ This plugin is not intended to play the game for you, nor make any decisions on 
 
 ### Game Behavior Modification
 
-These are modification on how the game performs a task or function. The modifications can change or replace the behavior of certain parts of the game.
+These are modifications on how the game performs a task or function. The modifications can change or replace the behavior of certain parts of the game.
 
 For example Faster Scrollbars, this feature makes the game scroll further (configurable) than normal for each tick of the mousewheel, this reduces on the tedious amount of scrolling normally required to navigate the games menus.
 
