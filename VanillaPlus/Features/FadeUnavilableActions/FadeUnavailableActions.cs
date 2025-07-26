@@ -37,6 +37,8 @@ public unsafe class FadeUnavailableActions : GameModification {
     private FadeUnavailableActionsConfig config = null!;
     private FadeUnavailableActionsConfigWindow configWindow = null!;
 
+    public override string ImageAssetName => "FadeUnavailableActions.png";
+
     public override bool HasConfigWindow => true;
 
     public override void OpenConfigWindow()
