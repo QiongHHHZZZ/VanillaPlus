@@ -7,7 +7,7 @@ using VanillaPlus.Core;
 using Action = System.Action;
 using Addon = VanillaPlus.Utilities.Addon;
 
-namespace VanillaPlus.Windows.Parts;
+namespace VanillaPlus.Windows;
 
 public class GameModificationOptionNode : SimpleComponentNode {
 

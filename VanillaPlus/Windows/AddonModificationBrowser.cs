@@ -12,7 +12,6 @@ using KamiToolKit.Nodes;
 using VanillaPlus.Core;
 using VanillaPlus.Extensions;
 using VanillaPlus.Utilities;
-using VanillaPlus.Windows.Parts;
 
 namespace VanillaPlus.Windows;
 
