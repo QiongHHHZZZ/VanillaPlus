@@ -35,9 +35,9 @@ public unsafe class TargetCastBarCountdown : GameModification {
     private TextNode? primaryTargetAltTextNode;
     private TextNode? focusTargetTextNode;
     
-    private static string PrimaryTargetStylePath => Path.Combine(Configuration.ConfigPath, "TargetCastBarCountdown.PrimaryTarget.style.json");
-    private static string PrimaryTargetAltStylePath => Path.Combine(Configuration.ConfigPath, "TargetCastBarCountdown.PrimaryTargetAlt.style.json");
-    private static string FocusTargetStylePath => Path.Combine(Configuration.ConfigPath, "TargetCastBarCountdown.FocusTarget.style.json");
+    private static string PrimaryTargetStylePath => Path.Combine(Config.ConfigPath, "TargetCastBarCountdown.PrimaryTarget.style.json");
+    private static string PrimaryTargetAltStylePath => Path.Combine(Config.ConfigPath, "TargetCastBarCountdown.PrimaryTargetAlt.style.json");
+    private static string FocusTargetStylePath => Path.Combine(Config.ConfigPath, "TargetCastBarCountdown.FocusTarget.style.json");
 
     private TargetCastBarCountdownConfig config = null!;
     private TargetCastBarCountdownConfigWindow configWindow = null!;

@@ -12,8 +12,8 @@ public class SystemConfiguration {
     public Vector2? BrowserWindowPosition;
 
     public static SystemConfiguration Load()
-        => Configuration.LoadConfig<SystemConfiguration>("system.config.json");
+        => Config.LoadConfig<SystemConfiguration>("system.config.json");
 
     public void Save()
-        => Configuration.SaveConfig(this, "system.config.json");
+        => Config.SaveConfig(this, "system.config.json");
 }

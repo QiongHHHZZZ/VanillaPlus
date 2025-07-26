@@ -8,7 +8,7 @@ namespace VanillaPlus.Utilities;
 /// <summary>
 /// Configuration File Utilities
 /// </summary>
-public static class Configuration {
+public static class Config {
     public static string ConfigPath => GetFileInfo("Configs").FullName;
     public static string CharacterConfigPath => GetFileInfo("Configs", GetCharacterPath()).FullName;
 
