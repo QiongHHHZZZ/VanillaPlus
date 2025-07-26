@@ -6,8 +6,8 @@ namespace VanillaPlus.FastMouseClick;
 public class FastMouseClick : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Fast Mouse Click",
-        Description = "The game does not fire UI events for single mouse clicks whenever a double click is detected. " +
-                      "This game modification fixes it by always triggering the normal mouse click in addition to the double click.",
+        Description = "The game does not fire UI events for single mouse clicks whenever a double click is detected\n\n" +
+                      "This game modification fixes it by always triggering the normal mouse click in addition to the double click",
         Type = ModificationType.GameBehavior,
         Authors = ["Haselnussbomber"],
         ChangeLog = [
