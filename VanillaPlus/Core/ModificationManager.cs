@@ -27,9 +27,18 @@ public class ModificationManager : IDisposable {
     }
 
     public void Dispose() {
+        Services.PluginLog.Debug("Disposing Modification Manager, now disabling all GameModifications");
+        
         foreach (var loadedMod in LoadedModifications) {
             if (loadedMod.State is LoadedState.Enabled) {
-                loadedMod.Modification.OnDisable();
+                try {
+                    Services.PluginLog.Debug($"Disabling {loadedMod.Name}");
+                    loadedMod.Modification.OnDisable();
+                    Services.PluginLog.Debug($"{loadedMod.Name} has been disabled");
+                }
+                catch (Exception e) {
+                    Services.PluginLog.Error(e, $"Error while unloading modification {loadedMod.Name}");
+                }
             }
         }
     }
