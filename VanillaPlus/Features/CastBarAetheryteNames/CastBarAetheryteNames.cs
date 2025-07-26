@@ -24,7 +24,9 @@ public unsafe class CastBarAetheryteNames : GameModification {
 
     private Hook<Telepo.Delegates.Teleport>? teleportHook;
     private TeleportInfo? teleportInfo;
-    
+
+    public override string ImageAssetName => "CastBarAetheryteNames.png";
+
     public override void OnEnable() {
         teleportHook = Services.GameInteropProvider.HookFromAddress<Telepo.Delegates.Teleport>(Telepo.MemberFunctionPointers.Teleport, OnTeleport);
         teleportHook?.Enable();
