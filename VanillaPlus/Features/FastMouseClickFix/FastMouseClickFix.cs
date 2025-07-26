@@ -1,0 +1,36 @@
+﻿using Dalamud.Utility.Signatures;
+using VanillaPlus.Core;
+
+namespace VanillaPlus.FastMouseClickFix;
+
+public class FastMouseClickFix : GameModification {
+    public override ModificationInfo ModificationInfo => new() {
+        DisplayName = "Fast Mouse Click Fix",
+        Description = "The game does not fire UI events for single mouse clicks whenever a double click is detected. " +
+                      "This game modification fixes it by always triggering the normal mouse click in addition to the double click.",
+        Type = ModificationType.GameBehavior,
+        Authors = ["Haselnussbomber"],
+        ChangeLog = [
+            new ChangeLogInfo(1, "InitialVersion"),
+        ],
+        CompatabilityModule = new HaselTweaksCompatabilityModule("FastMouseClickFix"),
+    };
+
+    [Signature("EB 3F B8 ?? ?? ?? ?? 48 8B D7")]
+    private readonly nint? memoryAddress = null;
+
+    private MemoryReplacement? memoryPatch;
+
+    public override void OnEnable() {
+        Services.GameInteropProvider.InitializeFromAttributes(this);
+        
+        if (memoryAddress is { } address && memoryAddress != nint.Zero) {
+            memoryPatch = new MemoryReplacement(address, [0x90, 0x90]);
+            memoryPatch.Enable();
+        }
+    }
+
+    public override void OnDisable() {
+        memoryPatch?.Dispose();
+    }
+}
