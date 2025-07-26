@@ -3,9 +3,9 @@ using VanillaPlus.Core;
 
 namespace VanillaPlus.FastMouseClickFix;
 
-public class FastMouseClickFix : GameModification {
+public class FastMouseClick : GameModification {
     public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Fast Mouse Click Fix",
+        DisplayName = "Fast Mouse Click",
         Description = "The game does not fire UI events for single mouse clicks whenever a double click is detected. " +
                       "This game modification fixes it by always triggering the normal mouse click in addition to the double click.",
         Type = ModificationType.GameBehavior,
