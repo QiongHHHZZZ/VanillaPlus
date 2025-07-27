@@ -12,7 +12,7 @@ using VanillaPlus.Extensions;
 using Action = Lumina.Excel.Sheets.Action;
 using ActionBarSlotNumberArray = FFXIVClientStructs.FFXIV.Client.UI.Arrays.ActionBarNumberArray.ActionBarBarNumberArray.ActionBarSlotNumberArray;
 
-namespace VanillaPlus.FadeUnavilableActions;
+namespace VanillaPlus.FadeUnavailableActions;
 
 public unsafe class FadeUnavailableActions : GameModification {
     public override ModificationInfo ModificationInfo => new() {

@@ -1,6 +1,6 @@
 ﻿using VanillaPlus.Core;
 
-namespace VanillaPlus.FadeUnavilableActions;
+namespace VanillaPlus.FadeUnavailableActions;
 
 public class FadeUnavailableActionsConfig : GameModificationConfig<FadeUnavailableActionsConfig> {
     protected override string FileName => "FadeUnavailableActions.config.json";
