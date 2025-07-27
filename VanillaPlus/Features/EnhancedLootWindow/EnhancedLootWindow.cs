@@ -18,7 +18,7 @@ namespace VanillaPlus.EnhancedLootWindow;
 public unsafe class EnhancedLootWindow : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Enhanced Loot Window",
-        Description = "Adds indicators to loot window items to indicate if you have unlocked that item before, or if the item is obtainable",
+        Description = "Adds indicators to loot window items to indicate if you have unlocked that item before, or if the item is obtainable.",
         Type = ModificationType.UserInterface,
         Authors = ["MidoriKami"],
         ChangeLog = [

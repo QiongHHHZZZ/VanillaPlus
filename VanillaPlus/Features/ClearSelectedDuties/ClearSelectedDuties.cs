@@ -10,7 +10,7 @@ namespace VanillaPlus.ClearSelectedDuties;
 public class ClearSelectedDuties : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Clear Selected Duties",
-        Description = "When opening the Duty Finder, deselects any selected duties",
+        Description = "When opening the Duty Finder, deselects any selected duties.",
         Authors = [ "MidoriKami" ],
         Type = ModificationType.GameBehavior,
         ChangeLog = [

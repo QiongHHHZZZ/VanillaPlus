@@ -18,7 +18,7 @@ namespace VanillaPlus.TargetCastBarCountdown;
 public unsafe class TargetCastBarCountdown : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Target Cast Bar Countdown",
-        Description = "Adds the time remaining for your targets current cast to the cast bar",
+        Description = "Adds the time remaining for your targets current cast to the cast bar.",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [

@@ -9,7 +9,7 @@ namespace VanillaPlus.FasterScroll;
 public class FasterScroll : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Faster Scrollbars",
-        Description = "Increases the speed of all scrollbars",
+        Description = "Increases the speed of all scrollbars.",
         Authors = ["MidoriKami"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [

@@ -11,7 +11,7 @@ namespace VanillaPlus.ResetInventoryTab;
 public unsafe class ResetInventoryTab : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Reset Inventory Tab",
-        Description = "Automatically resets the inventory to the first tab when opened",
+        Description = "Automatically resets the inventory to the first tab when opened.",
         Type = ModificationType.GameBehavior,
         Authors = ["Haselnussbomber"],
         ChangeLog = [

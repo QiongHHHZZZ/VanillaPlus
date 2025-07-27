@@ -11,7 +11,7 @@ namespace VanillaPlus.ForcedCutsceneSounds;
 public unsafe class ForcedCutsceneSounds : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Forced Cutscene Sounds",
-        Description = "Automatically unmutes selected sound channels in cutscenes",
+        Description = "Automatically unmutes selected sound channels in cutscenes.",
         Authors = ["Haselnussbomber"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [

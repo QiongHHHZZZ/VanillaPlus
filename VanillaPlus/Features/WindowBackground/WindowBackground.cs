@@ -14,8 +14,8 @@ namespace VanillaPlus;
 public unsafe class WindowBackground : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Window Backgrounds",
-        Description = "Allows you to add a background to any native window\n\n" +
-                      "Examples: Cast Bar, Target Health Bar, Inventory Widget, Todo List",
+        Description = "Allows you to add a background to any native window.\n\n" +
+                      "Examples: Cast Bar, Target Health Bar, Inventory Widget, Todo List.",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [

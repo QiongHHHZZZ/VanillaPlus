@@ -10,7 +10,7 @@ namespace VanillaPlus.HideUnwantedBanners;
 public unsafe class HideUnwantedBanners : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Hide Unwanted Banners",
-        Description = "Prevents large text banners from appearing and playing their sound effect",
+        Description = "Prevents large text banners from appearing and playing their sound effect.",
         Authors = ["MidoriKami"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
