@@ -220,6 +220,10 @@ public class AddonModificationBrowser : NativeAddon {
             categoryNode.IsVisible = validOptions.Any(option => option.ModificationInfo.Type.GetDescription() == categoryNode.Label.ToString());
             categoryNode.RecalculateLayout();
         }
+
+        if (validOptions.All(option => option != selectedOption)) {
+            ClearSelection();
+        }
         
         optionContainerNode.ContentNode.RefreshLayout();
         RecalculateScrollableAreaSize();
@@ -271,6 +275,7 @@ public class AddonModificationBrowser : NativeAddon {
             node.IsHovered = false;
         }
 
+        descriptionTextNode.IsVisible = true;
         descriptionTextNode.Text = "Please select an option on the left";
 
         descriptionImageNode.Scale = Vector2.One;
