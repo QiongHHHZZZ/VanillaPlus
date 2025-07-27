@@ -84,8 +84,8 @@ public class AddonModificationBrowser : NativeAddon {
             optionContainerNode.ContentNode.AddCategoryNode(newCategoryNode);
         }
 
-        RecalculateScrollableAreaSize();
         UpdateSizes();
+        RecalculateScrollableAreaSize();
     }
     
     private void BuildOptionsContainer() {
@@ -135,6 +135,8 @@ public class AddonModificationBrowser : NativeAddon {
             IsVisible = true,
         };
         System.NativeController.AttachNode(descriptionContainerNode, mainContainerNode);
+        
+        //todo: add border around image node
         
         descriptionTextNode = new TextNode {
             AlignmentType = AlignmentType.Center,
