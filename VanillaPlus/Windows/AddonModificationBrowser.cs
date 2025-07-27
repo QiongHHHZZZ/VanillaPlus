@@ -85,8 +85,8 @@ public class AddonModificationBrowser : NativeAddon {
             optionContainerNode.ContentNode.AddCategoryNode(newCategoryNode);
         }
 
-        UpdateSizes();
         RecalculateScrollableAreaSize();
+        UpdateSizes();
     }
     
     private void BuildOptionsContainer() {
