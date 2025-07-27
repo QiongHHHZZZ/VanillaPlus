@@ -102,7 +102,6 @@ public unsafe class FadeUnavailableActions : GameModification {
             }
         }
         else {
-            Services.PluginLog.Debug($"InRange: {numberArrayData->InRange}");
             ApplyColoring(hotBarSlotData, !numberArrayData->InRange, ShouldFadeAction(numberArrayData));
         }
     }
