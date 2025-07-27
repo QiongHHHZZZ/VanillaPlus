@@ -16,6 +16,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
     private readonly CheckboxNode checkboxNode;
     private readonly IconImageNode erroringImageNode;
     private readonly TextNode modificationNameNode;
+    private readonly IconImageNode experimentalImageNode;
     private readonly TextNode authorNamesNode;
     private readonly CircleButtonNode configButtonNode;
 
@@ -70,6 +71,13 @@ public class GameModificationOptionNode : SimpleComponentNode {
         };
         System.NativeController.AttachNode(modificationNameNode, this);
 
+        experimentalImageNode = new IconImageNode {
+            IconId = 60073,
+            EventFlagsSet = true,
+            Tooltip = "Caution, this feature is experimental.\nMay contain bugs or crash your game.",
+        };
+        System.NativeController.AttachNode(experimentalImageNode, this);
+        
         authorNamesNode = new TextNode {
             IsVisible = true,
             FontType = FontType.Axis,
@@ -122,6 +130,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
             }
             
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;
+
+            experimentalImageNode.IsVisible = value.Modification.IsExperimental;
 
             if (value.State is LoadedState.Errored) {
                 checkboxNode.IsEnabled = false;
@@ -181,6 +191,9 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
         modificationNameNode.Height = Height / 2.0f;
         modificationNameNode.Position = new Vector2(Height + Height / 3.0f, 0.0f);
+        
+        experimentalImageNode.Size = new Vector2(16.0f, 16.0f);
+        experimentalImageNode.Position = new Vector2(modificationNameNode.X, modificationNameNode.Height);
         
         authorNamesNode.Height = Height / 2.0f;
         authorNamesNode.Position = new Vector2(Height * 2.0f, Height / 2.0f);

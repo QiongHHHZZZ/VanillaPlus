@@ -34,6 +34,8 @@ public unsafe class WindowBackground : GameModification {
 
     public override string ImageName => "WindowBackgrounds.png";
 
+    public override bool IsExperimental => true;
+
     public override void OnEnable() {
         config = WindowBackgroundConfig.Load();
         configWindow = new WindowBackgroundConfigWindow(config, UpdateListeners, OnStyleChanged);
