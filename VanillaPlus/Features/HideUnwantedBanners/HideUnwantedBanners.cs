@@ -16,6 +16,7 @@ public unsafe class HideUnwantedBanners : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
         ],
+        CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@HideUnwantedBanner"),
     };
 
     private delegate void ImageSetImageTextureDelegate(AtkUnitBase* addon, int bannerId, int a3, int sfxId);
