@@ -36,6 +36,8 @@ public unsafe class EnhancedLootWindow : GameModification {
     private readonly List<ImageNode> crossNodes = [];
     private readonly List<ImageNode> padlockNodes = [];
 
+    public override string ImageName => "EnhancedLootWindow.png";
+
     public override void OpenConfigWindow()
         => configWindow.Toggle();
 
