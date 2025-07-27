@@ -53,7 +53,7 @@ public class ModificationManager : IDisposable {
             if (modification.Modification.ModificationInfo.CompatabilityModule is { } compatabilityModule) {
                 if (!compatabilityModule.ShouldLoadGameModification()) {
                     modification.State = LoadedState.Errored;
-                    modification.ErrorMessage = $"The original version of this feature is already active in {compatabilityModule.TargetPluginInternalName}\n\n" +
+                    modification.ErrorMessage = $"The original version of this feature is already active in {compatabilityModule.TargetPluginInternalName}.\n\n" +
                                                 $"ID: {compatabilityModule.TargetModule}";
                     Services.PluginLog.Warning($"Attempted to load {modification.Name}, but it's already enabled in {compatabilityModule.TargetPluginInternalName}");
                     return;
@@ -69,7 +69,7 @@ public class ModificationManager : IDisposable {
         }
         catch (Exception e) {
             modification.State = LoadedState.Errored;
-            modification.ErrorMessage = "Failed to load, this module has been disabled";
+            modification.ErrorMessage = "Failed to load, this module has been disabled.";
             Services.PluginLog.Error(e, $"Error while enabling {modification.Name}, attempting to disable");
             
             try {
@@ -77,7 +77,7 @@ public class ModificationManager : IDisposable {
                 Services.PluginLog.Information($"Successfully disabled erroring modification {modification.Name}");
             }
             catch (Exception fatal) {
-                modification.ErrorMessage = "Critical Error: Module failed to load, and errored again while unloading";
+                modification.ErrorMessage = "Critical Error: Module failed to load, and errored again while unloading.";
                 Services.PluginLog.Error(fatal, $"Critical Error while trying to unload erroring modification: {modification.Name}");
             }
         }
@@ -92,6 +92,7 @@ public class ModificationManager : IDisposable {
         try {
             Services.PluginLog.Info($"Disabling {modification.Name}");
             modification.Modification.OnDisable();
+            modification.Modification.OpenConfigAction = null;
         }
         catch (Exception e) {
             modification.State = LoadedState.Errored;

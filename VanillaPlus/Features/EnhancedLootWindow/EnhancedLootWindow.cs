@@ -27,8 +27,6 @@ public unsafe class EnhancedLootWindow : GameModification {
         CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@LootWindowDuplicateUniqueItemIndicator"),
     };
 
-    public override bool HasConfigWindow => true;
-
     private EnhancedLootWindowConfigWindow configWindow = null!;
     private EnhancedLootWindowConfig config = null!;
     private AddonController<AddonNeedGreed> needGreedController = null!;
@@ -38,13 +36,11 @@ public unsafe class EnhancedLootWindow : GameModification {
 
     public override string ImageName => "EnhancedLootWindow.png";
 
-    public override void OpenConfigWindow()
-        => configWindow.Toggle();
-
     public override void OnEnable() {
         config = EnhancedLootWindowConfig.Load();
         configWindow = new EnhancedLootWindowConfigWindow(config);
         configWindow.AddToWindowSystem();
+        OpenConfigAction = configWindow.Toggle;
 
         needGreedController = new AddonController<AddonNeedGreed>(Services.PluginInterface, "NeedGreed");
         needGreedController.OnAttach += AttachNodes;

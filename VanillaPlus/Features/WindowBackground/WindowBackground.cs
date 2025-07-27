@@ -28,11 +28,6 @@ public unsafe class WindowBackground : GameModification {
     private WindowBackgroundConfig config = null!;
     private WindowBackgroundConfigWindow configWindow = null!;
 
-    public override bool HasConfigWindow => true;
-
-    public override void OpenConfigWindow()
-        => configWindow.Toggle();
-
     public override string ImageName => "WindowBackgrounds.png";
 
     public override bool IsExperimental => true;
@@ -41,6 +36,7 @@ public unsafe class WindowBackground : GameModification {
         config = WindowBackgroundConfig.Load();
         configWindow = new WindowBackgroundConfigWindow(config, UpdateListeners, OnStyleChanged);
         configWindow.AddToWindowSystem();
+        OpenConfigAction = configWindow.Toggle;
         
         UpdateListeners();
     }

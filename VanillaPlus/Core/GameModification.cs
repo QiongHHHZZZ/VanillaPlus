@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace VanillaPlus.Core;
 
@@ -8,8 +9,7 @@ public abstract class GameModification {
     public abstract void OnEnable();
     public abstract void OnDisable();
 
-    public virtual bool HasConfigWindow => false;
-    public virtual void OpenConfigWindow() { }
+    public Action? OpenConfigAction { get; set; }
 
     /// <summary>
     /// Indicates this modification is experimental in nature and may cause issues.

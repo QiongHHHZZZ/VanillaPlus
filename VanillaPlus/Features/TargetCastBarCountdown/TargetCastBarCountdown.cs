@@ -44,15 +44,11 @@ public unsafe class TargetCastBarCountdown : GameModification {
 
     public override string ImageName => "TargetCastBarCountdown.png";
 
-    public override bool HasConfigWindow => true;
-
-    public override void OpenConfigWindow()
-        => configWindow.Toggle();
-
     public override void OnEnable() {
         config = TargetCastBarCountdownConfig.Load();
         configWindow = new TargetCastBarCountdownConfigWindow(config, DrawNodeConfigs, SaveNodes);
         configWindow.AddToWindowSystem();
+        OpenConfigAction = configWindow.Toggle;
 
         targetInfoCastBarController = new AddonController<AtkUnitBase>(Services.PluginInterface, "_TargetInfoCastBar");
         targetInfoCastBarController.OnAttach += AttachNode;

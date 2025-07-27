@@ -27,15 +27,11 @@ public unsafe class HideUnwantedBanners : GameModification {
     private HideUnwantedBannersConfig config = null!;
     private HideUnwantedBannersConfigWindow configWindow = null!;
 
-    public override bool HasConfigWindow => true;
-
-    public override void OpenConfigWindow()
-        => configWindow.Toggle();
-
     public override void OnEnable() {
         config = HideUnwantedBannersConfig.Load();
         configWindow = new HideUnwantedBannersConfigWindow(config);
         configWindow.AddToWindowSystem();
+        OpenConfigAction = configWindow.Toggle;
         
         Services.Hooker.InitializeFromAttributes(this);
         setImageTextureHook?.Enable();

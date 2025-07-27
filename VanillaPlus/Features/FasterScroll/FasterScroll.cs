@@ -23,16 +23,12 @@ public class FasterScroll : GameModification {
     private FasterScrollConfig config = null!;
     private FasterScrollConfigWindow configWindow = null!;
 
-    public override bool HasConfigWindow => true;
-
-    public override void OpenConfigWindow()
-        => configWindow.Toggle();
-
     public override void OnEnable() {
         config = FasterScrollConfig.Load();
         configWindow = new FasterScrollConfigWindow(config);
         configWindow.AddToWindowSystem();
-        
+        OpenConfigAction = configWindow.Toggle;
+
         Services.GameInteropProvider.InitializeFromAttributes(this);
         scrollbarInitializeHook?.Enable();
     }

@@ -40,15 +40,11 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     private ForcedCutsceneSoundsConfig config = null!;
     private ForcedCutsceneSoundsConfigWindow configWindow = null!;
 
-    public override bool HasConfigWindow => true;
-
-    public override void OpenConfigWindow()
-        => configWindow.Toggle();
-
     public override void OnEnable() {
         config = ForcedCutsceneSoundsConfig.Load();
         configWindow = new ForcedCutsceneSoundsConfigWindow(config);
         configWindow.AddToWindowSystem();
+        OpenConfigAction = configWindow.Toggle;
         
         createCutSceneControllerHook = Services.GameInteropProvider.HookFromAddress<ScheduleManagement.Delegates.CreateCutSceneController>(
             ScheduleManagement.MemberFunctionPointers.CreateCutSceneController,

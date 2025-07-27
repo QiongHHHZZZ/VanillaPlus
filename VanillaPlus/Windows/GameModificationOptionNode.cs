@@ -117,11 +117,11 @@ public class GameModificationOptionNode : SimpleComponentNode {
             modificationNameNode.Text = value.Modification.ModificationInfo.DisplayName;
             authorNamesNode.Text = $"By {string.Join(", ", value.Modification.ModificationInfo.Authors)}";
 
-            if (value.Modification.HasConfigWindow) {
+            if (value.Modification.OpenConfigAction is not null) {
                 configButtonNode.IsVisible = true;
                 configButtonNode.OnClick = null;
                 configButtonNode.OnClick = () => {
-                    value.Modification.OpenConfigWindow();
+                    value.Modification.OpenConfigAction();
                     OnClick?.Invoke();
                 };
 

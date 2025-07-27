@@ -39,15 +39,11 @@ public unsafe class FadeUnavailableActions : GameModification {
 
     public override string ImageName => "FadeUnavailableActions.png";
 
-    public override bool HasConfigWindow => true;
-
-    public override void OpenConfigWindow()
-        => configWindow.Toggle();
-
     public override void OnEnable() {
         config = FadeUnavailableActionsConfig.Load();
         configWindow = new FadeUnavailableActionsConfigWindow(config);
         configWindow.AddToWindowSystem();
+        OpenConfigAction = configWindow.Toggle;
         
         Services.Hooker.InitializeFromAttributes(this);
         onHotBarSlotUpdateHook?.Enable();
