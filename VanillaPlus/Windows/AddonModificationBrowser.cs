@@ -25,6 +25,7 @@ public class AddonModificationBrowser : NativeAddon {
     private ScrollingAreaNode<TreeListNode> optionContainerNode = null!;
     private ResNode descriptionContainerNode = null!;
     private ImGuiImageNode descriptionImageNode = null!;
+    private BorderNineGridNode borderNineGridNode = null!;
     private TextNode descriptionImageTextNode = null!;
     private TextNode descriptionTextNode = null!;
     private TextNode descriptionVersionTextNode = null!;
@@ -136,8 +137,6 @@ public class AddonModificationBrowser : NativeAddon {
         };
         System.NativeController.AttachNode(descriptionContainerNode, mainContainerNode);
         
-        //todo: add border around image node
-        
         descriptionTextNode = new TextNode {
             AlignmentType = AlignmentType.Center,
             TextFlags = TextFlags.WordWrap | TextFlags.MultiLine,
@@ -187,6 +186,11 @@ public class AddonModificationBrowser : NativeAddon {
             }
         });
         System.NativeController.AttachNode(descriptionImageNode, descriptionContainerNode);
+        
+        borderNineGridNode = new BorderNineGridNode {
+            IsVisible = true,
+        };
+        System.NativeController.AttachNode(borderNineGridNode, descriptionImageNode);
     }
 
     private void OnCategoryToggled(bool isVisible, ModificationType type) {
@@ -314,8 +318,11 @@ public class AddonModificationBrowser : NativeAddon {
         descriptionVersionTextNode.Size = new Vector2(200.0f, 28.0f);
         descriptionVersionTextNode.Position = descriptionContainerNode.Size - descriptionVersionTextNode.Size - new Vector2(8.0f, 8.0f);
 
-        descriptionImageTextNode.Size = new Vector2(descriptionContainerNode.Width - 16.0f, descriptionContainerNode.Height - descriptionImageNode.Y - descriptionImageNode.Height - descriptionVersionTextNode.Height - 10.0f);
-        descriptionImageTextNode.Position = new Vector2(8.0f, descriptionImageNode.Position.Y + descriptionImageNode.Height + 4.0f);
+        descriptionImageTextNode.Size = new Vector2(descriptionContainerNode.Width - 16.0f, descriptionContainerNode.Height - descriptionImageNode.Y - descriptionImageNode.Height - descriptionVersionTextNode.Height - 14.0f);
+        descriptionImageTextNode.Position = new Vector2(8.0f, descriptionImageNode.Position.Y + descriptionImageNode.Height + 8.0f);
+
+        borderNineGridNode.Size = descriptionImageNode.Size + new Vector2(30.0f, 30.0f);
+        borderNineGridNode.Position = new Vector2(-15.0f, -15.0f);
         
         descriptionTextNode.Size = descriptionContainerNode.Size - new Vector2(16.0f, 16.0f) - new Vector2(0.0f, descriptionVersionTextNode.Height);
         descriptionTextNode.Position = new Vector2(8.0f, 8.0f);
