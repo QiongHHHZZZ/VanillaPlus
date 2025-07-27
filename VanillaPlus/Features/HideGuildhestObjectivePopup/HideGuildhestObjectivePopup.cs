@@ -20,7 +20,7 @@ public class HideGuildhestObjectivePopup : GameModification {
         CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@HideGuildhestObjectivePopup"),
     };
 
-    public override string ImageAssetName => "HideGuildhestObjective.png";
+    public override string ImageName => "HideGuildhestObjective.png";
 
     public override void OnEnable()
         => Services.AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", OnJournalAcceptOpen);

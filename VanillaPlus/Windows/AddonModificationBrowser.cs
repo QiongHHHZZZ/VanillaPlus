@@ -231,7 +231,7 @@ public class AddonModificationBrowser : NativeAddon {
         selectedOption = option;
         selectedOption.IsSelected = true;
 
-        if (selectedOption.Modification.Modification.ImageAssetName is { } assetName) {
+        if (selectedOption.Modification.Modification.ImageName is { } assetName) {
             Task.Run(() => LoadModuleImage(assetName));
             
             descriptionImageNode.IsVisible = true;

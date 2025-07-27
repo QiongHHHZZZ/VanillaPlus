@@ -32,7 +32,7 @@ public unsafe class WindowBackground : GameModification {
     public override void OpenConfigWindow()
         => configWindow.Toggle();
 
-    public override string ImageAssetName => "WindowBackgrounds.png";
+    public override string ImageName => "WindowBackgrounds.png";
 
     public override void OnEnable() {
         config = WindowBackgroundConfig.Load();

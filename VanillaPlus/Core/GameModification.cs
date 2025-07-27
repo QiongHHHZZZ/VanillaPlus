@@ -11,7 +11,10 @@ public abstract class GameModification {
     public virtual bool HasConfigWindow => false;
     public virtual void OpenConfigWindow() { }
 
-    public virtual string? ImageAssetName => null;
+    /// <summary>
+    /// Set this to the filename of an image in the Assets folder, the image must be square or it will render very weirdly.
+    /// </summary>
+    public virtual string? ImageName => null;
 
     public string Name => LongName.Split(".").Last();
     private string LongName => GetType().ToString();

@@ -42,7 +42,7 @@ public unsafe class TargetCastBarCountdown : GameModification {
     private TargetCastBarCountdownConfig config = null!;
     private TargetCastBarCountdownConfigWindow configWindow = null!;
 
-    public override string ImageAssetName => "TargetCastBarCountdown.png";
+    public override string ImageName => "TargetCastBarCountdown.png";
 
     public override bool HasConfigWindow => true;
 
