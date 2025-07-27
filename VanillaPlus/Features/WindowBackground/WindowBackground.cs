@@ -21,6 +21,7 @@ public unsafe class WindowBackground : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
         ],
+        CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@DutyListBackground"),
     };
 
     private readonly List<AddonBackground> addonBackgrounds = [];
