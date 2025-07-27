@@ -73,7 +73,6 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
         experimentalImageNode = new IconImageNode {
             IconId = 60073,
-            EventFlagsSet = true,
             Tooltip = "Caution, this feature is experimental.\nMay contain bugs or crash your game.",
         };
         System.NativeController.AttachNode(experimentalImageNode, this);
@@ -132,6 +131,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;
 
             experimentalImageNode.IsVisible = value.Modification.IsExperimental;
+            experimentalImageNode.EnableEventFlags = value.Modification.IsExperimental;
 
             if (value.State is LoadedState.Errored) {
                 checkboxNode.IsEnabled = false;
