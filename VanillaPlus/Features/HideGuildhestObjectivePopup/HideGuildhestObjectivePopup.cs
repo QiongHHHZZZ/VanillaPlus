@@ -29,8 +29,8 @@ public class HideGuildhestObjectivePopup : GameModification {
         => Services.AddonLifecycle.UnregisterListener(OnJournalAcceptOpen);
 
     private unsafe void OnJournalAcceptOpen(AddonEvent type, AddonArgs args) {
-        if (Services.DataManager.GetExcelSheet<TerritoryType>().GetRow(Services.ClientState.TerritoryType) is not { TerritoryIntendedUse.RowId: 3 }) {
-            args.GetAddon<AtkUnitBase>()->Hide(false, false, 1);
-        }
+        if (Services.DataManager.GetExcelSheet<TerritoryType>().GetRow(Services.ClientState.TerritoryType) is not { TerritoryIntendedUse.RowId: 3 }) return;
+
+        args.GetAddon<AtkUnitBase>()->Hide(false, false, 1);
     }
 }
