@@ -8,6 +8,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
+using VanillaPlus.Utilities;
 
 namespace VanillaPlus;
 
@@ -82,14 +83,14 @@ public unsafe class WindowBackgroundConfigWindow : Window {
         var isTracked = config.Addons.Contains(addonName);
         
         if (isTracked) {
-            if (IconButton(FontAwesomeIcon.Trash)) {
+            if (Drawing.IconButton(FontAwesomeIcon.Trash)) {
                 config.Addons.Remove(addonName);
                 configChangedCallback();
                 config.Save();
             }
         }
         else {
-            if (IconButton(FontAwesomeIcon.Plus)) {
+            if (Drawing.IconButton(FontAwesomeIcon.Plus)) {
                 config.Addons.Add(addonName);
                 configChangedCallback();
                 config.Save();
@@ -98,10 +99,5 @@ public unsafe class WindowBackgroundConfigWindow : Window {
         
         ImGui.SameLine();
         ImGui.TextColored(isTracked ? KnownColor.LimeGreen.Vector() : KnownColor.White.Vector(), addonName);
-    }
-
-    private bool IconButton(FontAwesomeIcon icon) {
-        using var fixedFont = Services.PluginInterface.UiBuilder.IconFontFixedWidthHandle.Push();
-        return ImGui.Button(icon.ToIconString(), ImGuiHelpers.ScaledVector2(25.0f, 25.0f));
     }
 }
