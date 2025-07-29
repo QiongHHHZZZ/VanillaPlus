@@ -117,17 +117,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
             modificationNameNode.Text = value.Modification.ModificationInfo.DisplayName;
             authorNamesNode.Text = $"By {string.Join(", ", value.Modification.ModificationInfo.Authors)}";
 
-            if (value.Modification.OpenConfigAction is not null) {
-                configButtonNode.IsVisible = true;
-                configButtonNode.OnClick = null;
-                configButtonNode.OnClick = () => {
-                    value.Modification.OpenConfigAction();
-                    OnClick?.Invoke();
-                };
+            RefreshConfigWindowButton();
 
-                configButtonNode.IsEnabled = value.State is LoadedState.Enabled;
-            }
-            
             checkboxNode.IsChecked = value.State is LoadedState.Enabled;
 
             experimentalImageNode.IsVisible = value.Modification.IsExperimental;
@@ -165,6 +156,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         configButtonNode.IsEnabled = Modification.State is LoadedState.Enabled;
         
         OnClick?.Invoke();
+        RefreshConfigWindowButton();
     }
 
     public Action? OnClick { get; set; }
@@ -179,6 +171,18 @@ public class GameModificationOptionNode : SimpleComponentNode {
         set {
             selectedBackgroundNode.IsVisible = value;
             hoveredBackgroundNode.IsVisible = !value;
+        }
+    }
+
+    private void RefreshConfigWindowButton() {
+        if (Modification.Modification.OpenConfigAction is not null) {
+            configButtonNode.IsVisible = true;
+            configButtonNode.OnClick = () => {
+                Modification.Modification.OpenConfigAction();
+                OnClick?.Invoke();
+            };
+
+            configButtonNode.IsEnabled = Modification.State is LoadedState.Enabled;
         }
     }
 
