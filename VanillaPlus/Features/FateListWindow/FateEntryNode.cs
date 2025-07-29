@@ -125,7 +125,14 @@ public unsafe class FateEntryNode : SimpleComponentNode {
             iconNode.IconId = value.MapIconId;
             nameNode.Text = value.Name;
             timeRemainingNode.Text = TimeSpan.FromSeconds(value.TimeRemaining).ToString(@"mm\:ss");
-            levelNode.Text = $"Lv. {value.Level}-{value.MaxLevel}";
+
+            if (Fate is not { Level: 1, MaxLevel: 255 }) {
+                levelNode.Text = $"Lv. {value.Level}-{value.MaxLevel}";
+            }
+            else {
+                levelNode.Text = "Lv. ???";
+            }
+           
             progressTextNode.Text = $"{value.Progress}%";
             progressNode.Progress = value.Progress / 100.0f;
         }
