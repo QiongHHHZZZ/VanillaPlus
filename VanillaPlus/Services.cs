@@ -24,6 +24,7 @@ public class Services {
     [PluginService] public static IGameGui GameGui { get; set; } = null!;
     [PluginService] public static ITargetManager TargetManager { get; set; } = null!;
     [PluginService] public static IGameInventory GameInventory { get; set; } = null!;
+    [PluginService] public static IFateTable FateTable { get; set; } = null!;
     
 #pragma warning disable SeStringEvaluator
     [PluginService] public static ISeStringEvaluator SeStringEvaluator { get; set; } = null!;

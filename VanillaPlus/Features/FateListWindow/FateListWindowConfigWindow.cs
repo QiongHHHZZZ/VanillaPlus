@@ -4,9 +4,9 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
 using VanillaPlus.Utilities;
 
-namespace VanillaPlus.RecentlyLootedWindow;
+namespace VanillaPlus.FateListWindow;
 
-public class RecentlyLootedWindowConfigWindow(RecentlyLootedWindowConfig config) : Window("Recently Looted Window Config Window") {
+public class FateListWindowConfigWindow(FateListWindowConfig config) : Window("Fate List Window Config Window") {
     private SeVirtualKey newKey = SeVirtualKey.NO_KEY;
 
     public override void Draw() {
@@ -19,7 +19,6 @@ public class RecentlyLootedWindowConfigWindow(RecentlyLootedWindowConfig config)
         }
     }
 
-    public override void OnClose() {
-        config.Save();
-    }
+    public override void OnClose()
+        => config.Save();
 }
