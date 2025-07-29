@@ -3,6 +3,7 @@ using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using KamiToolKit;
+using VanillaPlus.Classes;
 using VanillaPlus.InternalSystem;
 using VanillaPlus.Utilities;
 
@@ -41,6 +42,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
         Services.PluginInterface.UiBuilder.OpenConfigUi += OpenModificationBrowser;
 
         System.ModificationManager = new ModificationManager();
+        System.KeyListener = new KeyListener();
         
         #if DEBUG
         Services.Framework.RunOnTick(OpenModificationBrowser, delayTicks: 5);
@@ -59,6 +61,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
         => System.AddonModificationBrowser.Open();
 
     public void Dispose() {
+        System.KeyListener.Dispose();
         System.ModificationManager.Dispose();
 
         foreach (var asset in Assets.LoadedTextures) {
