@@ -24,7 +24,9 @@ public class FateListWindow : GameModification {
     private FateListWindowConfigWindow configWindow = null!;
     
     private readonly Stopwatch stopwatch = Stopwatch.StartNew();
-    
+
+    public override string ImageName => "FateListWindow.png";
+
     public override void OnEnable() {
         config = FateListWindowConfig.Load();
         configWindow = new FateListWindowConfigWindow(config);
