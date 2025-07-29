@@ -10,18 +10,19 @@ namespace VanillaPlus.FateListWindow;
 
 public class AddonFateList(FateListWindowConfig config) : NativeAddon {
 
-    private ScrollingAreaNode<VerticalListNode> scrollingAreaNode = null!;
+    private ScrollingAreaNode<OrderedVerticalListNode<FateEntryNode, long>> scrollingAreaNode = null!;
 
     private readonly List<FateEntryNode> fateNodes = [];
 
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
-        scrollingAreaNode = new ScrollingAreaNode<VerticalListNode> {
+        scrollingAreaNode = new ScrollingAreaNode<OrderedVerticalListNode<FateEntryNode, long>> {
             Position = ContentStartPosition,
             Size = ContentSize,
             IsVisible = true,
             ContentHeight = 100,
         };
         scrollingAreaNode.ContentNode.FitContents = true;
+        scrollingAreaNode.ContentNode.OrderSelector = node => node.Fate.TimeRemaining;
         AttachNode(scrollingAreaNode);
     }
 
