@@ -3,7 +3,7 @@ using System.IO;
 using Dalamud.Utility;
 using Newtonsoft.Json.Linq;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 public class HaselTweaksCompatabilityModule(string moduleName) : CompatabilityModule {
     public override string TargetModule => moduleName;

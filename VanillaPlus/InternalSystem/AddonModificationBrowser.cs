@@ -9,11 +9,11 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Utilities;
 
-namespace VanillaPlus.Windows;
+namespace VanillaPlus.InternalSystem;
 
 public class AddonModificationBrowser : NativeAddon {
 

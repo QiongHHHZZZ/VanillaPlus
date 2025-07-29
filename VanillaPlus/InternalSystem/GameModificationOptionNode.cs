@@ -3,11 +3,11 @@ using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 using Action = System.Action;
 using Addon = VanillaPlus.Utilities.Addon;
 
-namespace VanillaPlus.Windows;
+namespace VanillaPlus.InternalSystem;
 
 public class GameModificationOptionNode : SimpleComponentNode {
 

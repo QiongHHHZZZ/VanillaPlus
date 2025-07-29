@@ -1,7 +1,6 @@
 ﻿using Dalamud.Interface.Windowing;
 using KamiToolKit;
-using VanillaPlus.Core;
-using VanillaPlus.Windows;
+using VanillaPlus.InternalSystem;
 
 namespace VanillaPlus;
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.DutyTimer;
 

@@ -2,7 +2,7 @@
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.ClearSelectedDuties;

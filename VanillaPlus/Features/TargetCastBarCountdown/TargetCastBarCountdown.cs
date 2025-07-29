@@ -9,7 +9,7 @@ using ImGuiNET;
 using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Utilities;
 

@@ -3,9 +3,8 @@ using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using KamiToolKit;
-using VanillaPlus.Core;
+using VanillaPlus.InternalSystem;
 using VanillaPlus.Utilities;
-using VanillaPlus.Windows;
 
 namespace VanillaPlus;
 

@@ -1,6 +1,6 @@
 ﻿using VanillaPlus.Utilities;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 /// <summary>
 /// For use with per-character settings. This will save a file in a character specific directory.

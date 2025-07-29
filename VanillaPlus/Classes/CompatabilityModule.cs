@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 public abstract class CompatabilityModule {
     public abstract string TargetModule { get; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 public abstract class GameModification {
     public abstract ModificationInfo ModificationInfo { get; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Dalamud.Memory;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 public class MemoryReplacement(nint address, byte[] replacementBytes) : IDisposable {
 

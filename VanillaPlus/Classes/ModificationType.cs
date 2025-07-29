@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 public enum ModificationType {
     

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.UI;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.RecentlyLootedWindow;
 

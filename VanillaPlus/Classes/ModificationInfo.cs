@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 public class ModificationInfo {
     public int Version => ChangeLog.Max(changelog => changelog.Version);

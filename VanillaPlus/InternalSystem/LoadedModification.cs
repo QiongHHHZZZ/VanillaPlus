@@ -1,4 +1,6 @@
-﻿namespace VanillaPlus.Core;
+﻿using VanillaPlus.Classes;
+
+namespace VanillaPlus.InternalSystem;
 
 public class LoadedModification(GameModification modification, LoadedState state = LoadedState.Unknown) {
     public GameModification Modification { get; set; } = modification;

@@ -5,7 +5,7 @@ using System.Numerics;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.RecentlyLootedWindow;

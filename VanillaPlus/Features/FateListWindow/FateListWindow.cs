@@ -3,7 +3,7 @@ using System.Linq;
 using System.Numerics;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.FateListWindow;

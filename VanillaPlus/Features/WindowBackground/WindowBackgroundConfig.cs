@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 using Dalamud.Interface;
-using VanillaPlus.Core;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus;
 

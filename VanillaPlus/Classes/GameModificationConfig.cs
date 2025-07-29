@@ -1,6 +1,6 @@
 ﻿using VanillaPlus.Utilities;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.Classes;
 
 public abstract class GameModificationConfig<T> where T : GameModificationConfig<T>, new() {
     protected abstract string FileName { get; }

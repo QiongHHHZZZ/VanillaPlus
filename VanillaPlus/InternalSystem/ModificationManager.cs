@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using VanillaPlus.Classes;
 
-namespace VanillaPlus.Core;
+namespace VanillaPlus.InternalSystem;
 
 public class ModificationManager : IDisposable {
 
