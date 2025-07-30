@@ -7,6 +7,7 @@ using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
+using VanillaPlus.Modals;
 
 namespace VanillaPlus.RecentlyLootedWindow;
 
@@ -23,18 +24,24 @@ public class RecentlyLootedWindow : GameModification {
     };
 
     private AddonRecentlyLooted recentlyLootedWindow = null!; 
-    private RecentlyLootedWindowConfig config = null!;
-    private RecentlyLootedWindowConfigWindow configWindow = null!;
+    private AddonConfig config = null!;
+    private KeybindModal? keybindModal;
 
     private readonly Stopwatch stopwatch = Stopwatch.StartNew();
 
     public override string ImageName => "RecentlyLootedWindow.png";
 
     public override void OnEnable() {
-        config = RecentlyLootedWindowConfig.Load();
-        configWindow = new RecentlyLootedWindowConfigWindow(config);
-        configWindow.AddToWindowSystem();
-        OpenConfigAction = configWindow.Toggle;
+        config = AddonConfig.Load("RecentlyLooted.addon.config", [SeVirtualKey.MENU, SeVirtualKey.L]);
+        OpenConfigAction = () => {
+            keybindModal ??= new KeybindModal {
+                KeybindSetCallback = keyBind => {
+                    config.OpenKeyCombo = keyBind;
+                    config.Save();
+                    keybindModal = null;
+                },
+            };
+        };
 
         recentlyLootedWindow = new AddonRecentlyLooted(config) {
             NativeController = System.NativeController,
@@ -53,7 +60,8 @@ public class RecentlyLootedWindow : GameModification {
 
     public override void OnDisable() {
         recentlyLootedWindow.Dispose();
-        configWindow.RemoveFromWindowSystem();
+        keybindModal = null;
+
         Services.Framework.Update -= OnFrameworkUpdate;
         Services.GameInventory.InventoryChanged -= OnRawItemAdded;
     }

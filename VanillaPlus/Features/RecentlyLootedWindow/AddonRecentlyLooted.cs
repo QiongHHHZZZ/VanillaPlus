@@ -3,10 +3,11 @@ using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.RecentlyLootedWindow;
 
-public class AddonRecentlyLooted(RecentlyLootedWindowConfig config) : NativeAddon {
+public class AddonRecentlyLooted(AddonConfig config) : NativeAddon {
 
     private readonly List<InventoryEventArgs> itemEvents = [];
 

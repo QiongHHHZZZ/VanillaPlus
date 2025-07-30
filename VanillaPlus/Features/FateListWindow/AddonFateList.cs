@@ -5,10 +5,11 @@ using Dalamud.Game.ClientState.Fates;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.FateListWindow;
 
-public class AddonFateList(FateListWindowConfig config) : NativeAddon {
+public class AddonFateList(AddonConfig config) : NativeAddon {
 
     private ScrollingAreaNode<OrderedVerticalListNode<FateEntryNode, long>> scrollingAreaNode = null!;
 

@@ -5,6 +5,8 @@ using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
+using VanillaPlus.Modals;
+using VanillaPlus.Utilities;
 
 namespace VanillaPlus.FateListWindow;
 
@@ -16,22 +18,29 @@ public class FateListWindow : GameModification {
         Authors = ["MidoriKami"],
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(2, "Now sorts by time remaining"),
         ],
     };
 
     private AddonFateList addonFateList = null!;
-    private FateListWindowConfig config = null!;
-    private FateListWindowConfigWindow configWindow = null!;
+    private AddonConfig config = null!;
+    private KeybindModal? keybindModal;
     
     private readonly Stopwatch stopwatch = Stopwatch.StartNew();
 
     public override string ImageName => "FateListWindow.png";
 
     public override void OnEnable() {
-        config = FateListWindowConfig.Load();
-        configWindow = new FateListWindowConfigWindow(config);
-        configWindow.AddToWindowSystem();
-        OpenConfigAction = configWindow.Toggle;
+        config = AddonConfig.Load("FateList.addon.config", [SeVirtualKey.MENU, SeVirtualKey.F]);
+        OpenConfigAction = () => {
+            keybindModal ??= new KeybindModal {
+                KeybindSetCallback = keyBind => {
+                    config.OpenKeyCombo = keyBind;
+                    config.Save();
+                    keybindModal = null;
+                },
+            };
+        };
 
         addonFateList = new AddonFateList(config) {
             NativeController = System.NativeController,
@@ -49,7 +58,7 @@ public class FateListWindow : GameModification {
 
     public override void OnDisable() {
         addonFateList.Dispose();
-        configWindow.RemoveFromWindowSystem();
+        keybindModal = null;
         
         Services.Framework.Update -= OnFrameworkUpdate;
     }
