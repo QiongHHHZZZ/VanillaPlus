@@ -109,6 +109,7 @@ public unsafe class LootItemNode : SimpleComponentNode {
     }
     
     protected override void OnSizeChanged() {
+        base.OnSizeChanged();
         itemNameNode.Size = Size - new Vector2(iconImageNode.X + iconImageNode.Width + 4.0f, 0.0f);
         itemNameNode.Position = new Vector2(iconImageNode.X + iconImageNode.Width + 4.0f, 0.0f);
         

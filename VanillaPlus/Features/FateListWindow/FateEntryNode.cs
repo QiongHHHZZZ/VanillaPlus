@@ -144,6 +144,7 @@ public unsafe class FateEntryNode : SimpleComponentNode {
     }
 
     protected override void OnSizeChanged() {
+        base.OnSizeChanged();
         hoveredBackgroundNode.Size = Size;
         
         iconNode.Position = new Vector2(2.0f, 2.0f);

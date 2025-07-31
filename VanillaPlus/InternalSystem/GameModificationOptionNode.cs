@@ -187,6 +187,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
     }
 
     protected override void OnSizeChanged() {
+        base.OnSizeChanged();
         hoveredBackgroundNode.Size = Size;
         selectedBackgroundNode.Size = Size;
 
