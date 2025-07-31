@@ -21,6 +21,7 @@ public class AddonRecentlyLooted(AddonConfig config) : NativeAddon {
             ContentHeight = 100,
         };
         scrollingAreaNode.ContentNode.FitContents = true;
+        scrollingAreaNode.ContentNode.MaxNodes = 30;
         AttachNode(scrollingAreaNode);
 
         RebuildList();

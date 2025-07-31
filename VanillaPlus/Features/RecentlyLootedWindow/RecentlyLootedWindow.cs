@@ -32,7 +32,7 @@ public class RecentlyLootedWindow : GameModification {
     public override string ImageName => "RecentlyLootedWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("RecentlyLooted.addon.config", [SeVirtualKey.MENU, SeVirtualKey.L]);
+        config = AddonConfig.Load("RecentlyLooted.addon.config", [SeVirtualKey.CONTROL, SeVirtualKey.L]);
         OpenConfigAction = () => {
             keybindModal ??= new KeybindModal {
                 KeybindSetCallback = keyBind => {
@@ -45,7 +45,7 @@ public class RecentlyLootedWindow : GameModification {
 
         recentlyLootedWindow = new AddonRecentlyLooted(config) {
             NativeController = System.NativeController,
-            Size = new Vector2(300.0f, 400.0f),
+            Size = new Vector2(250.0f, 350.0f),
             InternalName = "RecentlyLooted",
             Title = "Recently Looted Items",
         };

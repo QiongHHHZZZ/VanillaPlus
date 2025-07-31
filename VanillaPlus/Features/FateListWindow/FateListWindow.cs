@@ -6,7 +6,6 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Modals;
-using VanillaPlus.Utilities;
 
 namespace VanillaPlus.FateListWindow;
 
@@ -31,7 +30,7 @@ public class FateListWindow : GameModification {
     public override string ImageName => "FateListWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("FateList.addon.config", [SeVirtualKey.MENU, SeVirtualKey.F]);
+        config = AddonConfig.Load("FateList.addon.config", [SeVirtualKey.CONTROL, SeVirtualKey.F]);
         OpenConfigAction = () => {
             keybindModal ??= new KeybindModal {
                 KeybindSetCallback = keyBind => {
