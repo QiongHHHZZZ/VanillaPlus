@@ -2,7 +2,6 @@
 using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Inventory;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.UI;
