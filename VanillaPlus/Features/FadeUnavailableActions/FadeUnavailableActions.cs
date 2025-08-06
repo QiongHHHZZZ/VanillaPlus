@@ -29,7 +29,7 @@ public unsafe class FadeUnavailableActions : GameModification {
 
     private delegate void UpdateHotBarSlotDelegate(AddonActionBarBase* addon, ActionBarSlot* uiData, NumberArrayData* numberArray, StringArrayData* stringArray, int numberArrayIndex, int stringArrayIndex);
 
-    [Signature("E8 ?? ?? ?? ?? 49 81 C7 ?? ?? ?? ?? 83 C7 11", DetourName = nameof(OnHotBarSlotUpdate))]
+    [Signature("E8 ?? ?? ?? ?? 48 81 C6 ?? ?? ?? ?? 83 C7 11", DetourName = nameof(OnHotBarSlotUpdate))]
     private readonly Hook<UpdateHotBarSlotDelegate>? onHotBarSlotUpdateHook = null;
 
     private readonly Dictionary<uint, Action?> actionCache = [];
