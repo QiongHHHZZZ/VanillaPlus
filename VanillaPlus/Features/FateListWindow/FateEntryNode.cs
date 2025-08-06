@@ -85,7 +85,7 @@ public unsafe class FateEntryNode : SimpleComponentNode {
             
             var agentMap = AgentMap.Instance();
             agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId);
-            agentMap->IsFlagMarkerSet = false;
+            agentMap->FlagMarkerCount = 0;
             agentMap->SetFlagMapMarker(agentMap->CurrentTerritoryId, agentMap->CurrentMapId, Fate.Position, Fate.MapIconId);
         });
         

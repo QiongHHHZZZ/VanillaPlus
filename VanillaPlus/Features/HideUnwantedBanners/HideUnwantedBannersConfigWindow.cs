@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
-using ImGuiNET;
 
 namespace VanillaPlus.Features.HideUnwantedBanners;
 
@@ -76,7 +76,7 @@ public class HideUnwantedBannersConfigWindow : Window {
         }
         
         ImGui.SetCursorPos(Vector2.Zero);
-        ImGui.Image(texture.ImGuiHandle, texture.Size / ratio);
+        ImGui.Image(texture.Handle, texture.Size / ratio);
     }
     
     public override void OnClose()

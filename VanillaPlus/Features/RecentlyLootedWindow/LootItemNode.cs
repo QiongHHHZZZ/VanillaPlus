@@ -4,11 +4,13 @@ using Dalamud.Game.Inventory;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
 using VanillaPlus.Extensions;
+using AtkItemTooltipArgs = FFXIVClientStructs.FFXIV.Component.GUI.AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 
@@ -57,8 +59,10 @@ public unsafe class LootItemNode : SimpleComponentNode {
                 
                 var tooltipArgs = new AtkTooltipManager.AtkTooltipArgs();
                 tooltipArgs.Ctor();
-                tooltipArgs.TypeSpecificId = Item.BaseItemId;
-                tooltipArgs.Unk_16 = 1;
+                tooltipArgs.ItemArgs = new AtkItemTooltipArgs {
+                    Kind = DetailKind.ItemId,
+                    ItemId = (int) Item.BaseItemId,
+                };
                 
                 AtkStage.Instance()->TooltipManager.ShowTooltip(
                     AtkTooltipManager.AtkTooltipType.Item,
@@ -86,16 +90,16 @@ public unsafe class LootItemNode : SimpleComponentNode {
 
             var (itemBaseId, itemKind) = ItemUtil.GetBaseId(value.ItemId);
             switch (itemKind) {
-                case ItemPayload.ItemKind.Normal:
-                case ItemPayload.ItemKind.Collectible:
-                case ItemPayload.ItemKind.Hq:
+                case ItemKind.Normal:
+                case ItemKind.Collectible:
+                case ItemKind.Hq:
                     var item = Services.DataManager.GetExcelSheet<Item>().GetRow(itemBaseId);
                     iconImageNode.IconId = item.Icon;
                     itemNameNode.Text = item.Name.ToString();
                     itemNameNode.TextColor = item.RarityColor();
                     break;
 
-                case ItemPayload.ItemKind.EventItem:
+                case ItemKind.EventItem:
                     var eventItem = Services.DataManager.GetExcelSheet<EventItem>().GetRow(itemBaseId);
                     iconImageNode.IconId = eventItem.Icon;
                     itemNameNode.Text = eventItem.Name.ToString();
