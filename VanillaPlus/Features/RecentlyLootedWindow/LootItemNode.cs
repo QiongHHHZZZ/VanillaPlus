@@ -44,7 +44,7 @@ public unsafe class LootItemNode : SimpleComponentNode {
 
         itemNameNode = new TextNode {
             NodeId = 4,
-            TextFlags2 = TextFlags2.Ellipsis,
+            TextFlags = TextFlags.Ellipsis,
             AlignmentType = AlignmentType.Left,
             IsVisible = true,
         };

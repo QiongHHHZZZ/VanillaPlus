@@ -44,7 +44,7 @@ public unsafe class FateEntryNode : SimpleComponentNode {
             NodeId = 4,
             IsVisible = true,
             AlignmentType = AlignmentType.BottomLeft,
-            TextFlags2 = TextFlags2.Ellipsis,
+            TextFlags = TextFlags.Ellipsis,
         };
         System.NativeController.AttachNode(nameNode, this);
 
