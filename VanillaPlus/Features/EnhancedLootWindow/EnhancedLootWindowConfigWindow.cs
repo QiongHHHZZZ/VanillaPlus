@@ -1,7 +1,7 @@
 ﻿using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace VanillaPlus.EnhancedLootWindow;
+namespace VanillaPlus.Features.EnhancedLootWindow;
 
 public class EnhancedLootWindowConfigWindow(EnhancedLootWindowConfig config) : Window("Enhanced Loot Window Config", ImGuiWindowFlags.AlwaysAutoResize) {
     public override void Draw() {

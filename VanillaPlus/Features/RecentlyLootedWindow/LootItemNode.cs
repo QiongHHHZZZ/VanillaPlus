@@ -10,7 +10,7 @@ using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.RecentlyLootedWindow;
+namespace VanillaPlus.Features.RecentlyLootedWindow;
 
 public unsafe class LootItemNode : SimpleComponentNode {
 

@@ -8,7 +8,7 @@ using Lumina.Excel.Sheets;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.CastBarAetheryteNames;
+namespace VanillaPlus.Features.CastBarAetheryteNames;
 
 public unsafe class CastBarAetheryteNames : GameModification {
     public override ModificationInfo ModificationInfo => new() {

@@ -6,7 +6,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using VanillaPlus.Classes;
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
-namespace VanillaPlus.ResetInventoryTab;
+namespace VanillaPlus.Features.ResetInventoryTab;
 
 public unsafe class ResetInventoryTab : GameModification {
     public override ModificationInfo ModificationInfo => new() {

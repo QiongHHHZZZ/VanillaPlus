@@ -10,7 +10,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
 using VanillaPlus.Utilities;
 
-namespace VanillaPlus;
+namespace VanillaPlus.Features.WindowBackground;
 
 public unsafe class WindowBackgroundConfigWindow : Window {
     private readonly WindowBackgroundConfig config;

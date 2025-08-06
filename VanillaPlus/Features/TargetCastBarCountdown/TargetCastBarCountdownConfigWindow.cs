@@ -3,7 +3,7 @@ using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace VanillaPlus.TargetCastBarCountdown;
+namespace VanillaPlus.Features.TargetCastBarCountdown;
 
 public class TargetCastBarCountdownConfigWindow : Window {
     private readonly TargetCastBarCountdownConfig config;

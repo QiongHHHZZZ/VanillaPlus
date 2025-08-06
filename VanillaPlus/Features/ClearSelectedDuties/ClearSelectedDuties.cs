@@ -5,7 +5,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.ClearSelectedDuties;
+namespace VanillaPlus.Features.ClearSelectedDuties;
 
 public class ClearSelectedDuties : GameModification {
     public override ModificationInfo ModificationInfo => new() {

@@ -13,7 +13,7 @@ using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Utilities;
 
-namespace VanillaPlus.TargetCastBarCountdown;
+namespace VanillaPlus.Features.TargetCastBarCountdown;
 
 public unsafe class TargetCastBarCountdown : GameModification {
     public override ModificationInfo ModificationInfo => new() {

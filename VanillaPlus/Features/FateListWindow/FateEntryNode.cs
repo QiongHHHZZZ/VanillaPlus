@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes.TimelineBuilding;
 using KamiToolKit.Nodes;
 
-namespace VanillaPlus.FateListWindow;
+namespace VanillaPlus.Features.FateListWindow;
 
 public unsafe class FateEntryNode : SimpleComponentNode {
 

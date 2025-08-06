@@ -1,7 +1,7 @@
 ﻿using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace VanillaPlus.FadeUnavailableActions;
+namespace VanillaPlus.Features.FadeUnavailableActions;
 
 public class FadeUnavailableActionsConfigWindow(FadeUnavailableActionsConfig config) : Window("Fade Unavailable Actions Config", ImGuiWindowFlags.AlwaysAutoResize) {
     public override void Draw() {
