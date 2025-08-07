@@ -46,6 +46,9 @@ public class AddonModificationBrowser : NativeAddon {
     private readonly List<GameModificationOptionNode> modificationOptionNodes = [];
 
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
+        categoryNodes.Clear();
+        modificationOptionNodes.Clear();
+        
         mainContainerNode = new ResNode {
             Position = ContentStartPosition,
             Size = ContentSize,
@@ -339,9 +342,6 @@ public class AddonModificationBrowser : NativeAddon {
     }
     
     protected override unsafe void OnHide(AtkUnitBase* addon) {
-        categoryNodes.Clear();
-        modificationOptionNodes.Clear();
-        
         System.SystemConfig.BrowserWindowPosition = Position;
         System.SystemConfig.Save();
     }
