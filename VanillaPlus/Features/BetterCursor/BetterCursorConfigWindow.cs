@@ -2,6 +2,7 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
+using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.BetterCursor;
 
@@ -32,9 +33,12 @@ public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfig
             onConfigChanged();
             config.Save();
         }
-        
+
         if (Services.TextureProvider.TryGetFromGameIcon(config.IconId, out var texture)) {
             ImGui.Image(texture.GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(128.0f, 128.0f));
+        }
+        else {
+            ImGui.Image(Services.TextureProvider.GetPlaceholderTexture().GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(128.0f, 128.0f));
         }
     }
 
