@@ -33,7 +33,9 @@ public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfig
             config.Save();
         }
         
-        ImGui.Image(Services.TextureProvider.GetFromGameIcon(config.IconId).GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(128.0f, 128.0f));
+        if (Services.TextureProvider.TryGetFromGameIcon(config.IconId, out var texture)) {
+            ImGui.Image(texture.GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(128.0f, 128.0f));
+        }
     }
 
     public override void OnClose()
