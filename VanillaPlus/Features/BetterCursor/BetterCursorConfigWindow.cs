@@ -1,7 +1,7 @@
 ﻿using System;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
-using VanillaPlus.BetterCursor;
 
 namespace VanillaPlus.Features.BetterCursor;
 
@@ -25,6 +25,15 @@ public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfig
         if (ImGui.Checkbox("Hide on Left-Hold or Right-Hold", ref config.HideOnCameraMove)) {
             config.Save();
         }
+        
+        ImGuiHelpers.ScaledDummy(5.0f);
+
+        if (ImGui.InputUInt("IconId", ref config.IconId, 1)) {
+            onConfigChanged();
+            config.Save();
+        }
+        
+        ImGui.Image(Services.TextureProvider.GetFromGameIcon(config.IconId).GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(128.0f, 128.0f));
     }
 
     public override void OnClose()

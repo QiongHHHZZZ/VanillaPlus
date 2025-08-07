@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using VanillaPlus.Classes;
 
-namespace VanillaPlus.BetterCursor;
+namespace VanillaPlus.Features.BetterCursor;
 
 public class BetterCursorConfig : GameModificationConfig<BetterCursorConfig> {
     protected override string FileName => "BetterCursor.config.json";
@@ -10,4 +10,5 @@ public class BetterCursorConfig : GameModificationConfig<BetterCursorConfig> {
     public Vector4 Color = Vector4.One;
     public bool HideOnCameraMove = true;
     public float Size = 96.0f;
+    public uint IconId = 60498;
 }

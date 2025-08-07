@@ -7,9 +7,8 @@ using KamiToolKit.Classes.TimelineBuilding;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
-using VanillaPlus.Features.BetterCursor;
 
-namespace VanillaPlus.BetterCursor;
+namespace VanillaPlus.Features.BetterCursor;
 
 public unsafe class BetterCursor : GameModification {
     public override ModificationInfo ModificationInfo => new() {
@@ -59,6 +58,7 @@ public unsafe class BetterCursor : GameModification {
             imageNode.Size = new Vector2(config.Size);
             imageNode.Origin = new Vector2(config.Size / 2.0f);
             imageNode.Color = config.Color;
+            imageNode.IconId = config.IconId;
         }
 
         animationContainer?.Timeline?.PlayAnimation(config.Animations ? 1 : 2);
