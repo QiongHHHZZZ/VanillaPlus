@@ -310,7 +310,7 @@ public class AddonModificationBrowser : NativeAddon {
         optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height) + 5.0f;
     }
 
-    protected void UpdateSizes() {
+    private void UpdateSizes() {
         searchContainerNode.Size = new Vector2(mainContainerNode.Width, 28.0f);
         optionContainerNode.Position = new Vector2(0.0f, searchContainerNode.Height + ItemPadding);
         optionContainerNode.Size = new Vector2(mainContainerNode.Width * 3.0f / 5.0f - ItemPadding, mainContainerNode.Height - searchContainerNode.Height - ItemPadding);
