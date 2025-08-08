@@ -9,12 +9,11 @@ namespace VanillaPlus.InternalSystem;
 public class ModificationManager : IDisposable {
 
     public readonly List<LoadedModification> LoadedModifications = [];
-    private readonly List<GameModification> gameModifications;
 
     public ModificationManager() {
-        gameModifications = GetGameModifications();
+        var gameModifications1 = GetGameModifications();
 
-        foreach (var gameMod in gameModifications) {
+        foreach (var gameMod in gameModifications1) {
             Services.PluginInterface.Inject(gameMod);
 
             var newLoadedModification = new LoadedModification(gameMod, LoadedState.Disabled);
