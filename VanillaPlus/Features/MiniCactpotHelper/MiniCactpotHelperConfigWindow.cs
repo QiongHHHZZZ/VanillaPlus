@@ -3,7 +3,6 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
-using VanillaPlus.MiniCactpotHelper;
 
 namespace VanillaPlus.Features.MiniCactpotHelper;
 

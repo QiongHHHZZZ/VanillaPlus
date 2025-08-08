@@ -8,7 +8,7 @@ using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
 
-namespace VanillaPlus.WondrousTailsProbabilities;
+namespace VanillaPlus.Features.WondrousTailsProbabilities;
 
 public unsafe class WondrousTailsProbabilities : GameModification {
     public override ModificationInfo ModificationInfo => new() {

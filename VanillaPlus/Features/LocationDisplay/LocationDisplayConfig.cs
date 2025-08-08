@@ -1,6 +1,6 @@
 ﻿using VanillaPlus.Classes;
 
-namespace VanillaPlus.LocationDisplay;
+namespace VanillaPlus.Features.LocationDisplay;
 
 public class LocationDisplayConfig : GameModificationConfig<LocationDisplayConfig> {
     protected override string FileName => "LocationDisplay.config.json";

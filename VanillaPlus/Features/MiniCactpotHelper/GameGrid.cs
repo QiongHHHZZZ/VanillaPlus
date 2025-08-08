@@ -5,7 +5,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes.TimelineBuilding;
 using KamiToolKit.Nodes;
 
-namespace VanillaPlus.MiniCactpotHelper;
+namespace VanillaPlus.Features.MiniCactpotHelper;
 
 public class GameGrid : ResNode {
 

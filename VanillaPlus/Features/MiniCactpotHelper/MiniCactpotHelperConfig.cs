@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using VanillaPlus.Classes;
 
-namespace VanillaPlus.MiniCactpotHelper;
+namespace VanillaPlus.Features.MiniCactpotHelper;
 
 public class MiniCactpotHelperConfig : GameModificationConfig<MiniCactpotHelperConfig> {
     protected override string FileName => "MiniCactpotHelper.config.json";

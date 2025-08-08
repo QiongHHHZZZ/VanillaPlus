@@ -9,9 +9,8 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
-using VanillaPlus.Features.LocationDisplay;
 
-namespace VanillaPlus.LocationDisplay;
+namespace VanillaPlus.Features.LocationDisplay;
 
 public unsafe class LocationDisplay : GameModification {
     public override ModificationInfo ModificationInfo => new() {

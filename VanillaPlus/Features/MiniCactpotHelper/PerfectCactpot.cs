@@ -4,7 +4,7 @@ using System.Linq;
 
 // ReSharper disable InconsistentNaming
 
-namespace VanillaPlus.MiniCactpotHelper;
+namespace VanillaPlus.Features.MiniCactpotHelper;
 
 /// <summary>
 /// https://super-aardvark.github.io/yuryu/

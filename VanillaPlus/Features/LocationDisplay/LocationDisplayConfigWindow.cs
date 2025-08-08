@@ -6,7 +6,6 @@ using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
-using VanillaPlus.LocationDisplay;
 
 namespace VanillaPlus.Features.LocationDisplay;
 

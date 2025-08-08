@@ -4,7 +4,7 @@ using System.Linq;
 using Dalamud.Game.Text.SeStringHandling;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-namespace VanillaPlus.WondrousTailsProbabilities;
+namespace VanillaPlus.Features.WondrousTailsProbabilities;
 
 /// <summary>
 /// Minigame solver. Developed by Daemitris.
