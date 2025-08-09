@@ -122,14 +122,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
             experimentalImageNode.IsVisible = value.Modification.IsExperimental;
             experimentalImageNode.EnableEventFlags = value.Modification.IsExperimental;
 
-            if (value.State is LoadedState.Errored) {
-                checkboxNode.IsEnabled = false;
-                erroringImageNode.IsVisible = true;
-                erroringImageNode.EnableEventFlags = true;
-                erroringImageNode.Tooltip = Modification.ErrorMessage;
-
-                Addon.UpdateCollisionForNode(this);
-            }
+            UpdateDisabledState();
         }
     }
     
@@ -141,17 +134,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
             System.ModificationManager.TryDisableModification(Modification);
         }
 
-        if (Modification.State is LoadedState.Errored) {
-            checkboxNode.IsEnabled = false;
-            erroringImageNode.IsVisible = true;
-            erroringImageNode.EnableEventFlags = true;
-            erroringImageNode.Tooltip = Modification.ErrorMessage;
-
-            Addon.UpdateCollisionForNode(this);
-        }
-
-        checkboxNode.IsChecked = Modification.State is LoadedState.Enabled;
-        configButtonNode.IsEnabled = Modification.State is LoadedState.Enabled;
+        UpdateDisabledState();
         
         OnClick?.Invoke();
         RefreshConfigWindowButton();
@@ -206,5 +189,25 @@ public class GameModificationOptionNode : SimpleComponentNode {
         
         erroringImageNode.Size = checkboxNode.Size - new Vector2(4.0f, 4.0f);
         erroringImageNode.Position = checkboxNode.Position + new Vector2(5.0f, 8.0f);
+    }
+
+    public void UpdateDisabledState() {
+        if (Modification.State is LoadedState.Errored or LoadedState.CompatError) {
+            checkboxNode.IsEnabled = false;
+            erroringImageNode.IsVisible = true;
+            erroringImageNode.EnableEventFlags = true;
+            erroringImageNode.Tooltip = Modification.ErrorMessage;
+
+        }
+        else {
+            checkboxNode.IsEnabled = true;
+            erroringImageNode.IsVisible = false;
+            erroringImageNode.EnableEventFlags = false;
+        }
+
+        Addon.UpdateCollisionForNode(this);
+
+        checkboxNode.IsChecked = Modification.State is LoadedState.Enabled;
+        configButtonNode.IsEnabled = Modification.State is LoadedState.Enabled;
     }
 }
