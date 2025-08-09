@@ -24,10 +24,10 @@ public unsafe class BetterCursor : GameModification {
     private ResNode? animationContainer;
     private IconImageNode? imageNode;
 
-    private AddonController<AtkUnitBase> screenTextController = null!;
+    private AddonController<AtkUnitBase>? screenTextController;
 
-    private BetterCursorConfig config = null!;
-    private BetterCursorConfigWindow configWindow = null!;
+    private BetterCursorConfig? config;
+    private BetterCursorConfigWindow? configWindow;
 
     public override string ImageName => "BetterCursor.png";
 
@@ -45,11 +45,13 @@ public unsafe class BetterCursor : GameModification {
     }
 
     public override void OnDisable() {
-        screenTextController.Dispose();
-        configWindow.RemoveFromWindowSystem();
+        screenTextController?.Dispose();
+        configWindow?.RemoveFromWindowSystem();
     }
 
     private void UpdateNodeConfig() {
+        if (config is null) return;
+        
         if (animationContainer is not null) {
             animationContainer.Size = new Vector2(config.Size);
         }
@@ -65,6 +67,8 @@ public unsafe class BetterCursor : GameModification {
     }
 
     private void Update(AtkUnitBase* addon) {
+        if (config is null) return;
+
         if (animationContainer is not null && imageNode is not null) {
             ref var cursorData = ref UIInputData.Instance()->CursorInputs;
             animationContainer.Position = new Vector2(cursorData.PositionX, cursorData.PositionY) - imageNode.Size / 2.0f;

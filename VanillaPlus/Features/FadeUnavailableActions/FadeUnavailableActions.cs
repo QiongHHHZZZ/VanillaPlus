@@ -33,9 +33,9 @@ public unsafe class FadeUnavailableActions : GameModification {
     private readonly Hook<UpdateHotBarSlotDelegate>? onHotBarSlotUpdateHook = null;
 
     private readonly Dictionary<uint, Action?> actionCache = [];
-    
-    private FadeUnavailableActionsConfig config = null!;
-    private FadeUnavailableActionsConfigWindow configWindow = null!;
+
+    private FadeUnavailableActionsConfig? config;
+    private FadeUnavailableActionsConfigWindow? configWindow;
 
     public override string ImageName => "FadeUnavailableActions.png";
 
@@ -51,7 +51,7 @@ public unsafe class FadeUnavailableActions : GameModification {
 
     public override void OnDisable() {
         onHotBarSlotUpdateHook?.Dispose();
-        configWindow.RemoveFromWindowSystem();
+        configWindow?.RemoveFromWindowSystem();
         
         ResetAllHotbars();
     }
@@ -68,6 +68,7 @@ public unsafe class FadeUnavailableActions : GameModification {
     }
     
     private void ProcessHotBarSlot(ActionBarSlot* hotBarSlotData, NumberArrayData* numberArray, int numberArrayIndex) {
+        if (config is null) return;
         if (Services.ClientState.LocalPlayer is { IsCasting: true } ) return;
 
         var numberArrayData = (ActionBarSlotNumberArray*) (&numberArray->IntArray[numberArrayIndex]);
@@ -116,7 +117,9 @@ public unsafe class FadeUnavailableActions : GameModification {
         => !(numberArrayData->Executable && numberArrayData->Executable2);
 
     private void ApplyColoring(ActionBarSlot* hotBarSlotData, bool redden, bool fade) {
+        if (config is null) return;
         if (hotBarSlotData is null) return;
+
         var icon = hotBarSlotData->GetImageNode();
         var frame = hotBarSlotData->GetFrameNode();
         

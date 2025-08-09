@@ -25,8 +25,8 @@ public unsafe class WindowBackground : GameModification {
     };
 
     private readonly List<AddonBackground> addonBackgrounds = [];
-    private WindowBackgroundConfig config = null!;
-    private WindowBackgroundConfigWindow configWindow = null!;
+    private WindowBackgroundConfig? config;
+    private WindowBackgroundConfigWindow? configWindow;
 
     public override string ImageName => "WindowBackgrounds.png";
 
@@ -42,6 +42,8 @@ public unsafe class WindowBackground : GameModification {
     }
 
     private void UpdateListeners() {
+        if (config is null) return;
+        
         Services.AddonLifecycle.UnregisterListener(OnAddonSetup, OnAddonFinalize, OnAddonUpdate);
         if (config.Addons.Count == 0) return;
 
@@ -66,6 +68,8 @@ public unsafe class WindowBackground : GameModification {
     }
 
     public override void OnDisable() {
+        if (configWindow is null) return;
+        
         configWindow.RemoveFromWindowSystem();
         Services.AddonLifecycle.UnregisterListener(OnAddonSetup, OnAddonFinalize, OnAddonUpdate);
 
@@ -81,6 +85,8 @@ public unsafe class WindowBackground : GameModification {
         => AttachNode(args.GetAddon<AtkUnitBase>());
     
     private void OnAddonUpdate(AddonEvent type, AddonArgs args) {
+        if (config is null) return;
+        
         if (addonBackgrounds.FirstOrDefault(background => background.AddonName == args.AddonName) is { } info) {
             info.ImageNode.Size = args.GetAddon<AtkUnitBase>()->Size() + config.Padding;
         }
@@ -97,6 +103,8 @@ public unsafe class WindowBackground : GameModification {
     }
 
     private void AttachNode(AtkUnitBase* addon) {
+        if (config is null) return;
+        
         if (!addonBackgrounds.Any(background => background.AddonName == addon->NameString)) {
             var newBackgroundNode = new BackgroundImageNode {
                 Size = addon->Size() + config.Padding,
@@ -113,6 +121,8 @@ public unsafe class WindowBackground : GameModification {
     }
     
     private void OnStyleChanged() {
+        if (config is null) return;
+        
         foreach (var background in addonBackgrounds) {
             var addon = Services.GameGui.GetAddonByName<AtkUnitBase>(background.AddonName);
             if (addon is not null) {

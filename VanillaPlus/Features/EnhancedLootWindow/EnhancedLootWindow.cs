@@ -27,9 +27,9 @@ public unsafe class EnhancedLootWindow : GameModification {
         CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@LootWindowDuplicateUniqueItemIndicator"),
     };
 
-    private EnhancedLootWindowConfigWindow configWindow = null!;
-    private EnhancedLootWindowConfig config = null!;
-    private AddonController<AddonNeedGreed> needGreedController = null!;
+    private EnhancedLootWindowConfigWindow? configWindow;
+    private EnhancedLootWindowConfig? config;
+    private AddonController<AddonNeedGreed>? needGreedController;
 
     private readonly List<ImageNode> crossNodes = [];
     private readonly List<ImageNode> padlockNodes = [];
@@ -50,8 +50,8 @@ public unsafe class EnhancedLootWindow : GameModification {
     }
 
     public override void OnDisable() {
-        needGreedController.Dispose();
-        configWindow.RemoveFromWindowSystem();
+        needGreedController?.Dispose();
+        configWindow?.RemoveFromWindowSystem();
     }
 
     private void AttachNodes(AddonNeedGreed* addon) {

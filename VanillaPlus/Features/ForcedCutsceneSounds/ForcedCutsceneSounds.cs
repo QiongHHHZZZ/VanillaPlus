@@ -37,8 +37,8 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     private Hook<ScheduleManagement.Delegates.CreateCutSceneController>? createCutSceneControllerHook;
     private Hook<CutSceneControllerDtorDelegate>? cutSceneControllerDtorHook;
 
-    private ForcedCutsceneSoundsConfig config = null!;
-    private ForcedCutsceneSoundsConfigWindow configWindow = null!;
+    private ForcedCutsceneSoundsConfig? config;
+    private ForcedCutsceneSoundsConfigWindow? configWindow;
 
     public override void OnEnable() {
         config = ForcedCutsceneSoundsConfig.Load();
@@ -60,7 +60,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     public override void OnDisable() {
         createCutSceneControllerHook?.Dispose();
         cutSceneControllerDtorHook?.Dispose();
-        configWindow.RemoveFromWindowSystem();
+        configWindow?.RemoveFromWindowSystem();
     }
     
     private CutSceneController* CreateCutSceneControllerDetour(ScheduleManagement* thisPtr, byte* path, uint id, byte a4) {
@@ -89,6 +89,10 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     
     private CutSceneController* CutSceneControllerDtorDetour(CutSceneController* self, byte freeFlags) {
         try {
+            if (config is null) {
+                return cutSceneControllerDtorHook!.Original(self, freeFlags);
+            }
+            
             var cutsceneId = self->CutsceneId;
             
             if (config.Restore && cutsceneId is not 0) { // ignore title screen cutscene
@@ -106,7 +110,10 @@ public unsafe class ForcedCutsceneSounds : GameModification {
         return cutSceneControllerDtorHook!.Original(self, freeFlags);
     }
 
-    private bool ShouldHandle(string optionName) => optionName switch {
+    private bool ShouldHandle(string optionName) {
+        if (config is null) return false;
+        
+        return optionName switch {
             "IsSndMaster" => config.HandleMaster,
             "IsSndBgm" => config.HandleBgm,
             "IsSndSe" => config.HandleSe,
@@ -116,4 +123,5 @@ public unsafe class ForcedCutsceneSounds : GameModification {
             "IsSndPerform" => config.HandlePerform,
             _ => false,
         };
+    }
 }

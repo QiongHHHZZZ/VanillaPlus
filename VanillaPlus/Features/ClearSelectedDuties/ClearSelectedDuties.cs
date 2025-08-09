@@ -19,8 +19,8 @@ public class ClearSelectedDuties : GameModification {
         ],
     };
 
-    private ClearSelectedDutiesConfig config = null!;
-    private ClearSelectedDutiesConfigWindow configWindow = null!;
+    private ClearSelectedDutiesConfig? config;
+    private ClearSelectedDutiesConfigWindow? configWindow;
 
     public override void OnEnable() {
         config = ClearSelectedDutiesConfig.Load();
@@ -32,11 +32,13 @@ public class ClearSelectedDuties : GameModification {
     }
 
     public override void OnDisable() {
-        configWindow.RemoveFromWindowSystem();
+        configWindow?.RemoveFromWindowSystem();
         Services.AddonLifecycle.UnregisterListener(OnContentsFinderSetup);
     }
 
     private unsafe void OnContentsFinderSetup(AddonEvent type, AddonArgs args) {
+        if (config is null) return;
+        
         var contentsFinder = ContentsFinder.Instance();
         var agent = AgentContentsFinder.Instance();
         var addon = args.GetAddon<AddonContentsFinder>();

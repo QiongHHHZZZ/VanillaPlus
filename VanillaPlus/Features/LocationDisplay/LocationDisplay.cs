@@ -24,7 +24,7 @@ public unsafe class LocationDisplay : GameModification {
         CompatabilityModule = new PluginCompatabilityModule("WhereAmIAgain"),
     };
 
-    private IDtrBarEntry dtrBarEntry = null!;
+    private IDtrBarEntry? dtrBarEntry;
     private PlaceName? currentContinent;
     private PlaceName? currentRegion;
     private PlaceName? currentSubArea;
@@ -42,8 +42,8 @@ public unsafe class LocationDisplay : GameModification {
     private static TerritoryInfo* AreaInfo => TerritoryInfo.Instance();
     private static HousingManager* HousingInfo => HousingManager.Instance();
 
-    private LocationDisplayConfig config = null!;
-    private LocationDisplayConfigWindow configWindow = null!;
+    private LocationDisplayConfig? config;
+    private LocationDisplayConfigWindow? configWindow;
     
     public override void OnEnable() {
         config = LocationDisplayConfig.Load();
@@ -59,16 +59,17 @@ public unsafe class LocationDisplay : GameModification {
     }
 
     public override void OnDisable() {
-        configWindow.RemoveFromWindowSystem();
+        configWindow?.RemoveFromWindowSystem();
         Services.Framework.Update -= OnFrameworkUpdate;
 		Services.ClientState.TerritoryChanged -= OnZoneChange;
-        dtrBarEntry.Remove();
+        dtrBarEntry?.Remove();
     }
 
     private void OnZoneChange(ushort obj)		
         => locationChanged = true;
 
     private void OnFrameworkUpdate(IFramework framework) {
+        if (config is null) return;
 		if (Services.ClientState.LocalPlayer is null) return;
         
         UpdateRegion();
@@ -88,7 +89,9 @@ public unsafe class LocationDisplay : GameModification {
     }
 
     private void UpdateDtrText() {
-		var dtrString = FormatString(config.FormatString);
+        if (config is null || dtrBarEntry is null) return;
+		
+        var dtrString = FormatString(config.FormatString);
 		var tooltipString = FormatString(config.TooltipFormatString);
 
         dtrBarEntry.Text = dtrString;
@@ -106,7 +109,9 @@ public unsafe class LocationDisplay : GameModification {
 	};
 
 	private string FormatString(string inputFormat) {
-		try {
+        if (config is null) return string.Empty;
+		
+        try {
 			var preTextEnd = inputFormat.IndexOf('{');
 			var postTextStart = inputFormat.LastIndexOf('}') + 1;
 			var workingSegment = inputFormat[preTextEnd..postTextStart];

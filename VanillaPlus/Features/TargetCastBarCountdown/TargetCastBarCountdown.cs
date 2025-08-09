@@ -39,8 +39,8 @@ public unsafe class TargetCastBarCountdown : GameModification {
     private static string PrimaryTargetAltStylePath => Path.Combine(Config.ConfigPath, "TargetCastBarCountdown.PrimaryTargetAlt.style.json");
     private static string FocusTargetStylePath => Path.Combine(Config.ConfigPath, "TargetCastBarCountdown.FocusTarget.style.json");
 
-    private TargetCastBarCountdownConfig config = null!;
-    private TargetCastBarCountdownConfigWindow configWindow = null!;
+    private TargetCastBarCountdownConfig? config;
+    private TargetCastBarCountdownConfigWindow? configWindow;
 
     public override string ImageName => "TargetCastBarCountdown.png";
 
@@ -70,7 +70,7 @@ public unsafe class TargetCastBarCountdown : GameModification {
     }
 
     public override void OnDisable() {
-        configWindow.RemoveFromWindowSystem();
+        configWindow?.RemoveFromWindowSystem();
         
         targetInfoCastBarController?.Dispose();
         targetInfoController?.Dispose();
@@ -184,6 +184,8 @@ public unsafe class TargetCastBarCountdown : GameModification {
     }
 
     private void UpdateNode(AtkUnitBase* addon) {
+        if (config is null) return;
+        
         if (Services.ClientState.IsPvP) {
             if (primaryTargetTextNode is not null) primaryTargetTextNode.IsVisible = false;
             if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.IsVisible = false;

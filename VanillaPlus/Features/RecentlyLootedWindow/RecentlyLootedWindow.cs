@@ -23,8 +23,8 @@ public class RecentlyLootedWindow : GameModification {
         ],
     };
 
-    private AddonRecentlyLooted recentlyLootedWindow = null!; 
-    private AddonConfig config = null!;
+    private AddonRecentlyLooted? recentlyLootedWindow;
+    private AddonConfig? config;
     private KeybindModal? keybindModal;
 
     private readonly Stopwatch stopwatch = Stopwatch.StartNew();
@@ -59,7 +59,7 @@ public class RecentlyLootedWindow : GameModification {
     }
 
     public override void OnDisable() {
-        recentlyLootedWindow.Dispose();
+        recentlyLootedWindow?.Dispose();
         keybindModal = null;
 
         Services.Framework.Update -= OnFrameworkUpdate;
@@ -68,11 +68,13 @@ public class RecentlyLootedWindow : GameModification {
 
     private void OnRawItemAdded(IReadOnlyCollection<InventoryEventArgs> events) {
         foreach (var eventData in events) {
-            recentlyLootedWindow.AddInventoryItem(eventData);
+            recentlyLootedWindow?.AddInventoryItem(eventData);
         }
     }
 
     private unsafe void OnFrameworkUpdate(IFramework framework) {
+        if (config is null || recentlyLootedWindow is null) return;
+        
         if (UIInputData.Instance()->IsComboPressed(config.OpenKeyCombo.ToArray()) && stopwatch.ElapsedMilliseconds >= 250) {
             if (recentlyLootedWindow.IsOpen) {
                 recentlyLootedWindow.Close();

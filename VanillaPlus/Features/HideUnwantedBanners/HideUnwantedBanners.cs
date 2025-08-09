@@ -24,8 +24,8 @@ public unsafe class HideUnwantedBanners : GameModification {
     [Signature("48 89 5C 24 ?? 57 48 83 EC 30 48 8B D9 89 91", DetourName = nameof(OnSetImageTexture))]
     private readonly Hook<ImageSetImageTextureDelegate>? setImageTextureHook = null;
 
-    private HideUnwantedBannersConfig config = null!;
-    private HideUnwantedBannersConfigWindow configWindow = null!;
+    private HideUnwantedBannersConfig? config;
+    private HideUnwantedBannersConfigWindow? configWindow;
 
     public override void OnEnable() {
         config = HideUnwantedBannersConfig.Load();
@@ -38,7 +38,7 @@ public unsafe class HideUnwantedBanners : GameModification {
     }
 
     public override void OnDisable() {
-        configWindow.RemoveFromWindowSystem();
+        configWindow?.RemoveFromWindowSystem();
         setImageTextureHook?.Dispose();
     }
 
@@ -46,6 +46,11 @@ public unsafe class HideUnwantedBanners : GameModification {
         var skipOriginal = false;
 
         try {
+            if (config is null) {
+                setImageTextureHook!.Original(addon, skipOriginal ? 0 : bannerId, a3, skipOriginal ? 0 : soundEffectId);
+                return;
+            }
+            
             skipOriginal = config.HiddenBanners.Contains(bannerId);
         } catch (Exception e) {
             Services.PluginLog.Error(e, "Exception in OnSetImageTexture");

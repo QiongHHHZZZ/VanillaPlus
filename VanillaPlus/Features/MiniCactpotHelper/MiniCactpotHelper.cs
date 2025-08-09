@@ -23,11 +23,11 @@ public unsafe class MiniCactpotHelper : GameModification {
         CompatabilityModule = new PluginCompatabilityModule("MiniCactpotSolver"),
     };
 
-    private AddonController<AddonLotteryDaily> lotteryDailyController = null!;
-    
-    private MiniCactpotHelperConfig config = null!;
-    private MiniCactpotHelperConfigWindow configWindow = null!;
-    private PerfectCactpot perfectCactpot = null!;
+    private AddonController<AddonLotteryDaily>? lotteryDailyController;
+
+    private MiniCactpotHelperConfig? config;
+    private MiniCactpotHelperConfigWindow? configWindow;
+    private PerfectCactpot? perfectCactpot;
 
     private int[]? boardState;
     private GameGrid? gameGrid;
@@ -53,14 +53,18 @@ public unsafe class MiniCactpotHelper : GameModification {
 
     public override void OnDisable() {
         gameTask?.Dispose();
-        configWindow.RemoveFromWindowSystem();
-        lotteryDailyController.Dispose();
+        configWindow?.RemoveFromWindowSystem();
+        lotteryDailyController?.Dispose();
     }
 
-    private void ApplyConfigStyle()
-        => gameGrid?.UpdateButtonStyle(config);
+    private void ApplyConfigStyle() {
+        if (config is null) return;
+        gameGrid?.UpdateButtonStyle(config);
+    }
 
-	private void AttachNodes(AddonLotteryDaily* addon) {
+    private void AttachNodes(AddonLotteryDaily* addon) {
+        if (config is null) return;
+        if (configWindow is null) return;
 		if (addon is null) return;
 
 		var buttonContainerNode = addon->GetNodeById(8);
@@ -86,7 +90,9 @@ public unsafe class MiniCactpotHelper : GameModification {
 	}
 	
 	private void UpdateNodes(AddonLotteryDaily* addon) {
-		var newState = Enumerable.Range(0, 9).Select(i => addon->GameNumbers[i]).ToArray();
+        if (perfectCactpot is null) return;
+
+        var newState = Enumerable.Range(0, 9).Select(i => addon->GameNumbers[i]).ToArray();
 		if (!boardState?.SequenceEqual(newState) ?? true) {
 			try {
 				if (gameTask is null or { Status: TaskStatus.RanToCompletion or TaskStatus.Faulted or TaskStatus.Canceled }) {

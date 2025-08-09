@@ -1,4 +1,5 @@
-﻿using Dalamud.Hooking;
+﻿using System;
+using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using VanillaPlus.Classes;
@@ -20,8 +21,8 @@ public class FasterScroll : GameModification {
     [Signature("40 55 53 56 41 54 41 55 41 56 41 57 48 8B EC 48 81 EC ?? ?? ?? ??", DetourName = nameof(AtkComponentScrollBarReceiveEvent))]
     private readonly Hook<AtkComponentScrollBar.Delegates.ReceiveEvent>? scrollBarReceiveEventHook = null;
 
-    private FasterScrollConfig config = null!;
-    private FasterScrollConfigWindow configWindow = null!;
+    private FasterScrollConfig? config;
+    private FasterScrollConfigWindow? configWindow;
 
     public override void OnEnable() {
         config = FasterScrollConfig.Load();
@@ -35,12 +36,22 @@ public class FasterScroll : GameModification {
 
     public override void OnDisable() {
         scrollBarReceiveEventHook?.Dispose();
-        configWindow.RemoveFromWindowSystem();
+        configWindow?.RemoveFromWindowSystem();
     }
 
     private unsafe void AtkComponentScrollBarReceiveEvent(AtkComponentScrollBar* thisPtr, AtkEventType type, int param, AtkEvent* eventPointer, AtkEventData* dataPointer) {
-        thisPtr->MouseWheelSpeed = (short) ( config.SpeedMultiplier * thisPtr->MouseWheelSpeed );
-        scrollBarReceiveEventHook!.Original(thisPtr, type, param, eventPointer, dataPointer);
-        thisPtr->MouseWheelSpeed = (short) ( thisPtr->MouseWheelSpeed / config.SpeedMultiplier );
+        try {
+            if (config is null) {
+                scrollBarReceiveEventHook!.Original(thisPtr, type, param, eventPointer, dataPointer);
+                return;
+            }
+        
+            thisPtr->MouseWheelSpeed = (short) ( config.SpeedMultiplier * thisPtr->MouseWheelSpeed );
+            scrollBarReceiveEventHook!.Original(thisPtr, type, param, eventPointer, dataPointer);
+            thisPtr->MouseWheelSpeed = (short) ( thisPtr->MouseWheelSpeed / config.SpeedMultiplier );
+        }
+        catch (Exception e) {
+            Services.PluginLog.Error(e, "Error in AtkComponentScrollBarReceiveEvent");
+        }
     }
 }

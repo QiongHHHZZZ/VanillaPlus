@@ -21,8 +21,8 @@ public class FateListWindow : GameModification {
         ],
     };
 
-    private AddonFateList addonFateList = null!;
-    private AddonConfig config = null!;
+    private AddonFateList? addonFateList;
+    private AddonConfig? config;
     private KeybindModal? keybindModal;
     
     private readonly Stopwatch stopwatch = Stopwatch.StartNew();
@@ -56,13 +56,15 @@ public class FateListWindow : GameModification {
     }
 
     public override void OnDisable() {
-        addonFateList.Dispose();
+        addonFateList?.Dispose();
         keybindModal = null;
         
         Services.Framework.Update -= OnFrameworkUpdate;
     }
     
     private unsafe void OnFrameworkUpdate(IFramework framework) {
+        if (config is null || addonFateList is null) return;
+        
         if (UIInputData.Instance()->IsComboPressed(config.OpenKeyCombo.ToArray()) && stopwatch.ElapsedMilliseconds >= 250) {
             if (addonFateList.IsOpen) {
                 addonFateList.Close();

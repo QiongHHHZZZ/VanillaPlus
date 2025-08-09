@@ -22,9 +22,9 @@ public unsafe class WondrousTailsProbabilities : GameModification {
         CompatabilityModule = new PluginCompatabilityModule("WondrousTailsSolver"),
     };
 
-    private AddonController<AddonWeeklyBingo> weeklyBingoController = null!;
+    private AddonController<AddonWeeklyBingo>? weeklyBingoController;
     private TextNode? probabilityTextNode;
-    private PerfectTails perfectTails = null!;
+    private PerfectTails? perfectTails;
 
     public override string ImageName => "WondrousTailsProbabilities.png";
 
@@ -39,9 +39,11 @@ public unsafe class WondrousTailsProbabilities : GameModification {
     }
 
     public override void OnDisable()
-        => weeklyBingoController.Dispose();
+        => weeklyBingoController?.Dispose();
 
     private void AttachNodes(AddonWeeklyBingo* addon) {
+        if (perfectTails is null) return;
+        
         var existingTextNode = addon->GetTextNodeById(34);
         if (existingTextNode is null) return;
 
@@ -62,6 +64,8 @@ public unsafe class WondrousTailsProbabilities : GameModification {
     }
     
     private void RefreshNodes(AddonWeeklyBingo* addon) {
+        if (perfectTails is null) return;
+        
         foreach (var index in Enumerable.Range(0, 16)) {
             perfectTails.GameState[index] = PlayerState.Instance()->IsWeeklyBingoStickerPlaced(index);
         }
