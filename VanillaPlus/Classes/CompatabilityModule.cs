@@ -27,4 +27,8 @@ public abstract class CompatabilityModule {
     }
     
     protected abstract List<string> GetTargetPluginLoadedModules();
+
+    public string GetErrorMessage()
+        => $"The original version of this feature is already active in {TargetPluginInternalName}.\n\n" +
+           $"ID: {TargetModule}";
 }
