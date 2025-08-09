@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Numerics;
+using Dalamud.Game.Text.SeStringHandling;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -65,6 +66,35 @@ public unsafe class WondrousTailsProbabilities : GameModification {
     
     private void RefreshNodes(AddonWeeklyBingo* addon) {
         if (perfectTails is null) return;
+        var existingTextNode = addon->GetTextNodeById(34);
+        if (existingTextNode is not null) {
+            var nodeText = SeString.Parse(existingTextNode->NodeText);
+
+            // Get the first index of the double-newline payloads
+            var lineBreakIndex = -1;
+            for (var index = 0; index < nodeText.Payloads.Count; index++) {
+                if (index > 0) {
+                    var previousPayload = nodeText.Payloads[index - 1];
+                    var payload = nodeText.Payloads[index];
+
+                    if (previousPayload.Type is PayloadType.NewLine && payload.Type is PayloadType.NewLine) {
+                        lineBreakIndex = index - 1;
+                        break;
+                    }
+                }
+            }
+
+            // Copy all payloads up until the double-newline payload
+            if (lineBreakIndex is not -1) {
+                var newString = new SeStringBuilder();
+
+                for(var index = 0; index < lineBreakIndex; index++) {
+                    newString.Add(nodeText.Payloads[index]);
+                }
+
+                existingTextNode->SetText(newString.Encode());
+            }
+        }
         
         foreach (var index in Enumerable.Range(0, 16)) {
             perfectTails.GameState[index] = PlayerState.Instance()->IsWeeklyBingoStickerPlaced(index);
