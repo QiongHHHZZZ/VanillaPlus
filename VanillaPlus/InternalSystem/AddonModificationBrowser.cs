@@ -311,8 +311,10 @@ public class AddonModificationBrowser : NativeAddon {
     }
 
     public void UpdateDisabledState() {
-        foreach (var modificationOptionNode in modificationOptionNodes) {
-            modificationOptionNode.UpdateDisabledState();
+        if (changelogBrowser?.IsOpen ?? false) {
+            foreach (var modificationOptionNode in modificationOptionNodes) {
+                modificationOptionNode.UpdateDisabledState();
+            }
         }
     }
 
