@@ -5,4 +5,5 @@ public enum LoadedState {
     Enabled,
     Disabled,
     Errored,
+    CompatError,
 }
