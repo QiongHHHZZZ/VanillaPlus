@@ -53,6 +53,8 @@ public unsafe class LocationDisplay : GameModification {
         
         dtrBarEntry = Services.DtrBar.Get("VanillaPlus - LocationDisplay");
         dtrBarEntry.OnClick = _ => configWindow.Toggle();
+
+        locationChanged = true;
         
         Services.Framework.Update += OnFrameworkUpdate;
 		Services.ClientState.TerritoryChanged += OnZoneChange;
