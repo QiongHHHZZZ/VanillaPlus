@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Dalamud.Plugin;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.InternalSystem;
@@ -24,9 +25,13 @@ public class ModificationManager : IDisposable {
                 TryEnableModification(newLoadedModification);
             }
         }
+
+        Services.PluginInterface.ActivePluginsChanged += OnPluginsChanged;
     }
 
     public void Dispose() {
+        Services.PluginInterface.ActivePluginsChanged -= OnPluginsChanged;
+
         Services.PluginLog.Debug("Disposing Modification Manager, now disabling all GameModifications");
         
         foreach (var loadedMod in LoadedModifications) {
@@ -43,6 +48,46 @@ public class ModificationManager : IDisposable {
         }
     }
 
+    // When loaded plugins change, re-evaluate any compat modules
+    private void OnPluginsChanged(IActivePluginsChangedEventArgs args) {
+        
+        // If a new plugin is loaded, check for modules that we now need to disable
+        if (args is { Kind: PluginListInvalidationKind.Loaded }) {
+            foreach (var modification in LoadedModifications) {
+                
+                // We only care about currently enabled modules
+                if (modification.State is not LoadedState.Enabled) continue;
+                if (modification.Modification.ModificationInfo.CompatabilityModule is { } compatabilityModule) {
+                    
+                    // It was loaded, but shouldn't be anymore, unload it.
+                    if (!compatabilityModule.ShouldLoadGameModification()) {
+                        TryDisableModification(modification, false);
+                        modification.State = LoadedState.CompatError;
+                        modification.ErrorMessage = compatabilityModule.GetErrorMessage();
+                    }
+                }
+            }
+        }
+        
+        // If a new plugin is unloaded, check for CompatError modules and try to enable them
+        if (args is { Kind: PluginListInvalidationKind.Unloaded }) {
+            foreach (var modification in LoadedModifications) {
+                
+                // We only care about compat error modules
+                if (modification.State is not LoadedState.CompatError) continue;
+                if (modification.Modification.ModificationInfo.CompatabilityModule is { } compatabilityModule) {
+                    
+                    // It tried to load earlier, but failed due to compat, if compat says we're good, load it
+                    if (compatabilityModule.ShouldLoadGameModification()) {
+                        TryEnableModification(modification);
+                    }
+                }
+            }
+        }
+        
+        System.AddonModificationBrowser.UpdateDisabledState();
+    }
+
     public void TryEnableModification(LoadedModification modification) {
         if (modification.State is LoadedState.Errored) {
             Services.PluginLog.Error("Attempted to enable errored modification");
@@ -52,9 +97,9 @@ public class ModificationManager : IDisposable {
         try {
             if (modification.Modification.ModificationInfo.CompatabilityModule is { } compatabilityModule) {
                 if (!compatabilityModule.ShouldLoadGameModification()) {
-                    modification.State = LoadedState.Errored;
-                    modification.ErrorMessage = $"The original version of this feature is already active in {compatabilityModule.TargetPluginInternalName}.\n\n" +
-                                                $"ID: {compatabilityModule.TargetModule}";
+                    modification.State = LoadedState.CompatError;
+                    modification.ErrorMessage = compatabilityModule.GetErrorMessage();
+                    
                     Services.PluginLog.Warning($"Attempted to load {modification.Name}, but it's already enabled in {compatabilityModule.TargetPluginInternalName}");
                     return;
                 }
@@ -83,7 +128,7 @@ public class ModificationManager : IDisposable {
         }
     }
 
-    public void TryDisableModification(LoadedModification modification) {
+    public void TryDisableModification(LoadedModification modification, bool removeFromList = true) {
         if (modification.State is LoadedState.Errored) {
             Services.PluginLog.Error("Attempted to disable errored modification");
             return;
@@ -100,8 +145,11 @@ public class ModificationManager : IDisposable {
         } finally {
             modification.State = LoadedState.Disabled;
             Services.PluginLog.Info($"{modification.Name} has been disabled");
-            System.SystemConfig.EnabledModifications.Remove(modification.Name);
-            System.SystemConfig.Save();
+
+            if (removeFromList) {
+                System.SystemConfig.EnabledModifications.Remove(modification.Name);
+                System.SystemConfig.Save();
+            }
         }
     }
 
