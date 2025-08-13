@@ -13,6 +13,8 @@ public class AddonRecentlyLooted(AddonConfig config) : NativeAddon {
 
     private ScrollingAreaNode<VerticalListNode> scrollingAreaNode = null!;
 
+    public int ItemCountLimit { get; set; } = 100;
+
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
         scrollingAreaNode = new ScrollingAreaNode<VerticalListNode> {
             Position = ContentStartPosition,
@@ -38,7 +40,7 @@ public class AddonRecentlyLooted(AddonConfig config) : NativeAddon {
 
         itemEvents.Add(itemEvent);
 
-        if (itemEvents.Count >= 30) {
+        if (itemEvents.Count >= ItemCountLimit) {
             itemEvents.RemoveAt(0);
         }
 
