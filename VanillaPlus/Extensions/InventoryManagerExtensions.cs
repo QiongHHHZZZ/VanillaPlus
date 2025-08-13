@@ -29,11 +29,12 @@ public static class InventoryManagerExtensions {
             InventoryType.ArmoryRings,
         };
 
-        var itemCount = 0;
         foreach (var inventory in inventories) {
-            itemCount += inventoryManager.GetItemCountInContainer(itemId, inventory);
+            if (inventoryManager.GetItemCountInContainer(itemId, inventory) is not 0) {
+                return true;
+            }
         }
 
-        return itemCount is not 0;
+        return false;
     }
 }
