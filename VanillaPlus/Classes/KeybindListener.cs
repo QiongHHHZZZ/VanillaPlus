@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Classes;
@@ -11,7 +11,7 @@ namespace VanillaPlus.Classes;
 public class KeybindListener : IDisposable {
     private readonly Stopwatch debouncer = Stopwatch.StartNew();
     
-    public required HashSet<SeVirtualKey> KeyCombo { get; set; }
+    public required HashSet<VirtualKey> KeyCombo { get; set; }
     public required Action? KeybindCallback { get; init; }
     
     public KeybindListener()

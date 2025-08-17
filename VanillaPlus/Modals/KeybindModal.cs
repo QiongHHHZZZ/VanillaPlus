@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface.GameFonts;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
@@ -17,9 +18,9 @@ using VanillaPlus.Extensions;
 namespace VanillaPlus.Modals;
 
 public unsafe class KeybindModal : Window, IDisposable {
-    public required Action<HashSet<SeVirtualKey>> KeybindSetCallback { get; init; }
+    public required Action<HashSet<VirtualKey>> KeybindSetCallback { get; init; }
 
-    private readonly HashSet<SeVirtualKey> combo = [SeVirtualKey.NO_KEY];
+    private readonly HashSet<VirtualKey> combo = [VirtualKey.NO_KEY];
     private readonly IFontHandle largeAxisFontHandle;
 
     private readonly List<string> conflicts = [];
@@ -40,16 +41,16 @@ public unsafe class KeybindModal : Window, IDisposable {
             BaseSkewStrength = 16f,
         });
         
-        System.KeyListener.OnSeKeyPressed += OnSeKeyPressed;
+        System.KeyListener.OnKeyPressed += KeyPressed;
     }
 
-    private void OnSeKeyPressed(SeVirtualKey changedKey, bool isPressed) {
+    private void KeyPressed(VirtualKey arg1, bool isPressed) {
         if (!IsOpen) return;
         if (!isPressed) return;
 
         combo.Clear();
-        foreach (var key in Enum.GetValues<SeVirtualKey>()) {
-            if (UIInputData.Instance()->IsKeyDown(key)) {
+        foreach (var key in Services.KeyState.GetValidVirtualKeys()) {
+            if (Services.KeyState[(int)key]) {
                 combo.Add(key);
             }
         }
@@ -74,29 +75,31 @@ public unsafe class KeybindModal : Window, IDisposable {
                 conflicts.Add(nameString);
             }
         }
+        
+        Services.KeyState.ResetKeyCombo(combo);
     }
 
-    private static bool IsComboMatch(HashSet<SeVirtualKey> keyCombo, UIInputData.Keybind keybind, bool useAltCombo) {
+    private static bool IsComboMatch(HashSet<VirtualKey> keyCombo, UIInputData.Keybind keybind, bool useAltCombo) {
         var key = useAltCombo ? keybind.AltKey : keybind.Key;
         var flags = useAltCombo ? keybind.AltModifier : keybind.Modifier;
 
-        var comboModifies = keyCombo.Where(comboKey => comboKey is (SeVirtualKey.CONTROL or SeVirtualKey.MENU or SeVirtualKey.SHIFT)).ToList();
-        var comboKey = keyCombo.FirstOrDefault(comboKey => comboKey is not (SeVirtualKey.CONTROL  or SeVirtualKey.MENU or SeVirtualKey.SHIFT));
+        var comboModifies = keyCombo.Where(comboKey => comboKey is (VirtualKey.CONTROL or VirtualKey.MENU or VirtualKey.SHIFT)).ToList();
+        var comboKey = keyCombo.FirstOrDefault(comboKey => comboKey is not (VirtualKey.CONTROL  or VirtualKey.MENU or VirtualKey.SHIFT));
 
         // If our base key doesn't match, we don't match.
-        if (comboKey != key) return false;
+        if ((int)comboKey != (int)key) return false;
 
         // Game combo does not have a modifier, but we do
         if (flags is 0 && comboModifies.Count != 0) return false;
         
         // Game combo wants Control, but we don't have Control in our combo
-        if (flags.HasFlag(ModifierFlag.Ctrl) && !comboModifies.Contains(SeVirtualKey.CONTROL)) return false;
+        if (flags.HasFlag(ModifierFlag.Ctrl) && !comboModifies.Contains(VirtualKey.CONTROL)) return false;
         
         // Game combo wants Alt, but we don't have Alt in our combo
-        if (flags.HasFlag(ModifierFlag.Alt) && !comboModifies.Contains(SeVirtualKey.MENU)) return false;
+        if (flags.HasFlag(ModifierFlag.Alt) && !comboModifies.Contains(VirtualKey.MENU)) return false;
         
         // Game combo wants Shift, but we don't have Shift in our combo
-        if (flags.HasFlag(ModifierFlag.Shift) && !comboModifies.Contains(SeVirtualKey.SHIFT)) return false;
+        if (flags.HasFlag(ModifierFlag.Shift) && !comboModifies.Contains(VirtualKey.SHIFT)) return false;
 
         return true;
     }
@@ -155,7 +158,7 @@ public unsafe class KeybindModal : Window, IDisposable {
     }
 
     public void Dispose() {
-        System.KeyListener.OnSeKeyPressed -= OnSeKeyPressed;
+        System.KeyListener.OnKeyPressed -= KeyPressed;
         largeAxisFontHandle.Dispose();
         this.RemoveFromWindowSystem();
     }

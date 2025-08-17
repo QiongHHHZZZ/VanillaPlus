@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Modals;
@@ -30,7 +30,7 @@ public class RecentlyLootedWindow : GameModification {
     public override string ImageName => "RecentlyLootedWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("RecentlyLooted.addon.json", [SeVirtualKey.CONTROL, SeVirtualKey.L]);
+        config = AddonConfig.Load("RecentlyLooted.addon.json", [VirtualKey.CONTROL, VirtualKey.L]);
 
         recentlyLootedWindow = new AddonRecentlyLooted(config) {
             NativeController = System.NativeController,

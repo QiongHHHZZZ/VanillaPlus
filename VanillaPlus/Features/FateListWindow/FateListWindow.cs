@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using FFXIVClientStructs.FFXIV.Client.UI;
+using Dalamud.Game.ClientState.Keys;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Modals;
@@ -26,7 +26,7 @@ public class FateListWindow : GameModification {
     public override string ImageName => "FateListWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("FateList.addon.json", [SeVirtualKey.CONTROL, SeVirtualKey.F]);
+        config = AddonConfig.Load("FateList.addon.json", [VirtualKey.CONTROL, VirtualKey.F]);
 
         addonFateList = new AddonFateList(config) {
             NativeController = System.NativeController,
