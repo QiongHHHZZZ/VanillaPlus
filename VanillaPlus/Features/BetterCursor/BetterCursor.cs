@@ -19,6 +19,7 @@ public unsafe class BetterCursor : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
             new ChangeLogInfo(2, "Reduced Animation Speed to 1Hz"),
+            new ChangeLogInfo(3, "Added options to only show in duties and/or combat"),
         ],
     };
 
@@ -77,7 +78,27 @@ public unsafe class BetterCursor : GameModification {
             var isLeftHeld = (cursorData.MouseButtonHeldFlags & MouseButtonFlags.LBUTTON) != 0;
             var isRightHeld = (cursorData.MouseButtonHeldFlags & MouseButtonFlags.RBUTTON) != 0;
 
-            animationContainer.IsVisible = !isLeftHeld && !isRightHeld || !config.HideOnCameraMove;
+            if (config is { OnlyShowInCombat: true } or { OnlyShowInDuties: true }) {
+                // ReSharper disable once ReplaceWithSingleAssignment.True
+                var shouldShow = true;
+
+                if (config.OnlyShowInCombat && !Services.Condition.IsInCombat()) {
+                    shouldShow = false;
+                }
+
+                if (config.OnlyShowInDuties && !Services.Condition.IsBoundByDuty()) {
+                    shouldShow = false;
+                }
+
+                if ((isLeftHeld || isRightHeld) && config.HideOnCameraMove) {
+                    shouldShow = false;
+                }
+
+                animationContainer.IsVisible = shouldShow;
+            }
+            else {
+                animationContainer.IsVisible = !isLeftHeld && !isRightHeld || !config.HideOnCameraMove;
+            }
         }
     }
 
