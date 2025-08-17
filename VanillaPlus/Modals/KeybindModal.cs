@@ -25,6 +25,8 @@ public unsafe class KeybindModal : Window {
     public KeybindModal() : base("Set Keybind Modal") {
         this.AddToWindowSystem();
 
+        RespectCloseHotkey = false;
+
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(500.0f, 333.0f),
         };
