@@ -79,20 +79,10 @@ public unsafe class BetterCursor : GameModification {
             var isRightHeld = (cursorData.MouseButtonHeldFlags & MouseButtonFlags.RBUTTON) != 0;
 
             if (config is { OnlyShowInCombat: true } or { OnlyShowInDuties: true }) {
-                // ReSharper disable once ReplaceWithSingleAssignment.True
                 var shouldShow = true;
-
-                if (config.OnlyShowInCombat && !Services.Condition.IsInCombat()) {
-                    shouldShow = false;
-                }
-
-                if (config.OnlyShowInDuties && !Services.Condition.IsBoundByDuty()) {
-                    shouldShow = false;
-                }
-
-                if (config.HideOnCameraMove && (isLeftHeld || isRightHeld)) {
-                    shouldShow = false;
-                }
+                shouldShow &= !config.OnlyShowInCombat || Services.Condition.IsInCombat();
+                shouldShow &= !config.OnlyShowInDuties || Services.Condition.IsBoundByDuty();
+                shouldShow &= !config.HideOnCameraMove || (!isLeftHeld && !isRightHeld);
 
                 animationContainer.IsVisible = shouldShow;
             }
