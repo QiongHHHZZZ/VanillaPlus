@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using Dalamud.Plugin.Services;
+﻿using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
@@ -24,22 +21,12 @@ public class FateListWindow : GameModification {
     private AddonFateList? addonFateList;
     private AddonConfig? config;
     private KeybindModal? keybindModal;
+    private KeybindListener? keybindListener;
     
-    private readonly Stopwatch stopwatch = Stopwatch.StartNew();
-
     public override string ImageName => "FateListWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("FateList.addon.config", [SeVirtualKey.CONTROL, SeVirtualKey.F]);
-        OpenConfigAction = () => {
-            keybindModal ??= new KeybindModal {
-                KeybindSetCallback = keyBind => {
-                    config.OpenKeyCombo = keyBind;
-                    config.Save();
-                    keybindModal = null;
-                },
-            };
-        };
+        config = AddonConfig.Load("FateList.addon.json", [SeVirtualKey.CONTROL, SeVirtualKey.F]);
 
         addonFateList = new AddonFateList(config) {
             NativeController = System.NativeController,
@@ -51,29 +38,31 @@ public class FateListWindow : GameModification {
         if (config.WindowPosition is { } windowPosition) {
             addonFateList.Position = windowPosition;
         }
+
+        keybindListener = new KeybindListener {
+            KeybindCallback = addonFateList.Toggle,
+            KeyCombo = config.OpenKeyCombo,
+        };
         
-        Services.Framework.Update += OnFrameworkUpdate;
+        keybindModal = new KeybindModal {
+            KeybindSetCallback = keyBind => {
+                config.OpenKeyCombo = keyBind;
+                config.Save();
+
+                keybindListener.KeyCombo = keyBind;
+            },
+        };
+        OpenConfigAction = keybindModal.Open;
     }
 
     public override void OnDisable() {
         addonFateList?.Dispose();
+        addonFateList = null;
+        
+        keybindModal?.Dispose();
         keybindModal = null;
         
-        Services.Framework.Update -= OnFrameworkUpdate;
-    }
-    
-    private unsafe void OnFrameworkUpdate(IFramework framework) {
-        if (config is null || addonFateList is null) return;
-        
-        if (UIInputData.Instance()->IsComboPressed(config.OpenKeyCombo.ToArray()) && stopwatch.ElapsedMilliseconds >= 250) {
-            if (addonFateList.IsOpen) {
-                addonFateList.Close();
-            }
-            else {
-                addonFateList.Open();
-            }
-            
-            stopwatch.Restart();
-        }
+        keybindListener?.Dispose();
+        keybindListener = null;
     }
 }

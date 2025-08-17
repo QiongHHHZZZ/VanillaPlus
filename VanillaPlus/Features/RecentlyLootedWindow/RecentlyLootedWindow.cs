@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
-using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
@@ -28,22 +25,12 @@ public class RecentlyLootedWindow : GameModification {
     private AddonRecentlyLooted? recentlyLootedWindow;
     private AddonConfig? config;
     private KeybindModal? keybindModal;
-
-    private readonly Stopwatch stopwatch = Stopwatch.StartNew();
+    private KeybindListener? keybindListener;
 
     public override string ImageName => "RecentlyLootedWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("RecentlyLooted.addon.config", [SeVirtualKey.CONTROL, SeVirtualKey.L]);
-        OpenConfigAction = () => {
-            keybindModal ??= new KeybindModal {
-                KeybindSetCallback = keyBind => {
-                    config.OpenKeyCombo = keyBind;
-                    config.Save();
-                    keybindModal = null;
-                },
-            };
-        };
+        config = AddonConfig.Load("RecentlyLooted.addon.json", [SeVirtualKey.CONTROL, SeVirtualKey.L]);
 
         recentlyLootedWindow = new AddonRecentlyLooted(config) {
             NativeController = System.NativeController,
@@ -56,15 +43,35 @@ public class RecentlyLootedWindow : GameModification {
             recentlyLootedWindow.Position = windowPosition;
         }
 
-        Services.Framework.Update += OnFrameworkUpdate;
+        keybindListener = new KeybindListener {
+            KeybindCallback = recentlyLootedWindow.Toggle,
+            KeyCombo = config.OpenKeyCombo,
+        };
+        
+        keybindModal = new KeybindModal {
+            KeybindSetCallback = keyBind => {
+                config.OpenKeyCombo = keyBind;
+                config.Save();
+                    
+                keybindListener.KeyCombo = keyBind;
+            },
+        };
+
+        OpenConfigAction = keybindModal.Open;
+        
         Services.GameInventory.InventoryChanged += OnRawItemAdded;
     }
 
     public override void OnDisable() {
         recentlyLootedWindow?.Dispose();
+        recentlyLootedWindow = null;
+        
+        keybindModal?.Dispose();
         keybindModal = null;
+        
+        keybindListener?.Dispose();
+        keybindListener = null;
 
-        Services.Framework.Update -= OnFrameworkUpdate;
         Services.GameInventory.InventoryChanged -= OnRawItemAdded;
     }
 
@@ -73,21 +80,6 @@ public class RecentlyLootedWindow : GameModification {
             if (!Inventory.StandardInventories.Contains(eventData.Item.ContainerType)) continue;
 
             recentlyLootedWindow?.AddInventoryItem(eventData);
-        }
-    }
-
-    private unsafe void OnFrameworkUpdate(IFramework framework) {
-        if (config is null || recentlyLootedWindow is null) return;
-        
-        if (UIInputData.Instance()->IsComboPressed(config.OpenKeyCombo.ToArray()) && stopwatch.ElapsedMilliseconds >= 250) {
-            if (recentlyLootedWindow.IsOpen) {
-                recentlyLootedWindow.Close();
-            }
-            else {
-                recentlyLootedWindow.Open();
-            }
-            
-            stopwatch.Restart();
         }
     }
 }
