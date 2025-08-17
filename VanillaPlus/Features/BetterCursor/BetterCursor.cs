@@ -18,6 +18,7 @@ public unsafe class BetterCursor : GameModification {
         Type = ModificationType.UserInterface,
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(2, "Reduced Animation Speed to 1Hz"),
         ],
     };
 
@@ -93,22 +94,22 @@ public unsafe class BetterCursor : GameModification {
         System.NativeController.AttachNode(imageNode, animationContainer);
 
         animationContainer.AddTimeline(new TimelineBuilder()
-            .BeginFrameSet(1, 60)
+            .BeginFrameSet(1, 120)
             .AddLabel(1, 1, AtkTimelineJumpBehavior.Start, 0)
-            .AddLabel(30, 0, AtkTimelineJumpBehavior.LoopForever, 1)
-            .AddLabel(31, 2, AtkTimelineJumpBehavior.Start, 0)
-            .AddLabel(60, 0, AtkTimelineJumpBehavior.LoopForever, 2)
+            .AddLabel(60, 0, AtkTimelineJumpBehavior.LoopForever, 1)
+            .AddLabel(61, 2, AtkTimelineJumpBehavior.Start, 0)
+            .AddLabel(120, 0, AtkTimelineJumpBehavior.LoopForever, 2)
             .EndFrameSet()
             .Build());
 
         imageNode.AddTimeline(new TimelineBuilder()
-            .BeginFrameSet(1, 30)
+            .BeginFrameSet(1, 60)
             .AddFrame(1, scale: new Vector2(1.0f, 1.0f))
-            .AddFrame(15, scale: new Vector2(0.75f, 0.75f))
-            .AddFrame(30, scale: new Vector2(1.0f, 1.0f))
+            .AddFrame(30, scale: new Vector2(0.75f, 0.75f))
+            .AddFrame(60, scale: new Vector2(1.0f, 1.0f))
             .EndFrameSet()
-            .BeginFrameSet(31, 60)
-            .AddFrame(31, scale: new Vector2(1.0f, 1.0f))
+            .BeginFrameSet(61, 120)
+            .AddFrame(61, scale: new Vector2(1.0f, 1.0f))
             .EndFrameSet()
             .Build());
 
