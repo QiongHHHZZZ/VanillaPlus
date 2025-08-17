@@ -90,7 +90,7 @@ public unsafe class BetterCursor : GameModification {
                     shouldShow = false;
                 }
 
-                if ((isLeftHeld || isRightHeld) && config.HideOnCameraMove) {
+                if (config.HideOnCameraMove && (isLeftHeld || isRightHeld)) {
                     shouldShow = false;
                 }
 
