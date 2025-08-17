@@ -8,6 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Modals;
+using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 
@@ -20,6 +21,7 @@ public class RecentlyLootedWindow : GameModification {
         Authors = ["MidoriKami"],
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(2, "Limit tracking to standard inventories, and armory"),
         ],
     };
 
@@ -68,6 +70,8 @@ public class RecentlyLootedWindow : GameModification {
 
     private void OnRawItemAdded(IReadOnlyCollection<InventoryEventArgs> events) {
         foreach (var eventData in events) {
+            if (!Inventory.StandardInventories.Contains(eventData.Item.ContainerType)) continue;
+
             recentlyLootedWindow?.AddInventoryItem(eventData);
         }
     }
