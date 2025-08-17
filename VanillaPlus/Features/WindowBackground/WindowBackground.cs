@@ -20,6 +20,7 @@ public unsafe class WindowBackground : GameModification {
         Type = ModificationType.UserInterface,
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(2, "Added search bar to search 'All Windows' in config"),
         ],
         CompatabilityModule = new SimpleTweaksCompatabilityModule("UiAdjustments@DutyListBackground"),
     };
