@@ -93,9 +93,7 @@ public unsafe class BetterCursor : GameModification {
     }
 
     private void AttachNodes(AtkUnitBase* addon) {
-        animationContainer = new ResNode {
-            IsVisible = true,
-        };
+        animationContainer = new ResNode();
         System.NativeController.AttachNode(animationContainer, addon->RootNode);
 
         imageNode = new IconImageNode {
