@@ -28,6 +28,8 @@ public class AddonFateList(AddonConfig config) : NativeAddon {
     }
 
     protected override unsafe void OnUpdate(AtkUnitBase* addon) {
+        if (scrollingAreaNode is null) return;
+        
         var validFates = Services.FateTable.Where(fate => fate is { State: FateState.Running }).ToList();
         
         var toRemove =  FateListNode.GetNodes<FateEntryNode>().Where(node => !validFates.Any(fate => node.Fate.FateId == fate.FateId)).ToList();
@@ -51,7 +53,7 @@ public class AddonFateList(AddonConfig config) : NativeAddon {
             fateNode.Update();
         }
         
-        scrollingAreaNode?.ContentHeight = FateListNode.Nodes.Sum(node => node.IsVisible ? node.Height : 0.0f);
+        scrollingAreaNode.ContentHeight = FateListNode.Nodes.Sum(node => node.IsVisible ? node.Height : 0.0f);
     }
 
     protected override unsafe void OnHide(AtkUnitBase* addon) {

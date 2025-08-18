@@ -184,9 +184,9 @@ public unsafe class TargetCastBarCountdown : GameModification {
         if (config is null) return;
         
         if (Services.ClientState.IsPvP) {
-            primaryTargetTextNode?.IsVisible = false;
-            primaryTargetAltTextNode?.IsVisible = false;
-            focusTargetTextNode?.IsVisible = false;
+            if (primaryTargetTextNode is not null) primaryTargetTextNode.IsVisible = false;
+            if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.IsVisible = false;
+            if (focusTargetTextNode is not null) focusTargetTextNode.IsVisible = false;
             return;
         }
         
@@ -196,15 +196,19 @@ public unsafe class TargetCastBarCountdown : GameModification {
                 if (Services.TargetManager.Target is IBattleChara target && target.CurrentCastTime < target.TotalCastTime && config.PrimaryTarget) {
                     var castTime = (target.TotalCastTime - target.CurrentCastTime).ToString("00.00");
 
-                    primaryTargetTextNode?.IsVisible = true;
-                    primaryTargetTextNode?.Text = castTime;
+                    if (primaryTargetTextNode is not null) {
+                        primaryTargetTextNode.IsVisible = true;
+                        primaryTargetTextNode.Text = castTime;
+                    }
                     
-                    primaryTargetAltTextNode?.IsVisible = true;
-                    primaryTargetAltTextNode?.Text = castTime;
+                    if (primaryTargetAltTextNode is not null) {
+                        primaryTargetAltTextNode.IsVisible = true;
+                        primaryTargetAltTextNode.Text = castTime;
+                    }
                 }
                 else {
-                    primaryTargetTextNode?.IsVisible = false;
-                    primaryTargetAltTextNode?.IsVisible = false;
+                    if (primaryTargetTextNode is not null) primaryTargetTextNode.IsVisible = false;
+                    if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.IsVisible = false;
                 }
                 break;
             
@@ -218,7 +222,7 @@ public unsafe class TargetCastBarCountdown : GameModification {
                     }
                 }
                 else {
-                    focusTargetTextNode?.IsVisible = false;
+                    if (focusTargetTextNode is not null) focusTargetTextNode.IsVisible = false;
                 }
                 break;
         }

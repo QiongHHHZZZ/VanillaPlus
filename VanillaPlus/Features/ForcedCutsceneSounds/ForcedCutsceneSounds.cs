@@ -78,12 +78,12 @@ public unsafe class ForcedCutsceneSounds : GameModification {
         var result = createCutSceneControllerHook!.Original(thisPtr, path, id, a4);
         
         try {
-            if (id is 0) return result;
-            
+            if (wasMuted is null || id is 0) return result;
+
             foreach (var optionName in ConfigOptions) {
                 var isMuted = Services.GameConfig.System.TryGet(optionName, out bool value) && value;
 
-                wasMuted?[optionName] = isMuted;
+                wasMuted[optionName] = isMuted;
 
                 if (ShouldHandle(optionName) && isMuted) {
                     Services.GameConfig.System.Set(optionName, false);

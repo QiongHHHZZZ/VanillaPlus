@@ -23,7 +23,7 @@ public class AddonRecentlyLooted(AddonConfig config) : NativeAddon {
             IsVisible = true,
             ContentHeight = 100,
         };
-        ListNode?.FitContents = true;
+        ListNode!.FitContents = true;
         AttachNode(scrollingAreaNode);
 
         RebuildList();
