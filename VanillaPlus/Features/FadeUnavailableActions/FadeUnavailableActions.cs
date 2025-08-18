@@ -32,7 +32,7 @@ public unsafe class FadeUnavailableActions : GameModification {
     [Signature("E8 ?? ?? ?? ?? 48 81 C6 ?? ?? ?? ?? 83 C7 11", DetourName = nameof(OnHotBarSlotUpdate))]
     private Hook<UpdateHotBarSlotDelegate>? onHotBarSlotUpdateHook;
 
-    private readonly Dictionary<uint, Action?> actionCache = [];
+    private Dictionary<uint, Action?>? actionCache;
 
     private FadeUnavailableActionsConfig? config;
     private FadeUnavailableActionsConfigWindow? configWindow;
@@ -40,6 +40,8 @@ public unsafe class FadeUnavailableActions : GameModification {
     public override string ImageName => "FadeUnavailableActions.png";
 
     public override void OnEnable() {
+        actionCache = [];
+        
         config = FadeUnavailableActionsConfig.Load();
         configWindow = new FadeUnavailableActionsConfigWindow(config);
         configWindow.AddToWindowSystem();
@@ -55,6 +57,8 @@ public unsafe class FadeUnavailableActions : GameModification {
         
         configWindow?.RemoveFromWindowSystem();
         configWindow = null;
+
+        actionCache = null;
         
         ResetAllHotbars();
     }
@@ -109,10 +113,10 @@ public unsafe class FadeUnavailableActions : GameModification {
     private Action? GetAction(uint actionId) {
         var adjustedActionId = ActionManager.Instance()->GetAdjustedActionId(actionId);
 
-        if (actionCache.TryGetValue(adjustedActionId, out var action)) return action;
+        if (actionCache?.TryGetValue(adjustedActionId, out var action) ?? false) return action;
 
         action = Services.DataManager.GetExcelSheet<Action>().GetRowOrDefault(adjustedActionId);
-        actionCache.Add(adjustedActionId, action);
+        actionCache?.Add(adjustedActionId, action);
         return action;
     }
 

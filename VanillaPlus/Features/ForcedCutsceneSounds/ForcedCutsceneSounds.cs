@@ -30,7 +30,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
         "IsSndPerform",
     ];
     
-    private readonly Dictionary<string, bool> wasMuted = [];
+    private Dictionary<string, bool>? wasMuted;
 
     private delegate CutSceneController* CutSceneControllerDtorDelegate(CutSceneController* self, byte freeFlags);
     
@@ -41,6 +41,8 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     private ForcedCutsceneSoundsConfigWindow? configWindow;
 
     public override void OnEnable() {
+        wasMuted = [];
+        
         config = ForcedCutsceneSoundsConfig.Load();
         configWindow = new ForcedCutsceneSoundsConfigWindow(config);
         configWindow.AddToWindowSystem();
@@ -59,8 +61,17 @@ public unsafe class ForcedCutsceneSounds : GameModification {
 
     public override void OnDisable() {
         createCutSceneControllerHook?.Dispose();
+        createCutSceneControllerHook = null;
+        
         cutSceneControllerDtorHook?.Dispose();
+        cutSceneControllerDtorHook = null;
+        
         configWindow?.RemoveFromWindowSystem();
+        configWindow = null;
+        
+        config = null;
+
+        wasMuted = null;
     }
     
     private CutSceneController* CreateCutSceneControllerDetour(ScheduleManagement* thisPtr, byte* path, uint id, byte a4) {
@@ -72,7 +83,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
             foreach (var optionName in ConfigOptions) {
                 var isMuted = Services.GameConfig.System.TryGet(optionName, out bool value) && value;
 
-                wasMuted[optionName] = isMuted;
+                wasMuted?[optionName] = isMuted;
 
                 if (ShouldHandle(optionName) && isMuted) {
                     Services.GameConfig.System.Set(optionName, false);
@@ -97,7 +108,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
             
             if (config.Restore && cutsceneId is not 0) { // ignore title screen cutscene
                 foreach (var optionName in ConfigOptions) {
-                    if (ShouldHandle(optionName) && wasMuted.TryGetValue(optionName, out var value) && value) {
+                    if (ShouldHandle(optionName) && (wasMuted?.TryGetValue(optionName, out var value) ?? false) && value) {
                         Services.GameConfig.System.Set(optionName, value);
                     }
                 }

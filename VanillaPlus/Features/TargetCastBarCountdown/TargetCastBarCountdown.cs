@@ -71,10 +71,16 @@ public unsafe class TargetCastBarCountdown : GameModification {
 
     public override void OnDisable() {
         configWindow?.RemoveFromWindowSystem();
+        configWindow = null;
         
         targetInfoCastBarController?.Dispose();
+        targetInfoCastBarController = null;
+        
         targetInfoController?.Dispose();
+        targetInfoController = null;
+        
         focusTargetController?.Dispose();
+        focusTargetController = null;
     }
     
     private void DrawNodeConfigs() {
@@ -161,24 +167,15 @@ public unsafe class TargetCastBarCountdown : GameModification {
     private void DetachNode(AtkUnitBase* addon) {
         switch (addon->NameString) {
             case "_TargetInfoCastBar":
-                System.NativeController.DetachNode(primaryTargetTextNode, () => {
-                    primaryTargetTextNode?.Dispose();
-                    primaryTargetTextNode = null;
-                });
+                System.NativeController.DisposeNode(ref primaryTargetTextNode);
                 break;
             
             case "_TargetInfo":
-                System.NativeController.DetachNode(primaryTargetAltTextNode, () => {
-                    primaryTargetAltTextNode?.Dispose();
-                    primaryTargetAltTextNode = null;
-                });
+                System.NativeController.DisposeNode(ref primaryTargetAltTextNode);
                 break;
             
             case "_FocusTargetInfo":
-                System.NativeController.DetachNode(focusTargetTextNode, () => {
-                    focusTargetTextNode?.Dispose();
-                    focusTargetTextNode = null;
-                });
+                System.NativeController.DisposeNode(ref focusTargetTextNode);
                 break;
         }
     }
@@ -187,9 +184,9 @@ public unsafe class TargetCastBarCountdown : GameModification {
         if (config is null) return;
         
         if (Services.ClientState.IsPvP) {
-            if (primaryTargetTextNode is not null) primaryTargetTextNode.IsVisible = false;
-            if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.IsVisible = false;
-            if (focusTargetTextNode is not null) focusTargetTextNode.IsVisible = false;
+            primaryTargetTextNode?.IsVisible = false;
+            primaryTargetAltTextNode?.IsVisible = false;
+            focusTargetTextNode?.IsVisible = false;
             return;
         }
         
@@ -199,19 +196,15 @@ public unsafe class TargetCastBarCountdown : GameModification {
                 if (Services.TargetManager.Target is IBattleChara target && target.CurrentCastTime < target.TotalCastTime && config.PrimaryTarget) {
                     var castTime = (target.TotalCastTime - target.CurrentCastTime).ToString("00.00");
 
-                    if (primaryTargetTextNode is not null) {
-                        primaryTargetTextNode.IsVisible = true;
-                        primaryTargetTextNode.Text = castTime;
-                    }
+                    primaryTargetTextNode?.IsVisible = true;
+                    primaryTargetTextNode?.Text = castTime;
                     
-                    if (primaryTargetAltTextNode is not null) {
-                        primaryTargetAltTextNode.IsVisible = true;
-                        primaryTargetAltTextNode.Text = castTime;
-                    }
+                    primaryTargetAltTextNode?.IsVisible = true;
+                    primaryTargetAltTextNode?.Text = castTime;
                 }
                 else {
-                    if (primaryTargetTextNode is not null) primaryTargetTextNode.IsVisible = false;
-                    if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.IsVisible = false;
+                    primaryTargetTextNode?.IsVisible = false;
+                    primaryTargetAltTextNode?.IsVisible = false;
                 }
                 break;
             
@@ -225,7 +218,7 @@ public unsafe class TargetCastBarCountdown : GameModification {
                     }
                 }
                 else {
-                    if (focusTargetTextNode is not null) focusTargetTextNode.IsVisible = false;
+                    focusTargetTextNode?.IsVisible = false;
                 }
                 break;
         }

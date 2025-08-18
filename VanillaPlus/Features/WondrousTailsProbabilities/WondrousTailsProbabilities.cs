@@ -39,8 +39,12 @@ public unsafe class WondrousTailsProbabilities : GameModification {
         weeklyBingoController.Enable();
     }
 
-    public override void OnDisable()
-        => weeklyBingoController?.Dispose();
+    public override void OnDisable() {
+        weeklyBingoController?.Dispose();
+        weeklyBingoController = null;
+        
+        perfectTails = null;
+    }
 
     private void AttachNodes(AddonWeeklyBingo* addon) {
         if (perfectTails is null) return;

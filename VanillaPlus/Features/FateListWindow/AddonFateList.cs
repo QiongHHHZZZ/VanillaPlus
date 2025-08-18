@@ -15,7 +15,6 @@ public class AddonFateList(AddonConfig config) : NativeAddon {
     
     private OrderedVerticalListNode<FateEntryNode, long> FateListNode => scrollingAreaNode?.ContentNode ?? throw new Exception("Invalid List Node");
 
-
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
         scrollingAreaNode = new ScrollingAreaNode<OrderedVerticalListNode<FateEntryNode, long>> {
             Position = ContentStartPosition,
