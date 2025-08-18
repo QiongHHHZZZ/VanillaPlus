@@ -30,7 +30,7 @@ public unsafe class FadeUnavailableActions : GameModification {
     private delegate void UpdateHotBarSlotDelegate(AddonActionBarBase* addon, ActionBarSlot* uiData, NumberArrayData* numberArray, StringArrayData* stringArray, int numberArrayIndex, int stringArrayIndex);
 
     [Signature("E8 ?? ?? ?? ?? 48 81 C6 ?? ?? ?? ?? 83 C7 11", DetourName = nameof(OnHotBarSlotUpdate))]
-    private readonly Hook<UpdateHotBarSlotDelegate>? onHotBarSlotUpdateHook = null;
+    private Hook<UpdateHotBarSlotDelegate>? onHotBarSlotUpdateHook;
 
     private readonly Dictionary<uint, Action?> actionCache = [];
 
@@ -51,7 +51,10 @@ public unsafe class FadeUnavailableActions : GameModification {
 
     public override void OnDisable() {
         onHotBarSlotUpdateHook?.Dispose();
+        onHotBarSlotUpdateHook = null;
+        
         configWindow?.RemoveFromWindowSystem();
+        configWindow = null;
         
         ResetAllHotbars();
     }
@@ -136,8 +139,10 @@ public unsafe class FadeUnavailableActions : GameModification {
     private void ResetAllHotbars() {
         foreach (var addon in RaptureAtkUnitManager.Instance()->AllLoadedUnitsList.Entries) {
             if (addon.Value is null) continue;
-            if (addon.Value->NameString.Contains("_Action")) {
+            if (addon.Value->NameString.Contains("_Action") && !addon.Value->NameString.Contains("Contents")) {
                 var actionBar = (AddonActionBarBase*)addon.Value;
+                if (actionBar is null) continue;
+                if (actionBar->ActionBarSlotVector.First is null) continue;
 
                 foreach (var slot in actionBar->ActionBarSlotVector) {
                     if (slot.Icon is not null) {
