@@ -128,6 +128,7 @@ public unsafe class LootItemNode : SimpleComponentNode {
         Item = item.Item;
 
         if (item.Item.Quantity > 1) {
+            itemQuantityTextNode.Text = Item.Quantity.ToString();
         }
     }
 
