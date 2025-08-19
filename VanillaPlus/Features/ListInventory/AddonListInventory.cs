@@ -25,10 +25,12 @@ public unsafe class AddonListInventory : NativeAddon {
     protected override void OnSetup(AtkUnitBase* addon) {
         addon->SubscribeAtkArrayData(0, (int)StringArrayType.Inventory);
         addon->SubscribeAtkArrayData(1, (int)NumberArrayType.Inventory);
+
+        const float dropDownWidth = 175.0f;
         
         sortDropdownNode = new TextDropDownNode {
-            Size = new Vector2(150.0f, 28.0f),
-            Position = ContentStartPosition + new Vector2(ContentSize.X, 0.0f) - new Vector2(150.0f, 0.0f) + new Vector2(0.0f, 1.0f),
+            Size = new Vector2(dropDownWidth, 28.0f),
+            Position = ContentStartPosition + new Vector2(ContentSize.X, 0.0f) - new Vector2(dropDownWidth, 0.0f) + new Vector2(0.0f, 1.0f),
             MaxListOptions = 6,
             Options = ["Alphabetically", "Level", "Item Level", "Rarity", "Item Id", "Item Category"],
             IsVisible = true,
