@@ -154,7 +154,7 @@ public unsafe class WondrousTailsProbabilities : GameModification {
             probabilityTextNode.Text = perfectTails.SolveAndGetProbabilitySeString();
         }
 
-        AddCurrentDutyIndicator(addon);
+        AdjustCurrentDutyIndicator(addon);
     }
 
     private void DetachNodes(AddonWeeklyBingo* addon) {
@@ -167,7 +167,7 @@ public unsafe class WondrousTailsProbabilities : GameModification {
         System.NativeController.DisposeNode(ref currentDutyNode);
     }
     
-    private void AddCurrentDutyIndicator(AddonWeeklyBingo* addon) {
+    private void AdjustCurrentDutyIndicator(AddonWeeklyBingo* addon) {
         if (animationContainer is null || currentDutyNode is null) return;
         if (GetTaskForCurrentTerritory(Services.ClientState.TerritoryType) is { } dutySlot) {
             var nativeDutySlot = addon->DutySlotList[dutySlot].DutyButton->OwnerNode;
