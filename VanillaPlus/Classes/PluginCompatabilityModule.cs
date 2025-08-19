@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VanillaPlus.Classes;
 
-public class PluginCompatabilityModule(string pluginName) : CompatabilityModule {
+public class PluginCompatabilityModule(string pluginName) : CompatabilityModule(IncompatibilityType.Plugin) {
     public override string TargetModule => pluginName;
     public override string TargetPluginInternalName => pluginName;
 

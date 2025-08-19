@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace VanillaPlus.Classes;
 
-public class SimpleTweaksCompatabilityModule(string targetModuleName) : CompatabilityModule {
+public class SimpleTweaksCompatabilityModule(string targetModuleName, IncompatibilityType type = IncompatibilityType.OldVersion) : CompatabilityModule(type) {
     public override string TargetModule => targetModuleName;
     public override string TargetPluginInternalName => "SimpleTweaksPlugin";
 

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VanillaPlus.Classes;
 
-public abstract class CompatabilityModule {
+public abstract class CompatabilityModule(IncompatibilityType incompatibilityType) {
     public abstract string TargetModule { get; }
     public abstract string TargetPluginInternalName { get; }
     
@@ -28,7 +28,16 @@ public abstract class CompatabilityModule {
     
     protected abstract List<string> GetTargetPluginLoadedModules();
 
-    public string GetErrorMessage()
-        => $"The original version of this feature is already active in {TargetPluginInternalName}.\n\n" +
-           $"ID: {TargetModule}";
+    public string GetErrorMessage() {
+        return incompatibilityType switch {
+            IncompatibilityType.OldVersion => $"The original version of this feature is already active in {TargetPluginInternalName}.\n\n" +
+                                              $"ID: {TargetModule}",
+            
+            IncompatibilityType.Crash => $"There is a known crash when {TargetModule} from {TargetPluginInternalName} is also enabled.",
+            
+            IncompatibilityType.Plugin => $"The original version of this feature is from a plugin that is currently active: {TargetPluginInternalName}.",
+
+            _ => "ERROR: Type not set!",
+        };
+    }
 }
