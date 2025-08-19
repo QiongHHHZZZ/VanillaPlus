@@ -22,6 +22,7 @@ public unsafe class DraggableWindowDeadSpace : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),
         ],
+        CompatabilityModule = new SimpleTweaksCompatabilityModule("TooltipTweaks@ShowItemID", IncompatibilityType.Crash),
     };
 
     private ViewportEventListener? cursorEventListener;
