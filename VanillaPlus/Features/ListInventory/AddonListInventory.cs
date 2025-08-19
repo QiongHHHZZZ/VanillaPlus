@@ -85,9 +85,12 @@ public unsafe class AddonListInventory : NativeAddon {
             
             ListNode?.AddNode(newItemNode);
         }
-        
-        ListNode?.ItemSpacing = 3.0f;
-        ListNode?.RecalculateLayout();
+
+        if (ListNode is not null) {
+            ListNode.ItemSpacing = 3.0f;
+            ListNode.RecalculateLayout();
+        }
+
         RecalculateContentHeight();
     }
 
@@ -209,6 +212,8 @@ public unsafe class AddonListInventory : NativeAddon {
     }
 
     private void RecalculateContentHeight() {
-        scrollingAreaNode?.ContentHeight = ListNode?.Nodes.Sum(item => item.IsVisible ? item.Height + scrollingAreaNode.ContentNode.ItemSpacing : 0.0f ) ?? 1000.0f;
+        if (scrollingAreaNode is null || ListNode is null) return;
+        
+        scrollingAreaNode.ContentHeight = ListNode.Nodes.Sum(item => item.IsVisible ? item.Height + scrollingAreaNode.ContentNode.ItemSpacing : 0.0f );
     }
 }
