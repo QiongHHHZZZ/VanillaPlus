@@ -29,7 +29,9 @@ public unsafe class DraggableWindowDeadSpace : GameModification {
     private Dictionary<string, ResNode>? windowInteractionNodes;
     private Vector2 dragStart = Vector2.Zero;
     private bool isDragging;
-    
+
+    public override bool IsExperimental => true;
+
     public override void OnEnable() {
         windowInteractionNodes = [];
         
