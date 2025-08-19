@@ -14,6 +14,8 @@ public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfig
         }
 
         if (ImGui.DragFloat("Size", ref config.Size)) {
+            config.Size = Math.Max(0, config.Size);
+            
             onConfigChanged();
             config.Save();
         }
