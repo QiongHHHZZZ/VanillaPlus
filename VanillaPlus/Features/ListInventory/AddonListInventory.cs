@@ -107,14 +107,17 @@ public unsafe class AddonListInventory : NativeAddon {
         if (isHovered && !tooltipShowing) {
             var tooltipArgs = stackalloc AtkTooltipManager.AtkTooltipArgs[1];
             tooltipArgs->ItemArgs = new AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs {
-                Kind = DetailKind.Item,
-                ItemId = (int)itemNode.Item.Item.ItemId,
+                Kind = DetailKind.InventoryItem,
+                InventoryType = itemNode.Item.Item.Container,
+                Slot = itemNode.Item.Item.Slot,
+                BuyQuantity = -1,
+                Flag1 = 0,
             };
 
             AtkStage.Instance()->TooltipManager.ShowTooltip(
                 AtkTooltipManager.AtkTooltipType.Item,
                 ((AtkUnitBase*)this)->Id,
-                (AtkResNode*)itemNode,
+                (AtkResNode*)itemNode.CollisionNode.Node,
                 tooltipArgs
             );
             tooltipShowing = true;
