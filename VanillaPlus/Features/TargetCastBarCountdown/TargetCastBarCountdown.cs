@@ -93,6 +93,9 @@ public unsafe class TargetCastBarCountdown : GameModification {
         
         focusTargetController?.Dispose();
         focusTargetController = null;
+        
+        castBarEnemyController?.Dispose();
+        castBarEnemyController = null;
 
         castBarEnemyTextNode = null;
     }
