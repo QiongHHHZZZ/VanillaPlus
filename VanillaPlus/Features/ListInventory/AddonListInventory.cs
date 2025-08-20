@@ -31,8 +31,8 @@ public unsafe class AddonListInventory : NativeAddon {
         sortDropdownNode = new TextDropDownNode {
             Size = new Vector2(dropDownWidth, 28.0f),
             Position = ContentStartPosition + new Vector2(ContentSize.X, 0.0f) - new Vector2(dropDownWidth, 0.0f) + new Vector2(0.0f, 1.0f),
-            MaxListOptions = 6,
-            Options = ["Alphabetically", "Level", "Item Level", "Rarity", "Item Id", "Item Category"],
+            MaxListOptions = 7,
+            Options = ["Alphabetically", "Quantity", "Level", "Item Level", "Rarity", "Item Id", "Item Category"],
             IsVisible = true,
             OnOptionSelected = _ => UpdateInventoryList(),
         };
@@ -167,6 +167,7 @@ public unsafe class AddonListInventory : NativeAddon {
             "Rarity" => inventoryItems.OrderByDescending(item => item.Rarity).ThenBy(item => item.Name),
             "Item Id" => inventoryItems.OrderByDescending(item => item.Item.ItemId),
             "Item Category" => inventoryItems.OrderBy(item => item.UiCategory).ThenBy(item => item.Name),
+            "Quantity" => inventoryItems.OrderByDescending(item => item.ItemCount).ThenBy(item => item.Name),
             _ => inventoryItems.OrderBy(item => item.Name),
         };
     }

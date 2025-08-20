@@ -14,6 +14,7 @@ public class ListInventory : GameModification {
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(2, "Added Sort by Quantity"),
         ],
     };
     
