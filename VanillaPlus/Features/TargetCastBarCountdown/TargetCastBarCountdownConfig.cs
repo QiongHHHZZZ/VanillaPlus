@@ -7,4 +7,5 @@ public class TargetCastBarCountdownConfig : GameModificationConfig<TargetCastBar
 
     public bool PrimaryTarget = true;
     public bool FocusTarget = false;
+    public bool NamePlateTargets = true;
 }

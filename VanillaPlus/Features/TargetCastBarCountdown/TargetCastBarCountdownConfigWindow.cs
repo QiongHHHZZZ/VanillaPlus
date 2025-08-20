@@ -23,6 +23,7 @@ public class TargetCastBarCountdownConfigWindow : Window {
     public override void Draw() {
         if (ImGui.Checkbox("Show on Primary Target Cast Bar", ref config.PrimaryTarget)) config.Save();
         if (ImGui.Checkbox("Show on Focus Target Cast Bar", ref config.FocusTarget)) config.Save();
+        if (ImGui.Checkbox("Show on Nameplate Target Cast Bar", ref config.NamePlateTargets)) config.Save();
         
         ImGui.Spacing();
         ImGui.Separator();
