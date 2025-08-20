@@ -3,7 +3,6 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
-using VanillaPlus.Modals;
 
 namespace VanillaPlus.Features.ListInventory;
 
@@ -22,7 +21,7 @@ public class ListInventory : GameModification {
     
     private AddonListInventory? listInventory;
     private AddonConfig? config;
-    private KeybindModal? keybindModal;
+    private AddonConfigWindow? configWindow;
     private KeybindListener? keybindListener;
     
     public override void OnEnable() {
@@ -36,29 +35,22 @@ public class ListInventory : GameModification {
             Config = config,
         };
         
-        if (config.WindowPosition is { } windowPosition) {
-            listInventory.Position = windowPosition;
-        }
-
-        if (config.WindowSize is { } windowSize) {
-            listInventory.Size = windowSize;
-        }
+        listInventory.InitializeConfig(config);
 
         keybindListener = new KeybindListener {
-            KeybindCallback = listInventory.Toggle,
+            KeybindCallback = () => {
+                listInventory.Position = config.WindowPosition;
+                listInventory.Size = config.WindowSize;
+                listInventory.Toggle();
+            },
             KeyCombo = config.OpenKeyCombo,
         };
-        
-        keybindModal = new KeybindModal {
-            KeybindSetCallback = keyBind => {
-                config.OpenKeyCombo = keyBind;
-                config.Save();
-                    
-                keybindListener.KeyCombo = keyBind;
-            },
-        };
 
-        OpenConfigAction = keybindModal.Open;
+        configWindow = new AddonConfigWindow("Inventory List", config, keybind => {
+            keybindListener.KeyCombo = keybind;
+        });
+
+        OpenConfigAction = configWindow.Toggle;
 
         Services.CommandManager.AddHandler("/listinventory", new CommandInfo(OnListInventoryCommand) {
             DisplayOrder = 3,
@@ -73,8 +65,8 @@ public class ListInventory : GameModification {
         listInventory?.Dispose();
         listInventory = null;
         
-        keybindModal?.Dispose();
-        keybindModal = null;
+        configWindow?.Dispose();
+        configWindow = null;
         
         keybindListener?.Dispose();
         keybindListener = null;

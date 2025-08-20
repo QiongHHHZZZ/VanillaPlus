@@ -3,7 +3,6 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
-using VanillaPlus.Modals;
 
 namespace VanillaPlus.Features.FateListWindow;
 
@@ -22,8 +21,8 @@ public class FateListWindow : GameModification {
 
     private AddonFateList? addonFateList;
     private AddonConfig? config;
-    private KeybindModal? keybindModal;
     private KeybindListener? keybindListener;
+    private AddonConfigWindow? addonConfigWindow;
     
     public override string ImageName => "FateListWindow.png";
 
@@ -37,24 +36,22 @@ public class FateListWindow : GameModification {
             Title = "Fate List",
         };
         
-        if (config.WindowPosition is { } windowPosition) {
-            addonFateList.Position = windowPosition;
-        }
+        addonFateList.InitializeConfig(config);
 
         keybindListener = new KeybindListener {
-            KeybindCallback = addonFateList.Toggle,
+            KeybindCallback = () => {
+                addonFateList.Position = config.WindowPosition;
+                addonFateList.Size = config.WindowSize;
+                addonFateList.Toggle();
+            },
             KeyCombo = config.OpenKeyCombo,
         };
-        
-        keybindModal = new KeybindModal {
-            KeybindSetCallback = keyBind => {
-                config.OpenKeyCombo = keyBind;
-                config.Save();
 
-                keybindListener.KeyCombo = keyBind;
-            },
-        };
-        OpenConfigAction = keybindModal.Open;
+        addonConfigWindow = new AddonConfigWindow("Fate List", config, keybind => {
+            keybindListener.KeyCombo = keybind;
+        });
+
+        OpenConfigAction = addonConfigWindow.Toggle;
 
         Services.CommandManager.AddHandler("/fatelist", new CommandInfo(OnFateListCommand) {
             DisplayOrder = 3,
@@ -69,8 +66,8 @@ public class FateListWindow : GameModification {
         addonFateList?.Dispose();
         addonFateList = null;
         
-        keybindModal?.Dispose();
-        keybindModal = null;
+        addonConfigWindow?.Dispose();
+        addonConfigWindow = null;
         
         keybindListener?.Dispose();
         keybindListener = null;

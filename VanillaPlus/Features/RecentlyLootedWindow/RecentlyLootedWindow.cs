@@ -4,7 +4,6 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
-using VanillaPlus.Modals;
 using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
@@ -25,7 +24,7 @@ public class RecentlyLootedWindow : GameModification {
 
     private AddonRecentlyLooted? recentlyLootedWindow;
     private AddonConfig? config;
-    private KeybindModal? keybindModal;
+    private AddonConfigWindow? addonConfigWindow;
     private KeybindListener? keybindListener;
 
     public override string ImageName => "RecentlyLootedWindow.png";
@@ -40,25 +39,22 @@ public class RecentlyLootedWindow : GameModification {
             Title = "Recently Looted Items",
         };
         
-        if (config.WindowPosition is { } windowPosition) {
-            recentlyLootedWindow.Position = windowPosition;
-        }
+        recentlyLootedWindow.InitializeConfig(config);
 
         keybindListener = new KeybindListener {
-            KeybindCallback = recentlyLootedWindow.Toggle,
+            KeybindCallback = () => {
+                recentlyLootedWindow.Position = config.WindowPosition;
+                recentlyLootedWindow.Size = config.WindowSize;
+                recentlyLootedWindow.Toggle();
+            },
             KeyCombo = config.OpenKeyCombo,
         };
         
-        keybindModal = new KeybindModal {
-            KeybindSetCallback = keyBind => {
-                config.OpenKeyCombo = keyBind;
-                config.Save();
-                    
-                keybindListener.KeyCombo = keyBind;
-            },
-        };
+        addonConfigWindow = new AddonConfigWindow("Recently Looted Items", config, keybind => {
+            keybindListener.KeyCombo = keybind;
+        });
 
-        OpenConfigAction = keybindModal.Open;
+        OpenConfigAction = addonConfigWindow.Toggle;
         
         Services.GameInventory.InventoryChanged += OnRawItemAdded;
     }
@@ -67,8 +63,8 @@ public class RecentlyLootedWindow : GameModification {
         recentlyLootedWindow?.Dispose();
         recentlyLootedWindow = null;
         
-        keybindModal?.Dispose();
-        keybindModal = null;
+        addonConfigWindow?.Dispose();
+        addonConfigWindow = null;
         
         keybindListener?.Dispose();
         keybindListener = null;

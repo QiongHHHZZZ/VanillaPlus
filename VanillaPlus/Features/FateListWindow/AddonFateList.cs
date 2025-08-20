@@ -58,6 +58,7 @@ public class AddonFateList(AddonConfig config) : NativeAddon {
 
     protected override unsafe void OnHide(AtkUnitBase* addon) {
         config.WindowPosition = Position;
+        config.WindowSize = Size;
         config.Save();
     }
 

@@ -15,7 +15,7 @@ using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using VanillaPlus.Extensions;
 
-namespace VanillaPlus.Modals;
+namespace VanillaPlus.Classes;
 
 public unsafe class KeybindModal : Window, IDisposable {
     public required Action<HashSet<VirtualKey>> KeybindSetCallback { get; init; }
@@ -25,7 +25,7 @@ public unsafe class KeybindModal : Window, IDisposable {
 
     private readonly List<string> conflicts = [];
     
-    public KeybindModal() : base("Set Keybind Modal") {
+    public KeybindModal(string windowName) : base($"{windowName} Set Keybind Modal") {
         WindowName += $"##{new StackTrace().GetFrame(1)?.GetMethod()?.ReflectedType?.Name}";
         
         this.AddToWindowSystem();
