@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Game.Command;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Modals;
@@ -53,7 +54,15 @@ public class FateListWindow : GameModification {
             },
         };
         OpenConfigAction = keybindModal.Open;
+
+        Services.CommandManager.AddHandler("/fatelist", new CommandInfo(OnFateListCommand) {
+            DisplayOrder = 3,
+            HelpMessage = "Opens the Fate List Window",
+        });
     }
+
+    private void OnFateListCommand(string command, string arguments)
+        => addonFateList?.Open();
 
     public override void OnDisable() {
         addonFateList?.Dispose();
@@ -66,5 +75,7 @@ public class FateListWindow : GameModification {
         keybindListener = null;
 
         config = null;
+        
+        Services.CommandManager.RemoveHandler("/fatelist");
     }
 }
