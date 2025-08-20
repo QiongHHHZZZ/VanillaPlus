@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Game.Command;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 using VanillaPlus.Modals;
@@ -15,6 +16,7 @@ public class ListInventory : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),
             new ChangeLogInfo(2, "Added Sort by Quantity"),
+            new ChangeLogInfo(3, "Added `/listinventory` command to open window"),
         ],
     };
     
@@ -57,7 +59,15 @@ public class ListInventory : GameModification {
         };
 
         OpenConfigAction = keybindModal.Open;
+
+        Services.CommandManager.AddHandler("/listinventory", new CommandInfo(OnListInventoryCommand) {
+            DisplayOrder = 3,
+            HelpMessage = "Open List Inventory Window",
+        });
     }
+
+    private void OnListInventoryCommand(string command, string arguments)
+        => listInventory?.Toggle();
 
     public override void OnDisable() {
         listInventory?.Dispose();
