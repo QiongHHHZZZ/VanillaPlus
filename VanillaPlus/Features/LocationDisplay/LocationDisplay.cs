@@ -20,6 +20,7 @@ public unsafe class LocationDisplay : GameModification {
         Type = ModificationType.UserInterface,
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(2, "Fix instance id not updating when it should"),
         ],
         CompatabilityModule = new PluginCompatabilityModule("WhereAmIAgain"),
     };
@@ -34,6 +35,7 @@ public unsafe class LocationDisplay : GameModification {
     private sbyte lastHousingPlot;
     private short lastHousingRoom;
     private sbyte lastHousingWard;
+    private uint lastInstanceId;
     private uint lastRegion;
     private uint lastSubArea;
     private uint lastTerritory;
@@ -83,6 +85,7 @@ public unsafe class LocationDisplay : GameModification {
         UpdateRegion();
         UpdateSubArea();
         UpdateTerritory();
+        UpdateInstanceId();
 
         if (config.UsePreciseHousingLocation) {
             UpdatePreciseHousing();
@@ -172,6 +175,14 @@ public unsafe class LocationDisplay : GameModification {
 			locationChanged = true;
 		}
 	}
+    
+    private void UpdateInstanceId() {
+        if (lastInstanceId != UIState.Instance()->PublicInstance.InstanceId) {
+            lastInstanceId = UIState.Instance()->PublicInstance.InstanceId;
+            
+            locationChanged = true;
+        }
+    }
 
 	private void UpdateSubArea() {
 		if (lastSubArea != AreaInfo->SubAreaPlaceNameId) {
