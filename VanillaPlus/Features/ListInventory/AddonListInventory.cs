@@ -20,27 +20,60 @@ public unsafe class AddonListInventory : NativeAddon {
     private TextInputNode? textInputNode;
     private TextNode? searchLabelNode;
     private TextDropDownNode? sortDropdownNode;
+    
+    private VerticalListNode? mainContainerNode;
+    private HorizontalFlexNode? searchContainerNode;
+    private HorizontalListNode? widgetsContainerNode;
+    private CircleButtonNode? reverseButtonNode;
 
     public required AddonConfig Config { get; init; }
+
+    private bool reverseSort;
 
     protected override void OnSetup(AtkUnitBase* addon) {
         addon->SubscribeAtkArrayData(0, (int)StringArrayType.Inventory);
         addon->SubscribeAtkArrayData(1, (int)NumberArrayType.Inventory);
 
         const float dropDownWidth = 175.0f;
+
+        mainContainerNode = new VerticalListNode {
+            Position = ContentStartPosition,
+            Size = ContentSize,
+            IsVisible = true,
+        };
+
+        searchContainerNode = new HorizontalFlexNode {
+            Size = new Vector2(ContentSize.X, 28.0f),
+            AlignmentFlags = FlexFlags.FitHeight | FlexFlags.FitWidth,
+            IsVisible = true,
+        };
+
+        widgetsContainerNode = new HorizontalListNode {
+            Size = new Vector2(ContentSize.X, 28.0f),
+            Alignment = HorizontalListAnchor.Right,
+            IsVisible = true,
+        };
         
         sortDropdownNode = new TextDropDownNode {
             Size = new Vector2(dropDownWidth, 28.0f),
-            Position = ContentStartPosition + new Vector2(ContentSize.X, 0.0f) - new Vector2(dropDownWidth, 0.0f) + new Vector2(0.0f, 1.0f),
             MaxListOptions = 7,
             Options = ["Alphabetically", "Quantity", "Level", "Item Level", "Rarity", "Item Id", "Item Category"],
             IsVisible = true,
             OnOptionSelected = _ => UpdateInventoryList(),
         };
+
+        reverseButtonNode = new CircleButtonNode {
+            Size = new Vector2(28.0f, 28.0f),
+            Icon = ButtonIcon.Sort,
+            IsVisible = true,
+            OnClick = () => {
+                reverseSort = !reverseSort;
+                UpdateInventoryList();
+            },
+            Tooltip = "Reverse Sort Direction",
+        };
         
         textInputNode = new TextInputNode {
-            Size = new Vector2(ContentSize.X - sortDropdownNode.Width - 4.0f, 28.0f),
-            Position = ContentStartPosition,
             IsVisible = true,
         };
 
@@ -68,16 +101,25 @@ public unsafe class AddonListInventory : NativeAddon {
         const float listPadding = 4.0f;
         
         scrollingAreaNode = new ScrollingAreaNode<VerticalListNode> {
-            Size = ContentSize - new Vector2(0.0f, textInputNode.Height + listPadding),
-            Position = ContentStartPosition + new Vector2(0.0f, textInputNode.Height + listPadding),
+            Size = ContentSize - new Vector2(0.0f, searchContainerNode.Height + widgetsContainerNode.Height + listPadding),
+            Position = new Vector2(0.0f, listPadding),
             ContentHeight = 1000.0f,
             IsVisible = true,
         };
         
-        AttachNode(scrollingAreaNode);
-        AttachNode(textInputNode);
+        AttachNode(mainContainerNode);
+        mainContainerNode.AddNode(searchContainerNode);
+        searchContainerNode.AddNode(textInputNode);
+        mainContainerNode.AddNode(widgetsContainerNode);
+        widgetsContainerNode.AddNode(reverseButtonNode);
+
+        sortDropdownNode.Width = widgetsContainerNode.AreaRemaining;
+        widgetsContainerNode.AddNode(sortDropdownNode);
+        
         AttachNode(searchLabelNode, textInputNode);
-        AttachNode(sortDropdownNode);
+        
+        mainContainerNode.AddDummy(4.0f);
+        mainContainerNode.AddNode(scrollingAreaNode);
 
         if (ListNode is not null) {
             ListNode.ItemSpacing = 3.0f;
@@ -164,7 +206,9 @@ public unsafe class AddonListInventory : NativeAddon {
             _ => string.CompareOrdinal(leftItem.Name, rightItem.Name),
         };
 
-        return result is 0 ? string.CompareOrdinal(leftItem.Name, rightItem.Name) : result;
+        var reverseModifier = reverseSort ? -1 : 1;
+        
+        return ( result is 0 ? string.CompareOrdinal(leftItem.Name, rightItem.Name) : result ) * reverseModifier;
     }
 
     protected override void OnFinalize(AtkUnitBase* addon) {
