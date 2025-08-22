@@ -7,6 +7,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
+using KamiToolKit.System;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.ListInventory;
@@ -78,16 +79,6 @@ public unsafe class AddonListInventory : NativeAddon {
         AttachNode(searchLabelNode, textInputNode);
         AttachNode(sortDropdownNode);
 
-        foreach (var _ in Enumerable.Range(0, 140)) {
-            var newItemNode = new InventoryItemNode { 
-                Size = new Vector2(scrollingAreaNode.ContentNode.Width, 32.0f),
-                IsVisible = false,
-                OnHovered = OnItemHovered,
-            };
-            
-            ListNode?.AddNode(newItemNode);
-        }
-
         if (ListNode is not null) {
             ListNode.ItemSpacing = 3.0f;
             ListNode.RecalculateLayout();
@@ -102,7 +93,6 @@ public unsafe class AddonListInventory : NativeAddon {
         if (!itemNode.IsVisible) return;
         if (itemNode.Item is null) return;
         if (!sortDropdownNode?.IsCollapsed ?? true) return;
-        if (itemNode.ScreenY < scrollingAreaNode?.ScreenY) return;
         
         if (isHovered && !tooltipShowing) {
             var tooltipArgs = stackalloc AtkTooltipManager.AtkTooltipArgs[1];
@@ -133,46 +123,48 @@ public unsafe class AddonListInventory : NativeAddon {
     }
 
     private void UpdateInventoryList() {
-        if (ListNode?.Nodes.Count is 0) return;
+        if (ListNode is null) return;
+        if (scrollingAreaNode is null) return;
         
         AtkStage.Instance()->TooltipManager.HideTooltip((ushort)AddonId);
-        
-        foreach (var node in ListNode?.GetNodes<InventoryItemNode>() ?? []) {
-            node.IsVisible = false;
-            node.Item = null;
-        }
 
-        var nodeIndex = 0;
+        ListNode.SyncWithListData(GetInventoryItems(), GetDataFromNode, CreateInventoryNode);
+        ListNode.ReorderNodes(Comparison);
         
-        foreach (var itemInfo in GetOrderedInventoryItems()) {
-            if (ListNode?.Nodes[nodeIndex] is InventoryItemNode node) {
-                node.Item = itemInfo;
-                node.IsVisible = true;
-                nodeIndex++;
-            }
-        }
-
-        ListNode?.RecalculateLayout();
         RecalculateContentHeight();
     }
 
-    private IOrderedEnumerable<ItemInfo> GetOrderedInventoryItems() {
-        IEnumerable<ItemInfo> inventoryItems = GetInventoryItems();
+    private InventoryItemNode CreateInventoryNode(ItemInfo data) => new() {
+        Size = new Vector2(scrollingAreaNode!.ContentNode.Width, 32.0f), 
+        Item = data, 
+        IsVisible = true, 
+        OnHovered = OnItemHovered,
+    };
 
-        if (textInputNode?.String.ToString() is { Length: > 0 } searchString) {
-            inventoryItems = inventoryItems.Where(item => item.IsRegexMatch(searchString));
-        }
+    private static ItemInfo? GetDataFromNode(InventoryItemNode node)
+        => node.Item;
 
-        return sortDropdownNode?.SelectedOption switch {
-            "Alphabetically" => inventoryItems.OrderBy(item => item.Name),
-            "Level" => inventoryItems.OrderByDescending(item => item.Level).ThenBy(item => item.Name),
-            "Item Level" => inventoryItems.OrderByDescending(item => item.ItemLevel).ThenBy(item => item.Name),
-            "Rarity" => inventoryItems.OrderByDescending(item => item.Rarity).ThenBy(item => item.Name),
-            "Item Id" => inventoryItems.OrderByDescending(item => item.Item.ItemId),
-            "Item Category" => inventoryItems.OrderBy(item => item.UiCategory).ThenBy(item => item.Name),
-            "Quantity" => inventoryItems.OrderByDescending(item => item.ItemCount).ThenBy(item => item.Name),
-            _ => inventoryItems.OrderBy(item => item.Name),
+    private int Comparison(NodeBase x, NodeBase y) {
+        if (x is not InventoryItemNode left || y is not InventoryItemNode right) return 0;
+
+        var leftItem = left.Item;
+        var rightItem = right.Item;
+        if (leftItem is null || rightItem is null) return 0;
+
+        // Note: Compares in opposite direction to be descending instead of ascending, except for alphabetically
+
+        var result = sortDropdownNode?.SelectedOption switch {
+            "Alphabetically" => string.CompareOrdinal(leftItem.Name, rightItem.Name),
+            "Level" => rightItem.Level.CompareTo(leftItem.Level),
+            "Item Level" => rightItem.ItemLevel.CompareTo(leftItem.ItemLevel),
+            "Rarity" => rightItem.Rarity.CompareTo(leftItem.Rarity),
+            "Item Id" => rightItem.Item.ItemId.CompareTo(leftItem.Item.ItemId),
+            "Item Category" => rightItem.UiCategory.CompareTo(leftItem.UiCategory),
+            "Quantity" => rightItem.ItemCount.CompareTo(leftItem.ItemCount),
+            _ => string.CompareOrdinal(leftItem.Name, rightItem.Name),
         };
+
+        return result is 0 ? string.CompareOrdinal(leftItem.Name, rightItem.Name) : result;
     }
 
     protected override void OnFinalize(AtkUnitBase* addon) {
