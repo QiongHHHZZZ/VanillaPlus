@@ -309,7 +309,7 @@ public class AddonModificationBrowser : NativeAddon {
     }
 
     private void RecalculateScrollableAreaSize() {
-        optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height) + 5.0f;
+        optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height) + 10.0f;
     }
 
     public void UpdateDisabledState() {
