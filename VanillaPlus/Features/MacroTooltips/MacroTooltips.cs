@@ -58,7 +58,9 @@ public unsafe class MacroTooltips : GameModification {
                     var parts = iconCommandLine.Split(' ');
                     var actionNamePart = parts[1].Replace("\"", string.Empty);
                     
-                    var matchingAction = Services.DataManager.GetExcelSheet<Action>().FirstOrDefault(action => action.Name == actionNamePart);
+                    var matchingAction = Services.DataManager.GetExcelSheet<Action>()
+                        .FirstOrDefault(action => string.Equals(action.Name.ToString(), actionNamePart, StringComparison.OrdinalIgnoreCase));
+
                     if (matchingAction is { RowId: not 0 }) {
                         var tooltipArgs = stackalloc AtkTooltipManager.AtkTooltipArgs[1];
                         tooltipArgs->ActionArgs = new AtkTooltipManager.AtkTooltipArgs.AtkTooltipActionArgs {
