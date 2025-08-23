@@ -15,7 +15,7 @@ public class StickyShopCategories : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Sticky Shop Categories",
         Description = "Remembers the selected category and subcategories for certain vendors.",
-        Type = ModificationType.UserInterface,
+        Type = ModificationType.GameBehavior,
         Authors = ["Era"],
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
