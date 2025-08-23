@@ -159,9 +159,7 @@ public unsafe class LootItemNode : SimpleComponentNode {
 
         return new Lumina.Text.SeStringBuilder()
             .PushColorType(ItemUtil.GetItemRarityColorType(itemId))
-            // .PushEdgeColorType(ItemUtil.GetItemRarityColorType(itemId, true))
             .Append(itemName)
-            // .PopEdgeColorType()
             .PopColorType()
             .ToReadOnlySeString();
     }
