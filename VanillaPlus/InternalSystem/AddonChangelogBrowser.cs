@@ -45,11 +45,11 @@ public class AddonChangelogBrowser : NativeAddon {
                     IsVisible = true,
                     FontSize = 14,
                     LineSpacing = 22,
-                    Text = changelog.Description,
+                    String = changelog.Description,
                     TextColor = ColorHelper.GetColor(1),
                 };
 
-                newTextNode.Height = newTextNode.GetTextDrawSize(newTextNode.Text).Y;
+                newTextNode.Height = newTextNode.GetTextDrawSize(newTextNode.SeString).Y;
                 
                 categoryNode.AddNode(newTextNode);
 

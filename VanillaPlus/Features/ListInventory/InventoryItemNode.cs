@@ -99,28 +99,28 @@ public class InventoryItemNode : SimpleComponentNode {
             field = value;
             
             itemIconImageNode.IconId = value.IconId;
-            itemNameTextNode.Text = value.Name;
+            itemNameTextNode.String = value.Name;
             itemNameTextNode.TextColor = value.RarityColor;
 
             if (value.ItemCount > 1) {
-                itemCountTextNode.Text = value.ItemCount.ToString();
+                itemCountTextNode.String = value.ItemCount.ToString();
             }
             else {
-                itemCountTextNode.Text = string.Empty;
+                itemCountTextNode.String = string.Empty;
             }
 
             if (value.Level > 1) {
-                levelTextNode.Text = $"Lv. {value.Level, 3}";
+                levelTextNode.String = $"Lv. {value.Level, 3}";
             }
             else {
-                levelTextNode.Text = string.Empty;
+                levelTextNode.String = string.Empty;
             }
             
             if (value.ItemLevel > 1) {
-                itemLevelTextNode.Text = $"iLvl. {value.ItemLevel, 3}";
+                itemLevelTextNode.String = $"iLvl. {value.ItemLevel, 3}";
             }
             else {
-                itemLevelTextNode.Text = string.Empty;
+                itemLevelTextNode.String = string.Empty;
             }
         }
     }

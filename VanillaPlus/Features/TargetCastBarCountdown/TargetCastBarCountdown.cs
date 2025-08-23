@@ -273,12 +273,12 @@ public unsafe class TargetCastBarCountdown : GameModification {
 
                     if (primaryTargetTextNode is not null) {
                         primaryTargetTextNode.IsVisible = true;
-                        primaryTargetTextNode.Text = castTime;
+                        primaryTargetTextNode.String = castTime;
                     }
                     
                     if (primaryTargetAltTextNode is not null) {
                         primaryTargetAltTextNode.IsVisible = true;
-                        primaryTargetAltTextNode.Text = castTime;
+                        primaryTargetAltTextNode.String = castTime;
                     }
                 }
                 else {
@@ -293,7 +293,7 @@ public unsafe class TargetCastBarCountdown : GameModification {
 
                     if (focusTargetTextNode is not null) {
                         focusTargetTextNode.IsVisible = true;
-                        focusTargetTextNode.Text = castTime;
+                        focusTargetTextNode.String = castTime;
                     }
                 }
                 else {
@@ -314,7 +314,7 @@ public unsafe class TargetCastBarCountdown : GameModification {
 
                         if (node is not null) {
                             node.IsVisible = true;
-                            node.Text = castTime;
+                            node.String = castTime;
                         }
                     }
                     else {

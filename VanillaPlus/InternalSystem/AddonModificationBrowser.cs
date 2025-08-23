@@ -120,7 +120,7 @@ public class AddonModificationBrowser : NativeAddon {
             Position = new Vector2(10.0f, 6.0f),
             IsVisible = true,
             TextColor = ColorHelper.GetColor(3),
-            Text = "Search . . .",
+            String = "Search . . .",
         };
         System.NativeController.AttachNode(searchLabelNode, searchBoxNode);
 
@@ -148,7 +148,7 @@ public class AddonModificationBrowser : NativeAddon {
             LineSpacing = 22,
             FontType = FontType.Axis,
             IsVisible = true,
-            Text = "Please select an option on the left",
+            String = "Please select an option on the left",
             TextColor = ColorHelper.GetColor(1),
         };
         System.NativeController.AttachNode(descriptionTextNode, descriptionContainerNode);
@@ -247,18 +247,18 @@ public class AddonModificationBrowser : NativeAddon {
             descriptionImageNode.IsVisible = true;
             descriptionImageTextNode.IsVisible = true;
             descriptionTextNode.IsVisible = false;
-            descriptionImageTextNode.Text = selectedOption.Modification.Modification.ModificationInfo.Description;
+            descriptionImageTextNode.String = selectedOption.Modification.Modification.ModificationInfo.Description;
         }
         else {
             descriptionImageNode.IsVisible = false;
             descriptionImageTextNode.IsVisible = false;
             descriptionTextNode.IsVisible = true;
-            descriptionTextNode.Text = selectedOption.Modification.Modification.ModificationInfo.Description;
+            descriptionTextNode.String = selectedOption.Modification.Modification.ModificationInfo.Description;
         }
 
         changelogButtonNode.IsVisible = true;
         descriptionVersionTextNode.IsVisible = true;
-        descriptionVersionTextNode.Text = $"Version {selectedOption.Modification.Modification.ModificationInfo.Version}";
+        descriptionVersionTextNode.String = $"Version {selectedOption.Modification.Modification.ModificationInfo.Version}";
     }
 
     private async void LoadModuleImage(string assetName) {
@@ -282,7 +282,7 @@ public class AddonModificationBrowser : NativeAddon {
         }
 
         descriptionTextNode.IsVisible = true;
-        descriptionTextNode.Text = "Please select an option on the left";
+        descriptionTextNode.String = "Please select an option on the left";
 
         descriptionImageNode.Scale = Vector2.One;
         

@@ -1,13 +1,14 @@
 ﻿using System.Numerics;
 using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
+using Dalamud.Game.Text;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
-using VanillaPlus.Extensions;
+using Lumina.Text.ReadOnly;
 using AtkItemTooltipArgs = FFXIVClientStructs.FFXIV.Component.GUI.AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
@@ -105,26 +106,25 @@ public unsafe class LootItemNode : SimpleComponentNode {
                 case ItemKind.Hq:
                     var item = Services.DataManager.GetExcelSheet<Item>().GetRow(itemBaseId);
                     iconImageNode.IconId = item.Icon;
-                    itemNameTextNode.Text = item.Name.ToString();
-                    itemNameTextNode.TextColor = item.RarityColor();
+                    itemNameTextNode.ReadOnlySeString = GetItemName(itemBaseId);
                     break;
 
                 case ItemKind.EventItem:
                     var eventItem = Services.DataManager.GetExcelSheet<EventItem>().GetRow(itemBaseId);
                     iconImageNode.IconId = eventItem.Icon;
-                    itemNameTextNode.Text = eventItem.Name.ToString();
+                    itemNameTextNode.String = eventItem.Name.ToString();
                     break;
 
                 default:
                     iconImageNode.IconId = 60071;
-                    itemNameTextNode.Text = $"Unknown Item Type, ID: {value.Event.Item.ItemId}";
+                    itemNameTextNode.String = $"Unknown Item Type, ID: {value.Event.Item.ItemId}";
                     break;
             }
 
             switch (value.Event) {
                 case InventoryItemAddedArgs addedArgs:
                     if (addedArgs.Item.Quantity > 1) {
-                        itemQuantityTextNode.Text = addedArgs.Item.Quantity.ToString();
+                        itemQuantityTextNode.String = addedArgs.Item.Quantity.ToString();
                     }
                     break;
                 
@@ -132,7 +132,7 @@ public unsafe class LootItemNode : SimpleComponentNode {
                     var quantity = changedArgs.Item.Quantity - changedArgs.OldItemState.Quantity;
 
                     if (quantity > 1) {
-                        itemQuantityTextNode.Text = quantity.ToString();
+                        itemQuantityTextNode.String = quantity.ToString();
                     }
                     break;
             }
@@ -145,5 +145,24 @@ public unsafe class LootItemNode : SimpleComponentNode {
         itemNameTextNode.Position = new Vector2(iconImageNode.X + iconImageNode.Width + 4.0f, 0.0f);
         
         hoveredBackgroundNode.Size = Size;
+    }
+
+    private static ReadOnlySeString GetItemName(uint itemId) {
+        var itemName = ItemUtil.IsEventItem(itemId)
+                           ? Services.DataManager.GetExcelSheet<EventItem>().TryGetRow(itemId, out var eventItem) ? eventItem.Name : default
+                           : Services.DataManager.GetExcelSheet<Item>().TryGetRow(ItemUtil.GetBaseId(itemId).ItemId, out var item) ? item.Name : default;
+
+        if (ItemUtil.IsHighQuality(itemId))
+            itemName += " " + SeIconChar.HighQuality.ToIconString();
+        else if (ItemUtil.IsCollectible(itemId))
+            itemName += " " + SeIconChar.Collectible.ToIconString();
+
+        return new Lumina.Text.SeStringBuilder()
+            .PushColorType(ItemUtil.GetItemRarityColorType(itemId))
+            // .PushEdgeColorType(ItemUtil.GetItemRarityColorType(itemId, true))
+            .Append(itemName)
+            // .PopEdgeColorType()
+            .PopColorType()
+            .ToReadOnlySeString();
     }
 }

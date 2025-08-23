@@ -123,17 +123,17 @@ public unsafe class FateEntryNode : SimpleComponentNode {
             field = value;
 
             iconNode.IconId = value.MapIconId;
-            nameNode.Text = value.Name;
-            timeRemainingNode.Text = TimeSpan.FromSeconds(value.TimeRemaining).ToString(@"mm\:ss");
+            nameNode.SeString = value.Name;
+            timeRemainingNode.String = TimeSpan.FromSeconds(value.TimeRemaining).ToString(@"mm\:ss");
 
             if (Fate is not { Level: 1, MaxLevel: 255 }) {
-                levelNode.Text = $"Lv. {value.Level}-{value.MaxLevel}";
+                levelNode.String = $"Lv. {value.Level}-{value.MaxLevel}";
             }
             else {
-                levelNode.Text = "Lv. ???";
+                levelNode.String = "Lv. ???";
             }
            
-            progressTextNode.Text = $"{value.Progress}%";
+            progressTextNode.String = $"{value.Progress}%";
             progressNode.Progress = value.Progress / 100.0f;
         }
     }
@@ -169,8 +169,8 @@ public unsafe class FateEntryNode : SimpleComponentNode {
     public void Update() {
         var timeRemaining = TimeSpan.FromSeconds(Fate.TimeRemaining);
         
-        timeRemainingNode.Text = $"{SeIconChar.Clock.ToIconChar()} {timeRemaining:mm\\:ss}";
-        progressTextNode.Text = $"{Fate.Progress}%";
+        timeRemainingNode.String = $"{SeIconChar.Clock.ToIconChar()} {timeRemaining:mm\\:ss}";
+        progressTextNode.String = $"{Fate.Progress}%";
         progressNode.Progress = Fate.Progress / 100.0f;
 
         if (Fate.TimeRemaining < 300 && Timeline?.ActiveLabelId is 1) {

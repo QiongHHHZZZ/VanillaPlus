@@ -69,7 +69,7 @@ public unsafe class WondrousTailsProbabilities : GameModification {
             TextColor = ColorHelper.GetColor(1),
             LineSpacing = 18,
             TextFlags = TextFlags.MultiLine | TextFlags.Edge | TextFlags.WordWrap,
-            Text = perfectTails.SolveAndGetProbabilitySeString(),
+            SeString = perfectTails.SolveAndGetProbabilitySeString(),
             IsVisible = true,
         };
         System.NativeController.AttachNode(probabilityTextNode, (AtkResNode*)existingTextNode, NodePosition.AfterTarget);
@@ -151,7 +151,7 @@ public unsafe class WondrousTailsProbabilities : GameModification {
         }
 
         if (probabilityTextNode is not null) {
-            probabilityTextNode.Text = perfectTails.SolveAndGetProbabilitySeString();
+            probabilityTextNode.SeString = perfectTails.SolveAndGetProbabilitySeString();
         }
 
         AdjustCurrentDutyIndicator(addon);

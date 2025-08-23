@@ -113,8 +113,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
         get;
         set {
             field = value;
-            modificationNameNode.Text = value.Modification.ModificationInfo.DisplayName;
-            authorNamesNode.Text = $"By {string.Join(", ", value.Modification.ModificationInfo.Authors)}";
+            modificationNameNode.String = value.Modification.ModificationInfo.DisplayName;
+            authorNamesNode.String = $"By {string.Join(", ", value.Modification.ModificationInfo.Authors)}";
 
             RefreshConfigWindowButton();
 

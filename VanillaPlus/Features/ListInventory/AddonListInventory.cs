@@ -81,7 +81,7 @@ public unsafe class AddonListInventory : NativeAddon {
             Position = new Vector2(10.0f, 6.0f),
             IsVisible = true,
             TextColor = ColorHelper.GetColor(3),
-            Text = "Search . . .",
+            String = "Search . . .",
         };
 
         textInputNode.OnFocused += () => {
