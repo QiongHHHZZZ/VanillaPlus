@@ -78,6 +78,8 @@ public class RecentlyLootedWindow : GameModification {
         keybindListener?.Dispose();
         keybindListener = null;
 
+        Services.CommandManager.RemoveHandler("/recentloot");
+
         Services.GameInventory.InventoryChanged -= OnRawItemAdded;
     }
 
