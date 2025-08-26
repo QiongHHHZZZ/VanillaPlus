@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Game.Command;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
@@ -57,7 +58,15 @@ public class RecentlyLootedWindow : GameModification {
         OpenConfigAction = addonConfigWindow.Toggle;
         
         Services.GameInventory.InventoryChanged += OnRawItemAdded;
+        
+        Services.CommandManager.AddHandler("/recentloot", new CommandInfo(OnListInventoryCommand) {
+            DisplayOrder = 3,
+            HelpMessage = "Open Recently Looted Window",
+        });
     }
+
+    private void OnListInventoryCommand(string command, string arguments)
+        => recentlyLootedWindow?.Toggle();
 
     public override void OnDisable() {
         recentlyLootedWindow?.Dispose();
