@@ -99,32 +99,18 @@ public class InventoryItemNode : SimpleComponentNode {
                 field = null;
                 return;
             }
-            
+
             field = value;
 
-            var (itemBaseId, itemKind) = ItemUtil.GetBaseId(value.Item.ItemId);
-            switch (itemKind) {
-                case ItemKind.Normal:
-                case ItemKind.Collectible:
-                case ItemKind.Hq:
-                    var item = Services.DataManager.GetExcelSheet<Item>().GetRow(itemBaseId);
-                    itemIconImageNode.IconId = item.Icon;
-                    itemNameTextNode.ReadOnlySeString = GetItemName(itemBaseId);
-                    break;
-
-                case ItemKind.EventItem:
-                    var eventItem = Services.DataManager.GetExcelSheet<EventItem>().GetRow(itemBaseId);
-                    itemIconImageNode.IconId = eventItem.Icon;
-                    itemNameTextNode.String = eventItem.Name.ToString();
-                    break;
-
-                default:
-                    itemIconImageNode.IconId = 60071;
-                    itemNameTextNode.String = $"Unknown Item Type, ID: {value.Item.ItemId}";
-                    break;
+            var iconId = value.IconId;
+            
+            if (value.Item.IsHighQuality()) {
+                iconId += 1_000_000;
             }
 
-            itemCountTextNode.ReadOnlySeString = GetItemName(value.Item.ItemId);
+            itemIconImageNode.IconId = iconId;
+            itemNameTextNode.ReadOnlySeString = GetItemName(iconId);
+            itemCountTextNode.String = value.ItemCount.ToString();
 
             if (value.Level > 1) {
                 levelTextNode.String = $"Lv. {value.Level, 3}";
