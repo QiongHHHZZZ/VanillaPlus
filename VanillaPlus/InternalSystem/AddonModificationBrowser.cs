@@ -68,7 +68,7 @@ public class AddonModificationBrowser : NativeAddon {
         foreach (var category in groupedOptions) {
             var newCategoryNode = new TreeListCategoryNode {
                 IsVisible = true,
-                Label = category.Key.GetDescription(),
+                SeString = category.Key.GetDescription(),
                 OnToggle = isVisible => OnCategoryToggled(isVisible, category.Key),
             };
 
@@ -129,7 +129,7 @@ public class AddonModificationBrowser : NativeAddon {
         };
 
         searchBoxNode.OnUnfocused += () => {
-            if (searchBoxNode.String.ToString() is "") {
+            if (searchBoxNode.SeString.ToString() is "") {
                 searchLabelNode.IsVisible = true;
             }
         };
@@ -165,7 +165,7 @@ public class AddonModificationBrowser : NativeAddon {
         System.NativeController.AttachNode(descriptionImageTextNode, descriptionContainerNode);
 
         changelogButtonNode = new TextButtonNode {
-            Label = "Changelog",
+            SeString = "Changelog",
             OnClick = OnChangelogButtonClicked,
         };
         System.NativeController.AttachNode(changelogButtonNode, descriptionContainerNode);
@@ -223,7 +223,7 @@ public class AddonModificationBrowser : NativeAddon {
         }
 
         foreach (var categoryNode in categoryNodes) {
-            categoryNode.IsVisible = validOptions.Any(option => option.ModificationInfo.Type.GetDescription() == categoryNode.Label.ToString());
+            categoryNode.IsVisible = validOptions.Any(option => option.ModificationInfo.Type.GetDescription() == categoryNode.SeString.ToString());
             categoryNode.RecalculateLayout();
         }
 
