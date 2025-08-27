@@ -28,6 +28,8 @@ public class RecentlyLootedWindow : GameModification {
     private AddonConfigWindow? addonConfigWindow;
     private KeybindListener? keybindListener;
 
+    private bool enableTracking;
+
     public override string ImageName => "RecentlyLootedWindow.png";
 
     public override void OnEnable() {
@@ -56,17 +58,18 @@ public class RecentlyLootedWindow : GameModification {
         });
 
         OpenConfigAction = addonConfigWindow.Toggle;
-        
+
+        enableTracking = Services.ClientState.IsLoggedIn;
+
         Services.GameInventory.InventoryChanged += OnRawItemAdded;
-        
+        Services.ClientState.Login += OnLogin;
+        Services.ClientState.Logout += OnLogout;
+
         Services.CommandManager.AddHandler("/recentloot", new CommandInfo(OnListInventoryCommand) {
             DisplayOrder = 3,
             HelpMessage = "Open Recently Looted Window",
         });
     }
-
-    private void OnListInventoryCommand(string command, string arguments)
-        => recentlyLootedWindow?.Toggle();
 
     public override void OnDisable() {
         recentlyLootedWindow?.Dispose();
@@ -78,12 +81,25 @@ public class RecentlyLootedWindow : GameModification {
         keybindListener?.Dispose();
         keybindListener = null;
 
-        Services.CommandManager.RemoveHandler("/recentloot");
-
         Services.GameInventory.InventoryChanged -= OnRawItemAdded;
+        Services.ClientState.Login -= OnLogin;
+        Services.ClientState.Logout -= OnLogout;
+        
+        Services.CommandManager.RemoveHandler("/recentloot");
     }
 
+    private void OnLogin()
+        => enableTracking = true;
+
+    private void OnLogout(int type, int code)
+        => enableTracking = false;
+
+    private void OnListInventoryCommand(string command, string arguments)
+        => recentlyLootedWindow?.Toggle();
+
     private void OnRawItemAdded(IReadOnlyCollection<InventoryEventArgs> events) {
+        if (!enableTracking) return;
+        
         foreach (var eventData in events) {
             if (!Inventory.StandardInventories.Contains(eventData.Item.ContainerType)) continue;
 
