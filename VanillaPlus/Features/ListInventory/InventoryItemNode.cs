@@ -3,6 +3,7 @@ using System.Numerics;
 using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Text;
 using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
@@ -109,7 +110,7 @@ public class InventoryItemNode : SimpleComponentNode {
             }
 
             itemIconImageNode.IconId = iconId;
-            itemNameTextNode.ReadOnlySeString = GetItemName(iconId);
+            itemNameTextNode.ReadOnlySeString = GetItemName(value.Item);
             itemCountTextNode.String = value.ItemCount.ToString();
 
             if (value.Level > 1) {
@@ -128,18 +129,18 @@ public class InventoryItemNode : SimpleComponentNode {
         }
     }
     
-    private static ReadOnlySeString GetItemName(uint itemId) {
-        var itemName = ItemUtil.IsEventItem(itemId)
-                           ? Services.DataManager.GetExcelSheet<EventItem>().TryGetRow(itemId, out var eventItem) ? eventItem.Name : default
-                           : Services.DataManager.GetExcelSheet<Item>().TryGetRow(ItemUtil.GetBaseId(itemId).ItemId, out var item) ? item.Name : default;
+    private static ReadOnlySeString GetItemName(InventoryItem item) {
+        var itemName = ItemUtil.IsEventItem(item.ItemId)
+                           ? Services.DataManager.GetExcelSheet<EventItem>().TryGetRow(item.ItemId, out var eventItem) ? eventItem.Name : default
+                           : Services.DataManager.GetExcelSheet<Item>().TryGetRow(ItemUtil.GetBaseId(item.ItemId).ItemId, out var baseItem) ? baseItem.Name : default;
 
-        if (ItemUtil.IsHighQuality(itemId))
+        if (item.IsHighQuality())
             itemName += " " + SeIconChar.HighQuality.ToIconString();
-        else if (ItemUtil.IsCollectible(itemId))
+        else if (item.IsCollectable())
             itemName += " " + SeIconChar.Collectible.ToIconString();
 
         return new Lumina.Text.SeStringBuilder()
-            .PushColorType(ItemUtil.GetItemRarityColorType(itemId))
+            .PushColorType(ItemUtil.GetItemRarityColorType(item.ItemId))
             .Append(itemName)
             .PopColorType()
             .ToReadOnlySeString();
