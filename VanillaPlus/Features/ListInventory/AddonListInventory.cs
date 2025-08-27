@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -29,6 +30,8 @@ public unsafe class AddonListInventory : NativeAddon {
     public required AddonConfig Config { get; init; }
 
     private bool reverseSort;
+    private string searchText = string.Empty;
+    private string filterOption = "Alphabetically";
 
     protected override void OnSetup(AtkUnitBase* addon) {
         addon->SubscribeAtkArrayData(0, (int)StringArrayType.Inventory);
@@ -53,14 +56,18 @@ public unsafe class AddonListInventory : NativeAddon {
             Alignment = HorizontalListAnchor.Right,
             IsVisible = true,
         };
-        
+
         sortDropdownNode = new TextDropDownNode {
             Size = new Vector2(dropDownWidth, 28.0f),
             MaxListOptions = 7,
             Options = ["Alphabetically", "Quantity", "Level", "Item Level", "Rarity", "Item Id", "Item Category"],
             IsVisible = true,
-            OnOptionSelected = _ => UpdateInventoryList(),
+            OnOptionSelected = newOption => {
+                filterOption = newOption;
+                UpdateInventoryList();
+            },
         };
+        sortDropdownNode.SelectedOption = filterOption;
 
         reverseButtonNode = new CircleButtonNode {
             Size = new Vector2(28.0f, 28.0f),
@@ -72,16 +79,17 @@ public unsafe class AddonListInventory : NativeAddon {
             },
             Tooltip = "Reverse Sort Direction",
         };
-        
+
         textInputNode = new TextInputNode {
             IsVisible = true,
         };
+        textInputNode.SeString = searchText;
 
         searchLabelNode = new TextNode {
             Position = new Vector2(10.0f, 6.0f),
-            IsVisible = true,
             TextColor = ColorHelper.GetColor(3),
             String = "Search . . .",
+            IsVisible = searchText.IsNullOrEmpty(),
         };
 
         textInputNode.OnFocused += () => {
@@ -89,12 +97,11 @@ public unsafe class AddonListInventory : NativeAddon {
         };
 
         textInputNode.OnUnfocused += () => {
-            if (textInputNode.String.ToString() is "") {
-                searchLabelNode.IsVisible = true;
-            }
+            searchLabelNode.IsVisible = searchText.IsNullOrEmpty();
         };
 
-        textInputNode.OnInputReceived += _ => {
+        textInputNode.OnInputReceived += newSearchString => {
+            searchText = newSearchString.ToString();
             UpdateInventoryList();
         };
         
@@ -127,6 +134,7 @@ public unsafe class AddonListInventory : NativeAddon {
         }
 
         RecalculateContentHeight();
+        UpdateInventoryList();
     }
 
     private bool tooltipShowing;
@@ -170,7 +178,11 @@ public unsafe class AddonListInventory : NativeAddon {
         
         AtkStage.Instance()->TooltipManager.HideTooltip((ushort)AddonId);
 
-        ListNode.SyncWithListData(GetInventoryItems(), GetDataFromNode, CreateInventoryNode);
+        var filteredInventoryItems = GetInventoryItems()
+            .Where(item => item.IsRegexMatch(searchText))
+            .ToList();
+
+        ListNode.SyncWithListData(filteredInventoryItems, GetDataFromNode, CreateInventoryNode);
         ListNode.ReorderNodes(Comparison);
         
         RecalculateContentHeight();
@@ -195,7 +207,7 @@ public unsafe class AddonListInventory : NativeAddon {
 
         // Note: Compares in opposite direction to be descending instead of ascending, except for alphabetically
 
-        var result = sortDropdownNode?.SelectedOption switch {
+        var result = filterOption switch {
             "Alphabetically" => string.CompareOrdinal(leftItem.Name, rightItem.Name),
             "Level" => rightItem.Level.CompareTo(leftItem.Level),
             "Item Level" => rightItem.ItemLevel.CompareTo(leftItem.ItemLevel),
