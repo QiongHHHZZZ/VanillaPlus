@@ -124,8 +124,7 @@ public class InventoryItemNode : SimpleComponentNode {
                     break;
             }
 
-            itemCountTextNode.String = value.ItemCount.ToString();
-            
+            itemCountTextNode.ReadOnlySeString = GetItemName(value.Item.ItemId);
 
             if (value.Level > 1) {
                 levelTextNode.String = $"Lv. {value.Level, 3}";
