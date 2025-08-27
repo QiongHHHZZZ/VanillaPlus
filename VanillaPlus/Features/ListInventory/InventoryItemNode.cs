@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Numerics;
 using Dalamud.Game.Addon.Events;
-using Dalamud.Game.Text;
-using Dalamud.Utility;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
-using Lumina.Excel.Sheets;
-using Lumina.Text.ReadOnly;
+using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.ListInventory;
 
-public class InventoryItemNode : SimpleComponentNode {
+public unsafe class InventoryItemNode : SimpleComponentNode {
     
     private readonly NineGridNode hoveredBackgroundNode;
     private readonly IconImageNode itemIconImageNode;
@@ -102,15 +98,10 @@ public class InventoryItemNode : SimpleComponentNode {
             }
 
             field = value;
+            var item = value.Item.GetLinkedItem();
 
-            var iconId = value.IconId;
-            
-            if (value.Item.IsHighQuality()) {
-                iconId += 1_000_000;
-            }
-
-            itemIconImageNode.IconId = iconId;
-            itemNameTextNode.ReadOnlySeString = GetItemName(value.Item);
+            itemIconImageNode.IconId = item->GetIconId();
+            itemNameTextNode.ReadOnlySeString = item->GetItemName();
             itemCountTextNode.String = value.ItemCount.ToString();
 
             if (value.Level > 1) {
@@ -129,23 +120,6 @@ public class InventoryItemNode : SimpleComponentNode {
         }
     }
     
-    private static ReadOnlySeString GetItemName(InventoryItem item) {
-        var itemName = ItemUtil.IsEventItem(item.ItemId)
-                           ? Services.DataManager.GetExcelSheet<EventItem>().TryGetRow(item.ItemId, out var eventItem) ? eventItem.Name : default
-                           : Services.DataManager.GetExcelSheet<Item>().TryGetRow(ItemUtil.GetBaseId(item.ItemId).ItemId, out var baseItem) ? baseItem.Name : default;
-
-        if (item.IsHighQuality())
-            itemName += " " + SeIconChar.HighQuality.ToIconString();
-        else if (item.IsCollectable())
-            itemName += " " + SeIconChar.Collectible.ToIconString();
-
-        return new Lumina.Text.SeStringBuilder()
-            .PushColorType(ItemUtil.GetItemRarityColorType(item.ItemId))
-            .Append(itemName)
-            .PopColorType()
-            .ToReadOnlySeString();
-    }
-
     protected override void OnSizeChanged() {
         base.OnSizeChanged();
 
