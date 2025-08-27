@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Numerics;
 using Dalamud.Game.Addon.Events;
+using Dalamud.Game.Text;
+using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
+using Lumina.Excel.Sheets;
+using Lumina.Text.ReadOnly;
 
 namespace VanillaPlus.Features.ListInventory;
 
@@ -97,17 +101,31 @@ public class InventoryItemNode : SimpleComponentNode {
             }
             
             field = value;
-            
-            itemIconImageNode.IconId = value.IconId;
-            itemNameTextNode.String = value.Name;
-            itemNameTextNode.TextColor = value.RarityColor;
 
-            if (value.ItemCount > 1) {
-                itemCountTextNode.String = value.ItemCount.ToString();
+            var (itemBaseId, itemKind) = ItemUtil.GetBaseId(value.Item.ItemId);
+            switch (itemKind) {
+                case ItemKind.Normal:
+                case ItemKind.Collectible:
+                case ItemKind.Hq:
+                    var item = Services.DataManager.GetExcelSheet<Item>().GetRow(itemBaseId);
+                    itemIconImageNode.IconId = item.Icon;
+                    itemNameTextNode.ReadOnlySeString = GetItemName(itemBaseId);
+                    break;
+
+                case ItemKind.EventItem:
+                    var eventItem = Services.DataManager.GetExcelSheet<EventItem>().GetRow(itemBaseId);
+                    itemIconImageNode.IconId = eventItem.Icon;
+                    itemNameTextNode.String = eventItem.Name.ToString();
+                    break;
+
+                default:
+                    itemIconImageNode.IconId = 60071;
+                    itemNameTextNode.String = $"Unknown Item Type, ID: {value.Item.ItemId}";
+                    break;
             }
-            else {
-                itemCountTextNode.String = string.Empty;
-            }
+
+            itemCountTextNode.String = value.ItemCount.ToString();
+            
 
             if (value.Level > 1) {
                 levelTextNode.String = $"Lv. {value.Level, 3}";
@@ -123,6 +141,23 @@ public class InventoryItemNode : SimpleComponentNode {
                 itemLevelTextNode.String = string.Empty;
             }
         }
+    }
+    
+    private static ReadOnlySeString GetItemName(uint itemId) {
+        var itemName = ItemUtil.IsEventItem(itemId)
+                           ? Services.DataManager.GetExcelSheet<EventItem>().TryGetRow(itemId, out var eventItem) ? eventItem.Name : default
+                           : Services.DataManager.GetExcelSheet<Item>().TryGetRow(ItemUtil.GetBaseId(itemId).ItemId, out var item) ? item.Name : default;
+
+        if (ItemUtil.IsHighQuality(itemId))
+            itemName += " " + SeIconChar.HighQuality.ToIconString();
+        else if (ItemUtil.IsCollectible(itemId))
+            itemName += " " + SeIconChar.Collectible.ToIconString();
+
+        return new Lumina.Text.SeStringBuilder()
+            .PushColorType(ItemUtil.GetItemRarityColorType(itemId))
+            .Append(itemName)
+            .PopColorType()
+            .ToReadOnlySeString();
     }
 
     protected override void OnSizeChanged() {
