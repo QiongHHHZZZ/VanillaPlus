@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
@@ -16,6 +17,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
         Type = ModificationType.GameBehavior,
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(2, "Added option to disable in MSQ Roulette"),
         ],
         CompatibilityModule = new HaselTweaksCompatibilityModule("ForcedCutsceneMusic"),
     };
@@ -78,6 +80,8 @@ public unsafe class ForcedCutsceneSounds : GameModification {
         var result = createCutSceneControllerHook!.Original(thisPtr, path, id, a4);
         
         try {
+            if (config is null) return result;
+            if (config.DisableInMsqRoulette && AgentContentsFinder.Instance()->SelectedDuty is { ContentType: ContentsId.ContentsType.Roulette, Id: 3 }) return result;
             if (wasMuted is null || id is 0) return result;
 
             foreach (var optionName in ConfigOptions) {

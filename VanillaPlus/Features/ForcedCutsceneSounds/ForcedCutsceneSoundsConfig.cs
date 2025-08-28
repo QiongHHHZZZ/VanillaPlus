@@ -13,4 +13,6 @@ public class ForcedCutsceneSoundsConfig : GameModificationConfig<ForcedCutsceneS
     public bool HandleEnv = true;
     public bool HandleSystem = false;
     public bool HandlePerform = false;
+
+    public bool DisableInMsqRoulette = true;
 }
