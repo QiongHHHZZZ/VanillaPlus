@@ -22,6 +22,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
 
     public GameModificationOptionNode() {
         hoveredBackgroundNode = new SimpleNineGridNode {
+            NodeId = 2,
             TexturePath = "ui/uld/ListItemA.tex",
             TextureCoordinates = new Vector2(0.0f, 22.0f),
             TextureSize = new Vector2(64.0f, 22.0f),
@@ -34,6 +35,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         System.NativeController.AttachNode(hoveredBackgroundNode, this);
         
         selectedBackgroundNode = new SimpleNineGridNode {
+            NodeId = 3,
             TexturePath = "ui/uld/ListItemA.tex",
             TextureCoordinates = new Vector2(0.0f, 0.0f),
             TextureSize = new Vector2(64.0f, 22.0f),
@@ -46,16 +48,14 @@ public class GameModificationOptionNode : SimpleComponentNode {
         System.NativeController.AttachNode(selectedBackgroundNode, this);
         
         checkboxNode = new CheckboxNode {
-            Origin = new Vector2(8.0f, 8.0f),
-            Scale = new Vector2(2.0f, 2.0f),
+            NodeId = 4,
             IsVisible = true,
             OnClick = ToggleModification,
         };
         System.NativeController.AttachNode(checkboxNode, this);
 
         erroringImageNode = new IconImageNode {
-            Scale = new Vector2(2.0f, 2.0f),
-            Origin = new Vector2(8.0f, 8.0f),
+            NodeId = 5,
             IconId = 61502,
             ImageNodeFlags = 0,
             WrapMode = 2,
@@ -64,6 +64,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         System.NativeController.AttachNode(erroringImageNode, this);
 
         modificationNameNode = new TextNode {
+            NodeId = 6,
             IsVisible = true,
             TextFlags = TextFlags.AutoAdjustNodeSize | TextFlags.Ellipsis,
             AlignmentType = AlignmentType.BottomLeft,
@@ -72,12 +73,14 @@ public class GameModificationOptionNode : SimpleComponentNode {
         System.NativeController.AttachNode(modificationNameNode, this);
 
         experimentalImageNode = new IconImageNode {
+            NodeId = 7,
             IconId = 60073,
             Tooltip = "Caution, this feature is experimental.\nMay contain bugs or crash your game.",
         };
         System.NativeController.AttachNode(experimentalImageNode, this);
         
         authorNamesNode = new TextNode {
+            NodeId = 8,
             IsVisible = true,
             FontType = FontType.Axis,
             TextFlags = TextFlags.AutoAdjustNodeSize | TextFlags.Ellipsis,
@@ -87,6 +90,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         System.NativeController.AttachNode(authorNamesNode, this);
 
         configButtonNode = new CircleButtonNode {
+            NodeId = 9,
             Icon = ButtonIcon.GearCog,
             Tooltip = "Open configuration window",
         };
@@ -173,8 +177,8 @@ public class GameModificationOptionNode : SimpleComponentNode {
         hoveredBackgroundNode.Size = Size;
         selectedBackgroundNode.Size = Size;
 
-        checkboxNode.Size = new Vector2(16.0f, 16.0f);
-        checkboxNode.Position = new Vector2(Height / 4.0f + checkboxNode.Width / 2.0f, Height / 2.0f - checkboxNode.Height / 2.0f - 4.0f);
+        checkboxNode.Size = new Vector2(Height, Height) * 3.0f / 4.0f;
+        checkboxNode.Position = new Vector2(Height, Height) / 8.0f;
 
         modificationNameNode.Height = Height / 2.0f;
         modificationNameNode.Position = new Vector2(Height + Height / 3.0f, 0.0f);
@@ -189,7 +193,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         configButtonNode.Position = new Vector2(Width - Height, Height / 2.0f - configButtonNode.Height / 2.0f);
         
         erroringImageNode.Size = checkboxNode.Size - new Vector2(4.0f, 4.0f);
-        erroringImageNode.Position = checkboxNode.Position + new Vector2(5.0f, 8.0f);
+        erroringImageNode.Position = checkboxNode.Position + new Vector2(1.0f, 3.0f);
     }
 
     public void UpdateDisabledState() {
