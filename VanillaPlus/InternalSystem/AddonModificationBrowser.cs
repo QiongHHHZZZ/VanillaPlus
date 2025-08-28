@@ -65,6 +65,8 @@ public class AddonModificationBrowser : NativeAddon {
                                    .GroupBy(option => option.Modification.ModificationInfo.Type)
                                    .OrderBy(option => option.Key);
 
+        uint optionIndex = 0;
+        
         foreach (var category in groupedOptions) {
             var newCategoryNode = new TreeListCategoryNode {
                 IsVisible = true,
@@ -74,6 +76,7 @@ public class AddonModificationBrowser : NativeAddon {
 
             foreach (var mod in category.OrderBy(modification => modification.Modification.ModificationInfo.DisplayName)) {
                 var newOptionNode = new GameModificationOptionNode {
+                    NodeId = optionIndex++,
                     Height = 42.0f,
                     Modification = mod,
                     IsVisible = true,
