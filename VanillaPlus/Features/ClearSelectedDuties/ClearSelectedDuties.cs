@@ -1,8 +1,10 @@
-﻿using Dalamud.Game.Addon.Lifecycle;
+﻿using System.Numerics;
+using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
@@ -20,12 +22,23 @@ public class ClearSelectedDuties : GameModification {
     };
 
     private ClearSelectedDutiesConfig? config;
-    private ClearSelectedDutiesConfigWindow? configWindow;
+    private AddonBoolConfig? configWindow;
 
     public override void OnEnable() {
         config = ClearSelectedDutiesConfig.Load();
-        configWindow = new ClearSelectedDutiesConfigWindow(config);
-        configWindow.AddToWindowSystem();
+        configWindow = new AddonBoolConfig {
+            NativeController = System.NativeController,
+            Size = new Vector2(300.0f, 125.0f),
+            InternalName = "ClearSelectedConfig",
+            Title = "Clear Selected Duties Config",
+            OnClose = () => config.Save(),
+        };
+        
+        configWindow.AddConfigEntry(new BoolConfigEntry("Settings", "Disable when Unrestricted", config.DisableWhenUnrestricted, b => {
+            config.DisableWhenUnrestricted = b;
+            config.Save();
+        }));
+        
         OpenConfigAction = configWindow.Toggle;
         
         Services.AddonLifecycle.RegisterListener(AddonEvent.PostSetup, "ContentsFinder", OnContentsFinderSetup);
@@ -34,7 +47,7 @@ public class ClearSelectedDuties : GameModification {
     public override void OnDisable() {
         Services.AddonLifecycle.UnregisterListener(OnContentsFinderSetup);
        
-        configWindow?.RemoveFromWindowSystem();
+        configWindow?.Dispose();
         configWindow = null;
         
         config = null;

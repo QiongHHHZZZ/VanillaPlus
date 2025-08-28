@@ -10,6 +10,7 @@ using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
+using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
 
@@ -27,7 +28,7 @@ public unsafe class EnhancedLootWindow : GameModification {
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@LootWindowDuplicateUniqueItemIndicator"),
     };
 
-    private EnhancedLootWindowConfigWindow? configWindow;
+    private AddonBoolConfig? configWindow;
     private EnhancedLootWindowConfig? config;
     private AddonController<AddonNeedGreed>? needGreedController;
 
@@ -38,8 +39,24 @@ public unsafe class EnhancedLootWindow : GameModification {
 
     public override void OnEnable() {
         config = EnhancedLootWindowConfig.Load();
-        configWindow = new EnhancedLootWindowConfigWindow(config);
-        configWindow.AddToWindowSystem();
+        configWindow = new AddonBoolConfig {
+            NativeController = System.NativeController,
+            Size = new Vector2(300.0f, 150.0f),
+            InternalName = "EnhancedLootWindowConfig",
+            Title = "Enhanced Loot Window Config",
+            OnClose = () => config.Save(),
+        };
+        
+        configWindow.AddConfigEntry(new BoolConfigEntry("Settings", "Mark Un-obtainable Items", config.MarkUnobtainableItems, b => {
+            config.MarkUnobtainableItems = b;
+            config.Save();
+        }));
+        
+        configWindow.AddConfigEntry(new BoolConfigEntry("Settings", "Mark Already Unlocked Items", config.MarkAlreadyObtainedItems, b => {
+            config.MarkAlreadyObtainedItems = b;
+            config.Save();
+        }));
+
         OpenConfigAction = configWindow.Toggle;
 
         needGreedController = new AddonController<AddonNeedGreed>("NeedGreed");
@@ -53,7 +70,7 @@ public unsafe class EnhancedLootWindow : GameModification {
         needGreedController?.Dispose();
         needGreedController = null;
         
-        configWindow?.RemoveFromWindowSystem();
+        configWindow?.Dispose();
         configWindow = null;
         
         config = null;
