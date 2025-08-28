@@ -4,13 +4,12 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
-using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 
 public record IndexedItemEvent(InventoryEventArgs Event, int Index);
 
-public class AddonRecentlyLooted(AddonConfig config) : NativeAddon {
+public class AddonRecentlyLooted : NativeAddon {
 
     private readonly List<IndexedItemEvent> itemEvents = [];
 
@@ -28,11 +27,6 @@ public class AddonRecentlyLooted(AddonConfig config) : NativeAddon {
         AttachNode(scrollingAreaNode);
 
         RebuildList();
-    }
-
-    protected override unsafe void OnHide(AtkUnitBase* addon) {
-        config.WindowPosition = Position;
-        config.Save();
     }
 
     protected override unsafe void OnFinalize(AtkUnitBase* addon)

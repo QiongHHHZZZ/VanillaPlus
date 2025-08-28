@@ -33,14 +33,6 @@ public class AddonConfigWindow : Window, IDisposable {
         ImGui.TextColored(KnownColor.Gray.Vector(), "Changes won't take effect until the window is reopened");
         
         ImGui.Spacing();
-        if (ImGui.DragFloat2("Window Position", ref config.WindowPosition)) {
-            var xPos = Math.Max(0.0f, config.WindowPosition.X);
-            var yPos = Math.Max(0.0f, config.WindowPosition.Y);
-            
-            config.WindowPosition = new Vector2(xPos, yPos);
-            config.Save();
-        }
-
         if (ImGui.DragFloat2("Window Size", ref config.WindowSize)) {
             var xPos = Math.Max(50.0f, config.WindowSize.X);
             var yPos = Math.Max(50.0f, config.WindowSize.Y);

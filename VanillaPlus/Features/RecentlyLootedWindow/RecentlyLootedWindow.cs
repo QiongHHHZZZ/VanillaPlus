@@ -4,7 +4,6 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
@@ -35,19 +34,19 @@ public class RecentlyLootedWindow : GameModification {
     public override void OnEnable() {
         config = AddonConfig.Load("RecentlyLooted.addon.json", [VirtualKey.CONTROL, VirtualKey.L]);
 
-        recentlyLootedWindow = new AddonRecentlyLooted(config) {
+        recentlyLootedWindow = new AddonRecentlyLooted() {
             NativeController = System.NativeController,
             Size = new Vector2(250.0f, 350.0f),
             InternalName = "RecentlyLooted",
             Title = "Recently Looted Items",
         };
         
-        recentlyLootedWindow.InitializeConfig(config);
-
         keybindListener = new KeybindListener {
             KeybindCallback = () => {
-                recentlyLootedWindow.Position = config.WindowPosition;
-                recentlyLootedWindow.Size = config.WindowSize;
+                if (config.WindowSize != Vector2.Zero) {
+                    recentlyLootedWindow.Size = config.WindowSize;
+                }
+
                 recentlyLootedWindow.Toggle();
             },
             KeyCombo = config.OpenKeyCombo,

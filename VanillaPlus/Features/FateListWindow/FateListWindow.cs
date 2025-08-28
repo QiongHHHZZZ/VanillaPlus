@@ -2,7 +2,6 @@
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.FateListWindow;
 
@@ -29,19 +28,19 @@ public class FateListWindow : GameModification {
     public override void OnEnable() {
         config = AddonConfig.Load("FateList.addon.json", [VirtualKey.CONTROL, VirtualKey.F]);
 
-        addonFateList = new AddonFateList(config) {
+        addonFateList = new AddonFateList() {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 400.0f),
             InternalName = "FateList",
             Title = "Fate List",
         };
         
-        addonFateList.InitializeConfig(config);
-
         keybindListener = new KeybindListener {
             KeybindCallback = () => {
-                addonFateList.Position = config.WindowPosition;
-                addonFateList.Size = config.WindowSize;
+                if (config.WindowSize != Vector2.Zero) {
+                    addonFateList.Size = config.WindowSize;
+                }
+
                 addonFateList.Toggle();
             },
             KeyCombo = config.OpenKeyCombo,

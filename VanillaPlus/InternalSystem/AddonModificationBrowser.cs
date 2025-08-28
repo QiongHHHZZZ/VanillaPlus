@@ -301,10 +301,6 @@ public class AddonModificationBrowser : NativeAddon {
                 changelogBrowser.Close();
             }
 
-            if (System.SystemConfig.ChangelogWindowPosition is { } changelogPosition) {
-                changelogBrowser.Position = changelogPosition;
-            }
-            
             changelogBrowser.Modification = selectedOption.Modification.Modification;
             changelogBrowser.Title = $"{selectedOption.ModificationInfo.DisplayName} Changelog";
             changelogBrowser.Open();
@@ -352,10 +348,5 @@ public class AddonModificationBrowser : NativeAddon {
         foreach (var node in categoryNodes) {
             node.Width = optionContainerNode.ContentNode.Width;
         }
-    }
-    
-    protected override unsafe void OnHide(AtkUnitBase* addon) {
-        System.SystemConfig.BrowserWindowPosition = Position;
-        System.SystemConfig.Save();
     }
 }

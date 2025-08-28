@@ -23,10 +23,6 @@ public sealed class VanillaPlus : IDalamudPlugin {
             Size = new Vector2(836.0f, 560.0f),
         };
 
-        if (System.SystemConfig.BrowserWindowPosition is { } browserPosition) {
-            System.AddonModificationBrowser.Position = browserPosition;
-        }
-
         Services.CommandManager.AddHandler("/vanillaplus", new CommandInfo(Handler) {
             DisplayOrder = 1,
             ShowInHelp = true,

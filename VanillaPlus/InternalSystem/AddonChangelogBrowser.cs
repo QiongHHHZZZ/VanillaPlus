@@ -61,10 +61,5 @@ public class AddonChangelogBrowser : NativeAddon {
         }
     }
 
-    protected override unsafe void OnHide(AtkUnitBase* addon) {
-        System.SystemConfig.ChangelogWindowPosition = Position;
-        System.SystemConfig.Save();
-    }
-
     public GameModification? Modification { get; set; }
 }

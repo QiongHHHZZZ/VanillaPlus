@@ -5,11 +5,10 @@ using Dalamud.Game.ClientState.Fates;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
-using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.FateListWindow;
 
-public class AddonFateList(AddonConfig config) : NativeAddon {
+public class AddonFateList : NativeAddon {
 
     private ScrollingAreaNode<OrderedVerticalListNode<FateEntryNode, long>>? scrollingAreaNode;
     
@@ -42,12 +41,6 @@ public class AddonFateList(AddonConfig config) : NativeAddon {
         }
         
         scrollingAreaNode.ContentHeight = FateListNode.Nodes.Sum(node => node.IsVisible ? node.Height : 0.0f);
-    }
-
-    protected override unsafe void OnHide(AtkUnitBase* addon) {
-        config.WindowPosition = Position;
-        config.WindowSize = Size;
-        config.Save();
     }
 
     protected override unsafe void OnFinalize(AtkUnitBase* addon)

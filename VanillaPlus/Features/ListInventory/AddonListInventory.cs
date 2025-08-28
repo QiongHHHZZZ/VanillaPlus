@@ -259,11 +259,6 @@ public unsafe class AddonListInventory : NativeAddon {
 
         return itemInfos;
     }
-    
-    protected override void OnHide(AtkUnitBase* addon) {
-        Config.WindowPosition = Position;
-        Config.Save();
-    }
 
     private void RecalculateContentHeight() {
         if (scrollingAreaNode is null || ListNode is null) return;

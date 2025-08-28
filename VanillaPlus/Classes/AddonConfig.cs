@@ -23,6 +23,5 @@ public class AddonConfig {
         => Config.SaveConfig(this, fileName);
 
     public HashSet<VirtualKey> OpenKeyCombo = [];
-    public Vector2 WindowPosition = Vector2.Zero;
     public Vector2 WindowSize = Vector2.Zero;
 }

@@ -2,7 +2,6 @@
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.ListInventory;
 
@@ -26,7 +25,7 @@ public class ListInventory : GameModification {
     private KeybindListener? keybindListener;
     
     public override void OnEnable() {
-        config = AddonConfig.Load("ListInventory.addon.config", [VirtualKey.SHIFT, VirtualKey.CONTROL, VirtualKey.I]);
+        config = AddonConfig.Load("ListInventory.addon.json", [VirtualKey.SHIFT, VirtualKey.CONTROL, VirtualKey.I]);
         
         listInventory = new AddonListInventory {
             NativeController = System.NativeController,
@@ -36,12 +35,12 @@ public class ListInventory : GameModification {
             Config = config,
         };
         
-        listInventory.InitializeConfig(config);
-
         keybindListener = new KeybindListener {
             KeybindCallback = () => {
-                listInventory.Position = config.WindowPosition;
-                listInventory.Size = config.WindowSize;
+                if (config.WindowSize != Vector2.Zero) {
+                    listInventory.Size = config.WindowSize;
+                }
+                
                 listInventory.Toggle();
             },
             KeyCombo = config.OpenKeyCombo,
