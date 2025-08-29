@@ -2,6 +2,7 @@
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Hooking;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using Lumina.Excel.Sheets;
@@ -79,6 +80,8 @@ public unsafe class CastBarAetheryteNames : GameModification {
 
     private void UpdateTeleportList() {
         if (!Services.ClientState.IsLoggedIn) return;
+        if (Control.Instance()->LocalPlayer is null) return;
+
         Telepo.Instance()->UpdateAetheryteList();
     }
     
