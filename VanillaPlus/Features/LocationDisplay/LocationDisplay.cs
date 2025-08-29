@@ -111,10 +111,10 @@ public unsafe class LocationDisplay : GameModification {
 	}
 
 	private string GetStringForIndex(int index) => index switch {
-		0 => currentContinent?.Name.ExtractText() ?? string.Empty,
-		1 => currentTerritory?.Name.ExtractText() ?? string.Empty,
-		2 => currentRegion?.Name.ExtractText() ?? string.Empty,
-		3 => currentSubArea?.Name.ExtractText() ?? string.Empty,
+		0 => currentContinent?.Name.ToString() ?? string.Empty,
+		1 => currentTerritory?.Name.ToString() ?? string.Empty,
+		2 => currentRegion?.Name.ToString() ?? string.Empty,
+		3 => currentSubArea?.Name.ToString() ?? string.Empty,
 		4 => currentWard ?? string.Empty,
 		_ => string.Empty,
 	};

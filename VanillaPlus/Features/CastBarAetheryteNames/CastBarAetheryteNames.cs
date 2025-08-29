@@ -69,7 +69,7 @@ public unsafe class CastBarAetheryteNames : GameModification {
                 break;
             
             case { } when aetheryte.PlaceName.IsValid:
-                textNode->SetText(aetheryte.PlaceName.Value.Name.ExtractText());
+                textNode->SetText(aetheryte.PlaceName.Value.Name.ToString());
                 break;
         }
     }
