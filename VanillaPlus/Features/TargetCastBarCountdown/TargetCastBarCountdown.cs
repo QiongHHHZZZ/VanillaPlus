@@ -163,7 +163,9 @@ public unsafe class TargetCastBarCountdown : GameModification {
                     IsVisible = true,
                 };
                 primaryTargetTextNode.Load(PrimaryTargetStylePath);
-                System.NativeController.AttachNode(primaryTargetTextNode, addon->GetNodeById(2), NodePosition.AsLastChild);
+                primaryTargetTextNode.IsVisible = true;
+                
+                System.NativeController.AttachNode(primaryTargetTextNode, addon->GetNodeById(7), NodePosition.AsLastChild);
                 break;
             
             case "_TargetInfo":
@@ -178,7 +180,8 @@ public unsafe class TargetCastBarCountdown : GameModification {
                     IsVisible = true,
                 };
                 primaryTargetAltTextNode.Load(PrimaryTargetAltStylePath);
-                System.NativeController.AttachNode(primaryTargetAltTextNode, addon->GetNodeById(10), NodePosition.AsLastChild);
+                primaryTargetAltTextNode.IsVisible = true;
+                System.NativeController.AttachNode(primaryTargetAltTextNode, addon->GetNodeById(15), NodePosition.AsLastChild);
                 break;
             
             case "_FocusTargetInfo":
@@ -193,7 +196,8 @@ public unsafe class TargetCastBarCountdown : GameModification {
                     IsVisible = true,
                 };
                 focusTargetTextNode.Load(FocusTargetStylePath);
-                System.NativeController.AttachNode(focusTargetTextNode, addon->GetNodeById(3), NodePosition.AsLastChild);
+                focusTargetTextNode.IsVisible = true;
+                System.NativeController.AttachNode(focusTargetTextNode, addon->GetNodeById(8), NodePosition.AsLastChild);
                 break;
             
             case "CastBarEnemy":
@@ -216,7 +220,10 @@ public unsafe class TargetCastBarCountdown : GameModification {
                     
                     castBarEnemyTextNode[index] = newNode;
                     newNode.Load(CastBarEnemyStylePath);
-                    System.NativeController.AttachNode(newNode, (AtkComponentNode*)info.CastBarNode);
+                    castBarEnemyTextNode[index]!.IsVisible = true;
+
+                    var castBarNode = (AtkComponentNode*)info.CastBarNode;
+                    System.NativeController.AttachNode(newNode, castBarNode->SearchNodeById<AtkResNode>(7));
                 }
                 break;
         }
@@ -254,72 +261,55 @@ public unsafe class TargetCastBarCountdown : GameModification {
         if (config is null) return;
         
         if (Services.ClientState.IsPvP) {
-            if (primaryTargetTextNode is not null) primaryTargetTextNode.IsVisible = false;
-            if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.IsVisible = false;
-            if (focusTargetTextNode is not null) focusTargetTextNode.IsVisible = false;
+            if (primaryTargetTextNode is not null) primaryTargetTextNode.String = string.Empty;
+            if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.String = string.Empty;
+            if (focusTargetTextNode is not null) focusTargetTextNode.String = string.Empty;
             foreach (var node in castBarEnemyTextNode ?? []) {
                 if (node is not null) {
-                    node.IsVisible = false;
+                    node.String = string.Empty;
                 }
             }
             return;
         }
         
         switch (addon->NameString) {
-            case "_TargetInfoCastBar":
-            case "_TargetInfo":
+            case "_TargetInfoCastBar" when primaryTargetTextNode is not null:
+                if (Services.TargetManager.Target is IBattleChara primaryTarget && primaryTarget.CurrentCastTime < primaryTarget.TotalCastTime && config.PrimaryTarget) {
+                    var castTime = (primaryTarget.TotalCastTime - primaryTarget.CurrentCastTime).ToString("00.00");
+
+                    primaryTargetTextNode.String = castTime;
+                }
+                break;
+
+            case "_TargetInfo" when primaryTargetAltTextNode is not null:
                 if (Services.TargetManager.Target is IBattleChara target && target.CurrentCastTime < target.TotalCastTime && config.PrimaryTarget) {
                     var castTime = (target.TotalCastTime - target.CurrentCastTime).ToString("00.00");
 
-                    if (primaryTargetTextNode is not null) {
-                        primaryTargetTextNode.IsVisible = true;
-                        primaryTargetTextNode.String = castTime;
-                    }
-                    
-                    if (primaryTargetAltTextNode is not null) {
-                        primaryTargetAltTextNode.IsVisible = true;
-                        primaryTargetAltTextNode.String = castTime;
-                    }
-                }
-                else {
-                    if (primaryTargetTextNode is not null) primaryTargetTextNode.IsVisible = false;
-                    if (primaryTargetAltTextNode is not null) primaryTargetAltTextNode.IsVisible = false;
+                    primaryTargetAltTextNode.String = castTime;
                 }
                 break;
             
-            case "_FocusTargetInfo":
+            case "_FocusTargetInfo" when focusTargetTextNode is not null:
                 if (Services.TargetManager.FocusTarget is IBattleChara focusTarget && focusTarget.CurrentCastTime < focusTarget.TotalCastTime && config.FocusTarget) {
                     var castTime = (focusTarget.TotalCastTime - focusTarget.CurrentCastTime).ToString("00.00");
 
-                    if (focusTargetTextNode is not null) {
-                        focusTargetTextNode.IsVisible = true;
-                        focusTargetTextNode.String = castTime;
-                    }
-                }
-                else {
-                    if (focusTargetTextNode is not null) focusTargetTextNode.IsVisible = false;
+                    focusTargetTextNode.String = castTime;
                 }
                 break;
             
-            case "CastBarEnemy":
+            case "CastBarEnemy" when castBarEnemyTextNode is not null:
                 var castBarAddon = (AddonCastBarEnemy*)addon;
                 
                 foreach (var index in Enumerable.Range(0, 10)) {
                     var info = castBarAddon->CastBarInfo[index];
-                    var node = castBarEnemyTextNode?[index];
+                    var node = castBarEnemyTextNode[index];
                     
                     var targetObject = Services.ObjectTable.FirstOrDefault(obj => obj.EntityId == info.ObjectId.ObjectId);
                     if (targetObject is IBattleNpc enemyTarget && enemyTarget.CurrentCastTime < enemyTarget.TotalCastTime) {
                         var castTime = (enemyTarget.TotalCastTime - enemyTarget.CurrentCastTime).ToString("00.00");
 
                         if (node is not null) {
-                            node.IsVisible = true;
                             node.String = castTime;
-                        }
-                    }
-                    else {
-                        if (node is not null) {
-                            node.IsVisible = false;
                         }
                     }
                 }
