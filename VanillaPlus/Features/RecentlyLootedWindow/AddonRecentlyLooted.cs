@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
+using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 
-public record IndexedItemEvent(InventoryEventArgs Event, int Index);
+public unsafe class AddonRecentlyLooted : NativeAddon {
 
-public class AddonRecentlyLooted : NativeAddon {
-
-    private readonly List<IndexedItemEvent> itemEvents = [];
+    private readonly List<LootedItemInfo> items = [];
 
     private ScrollingAreaNode<VerticalListNode>? scrollingAreaNode;
     private VerticalListNode? ListNode => scrollingAreaNode?.ContentNode;
 
-    protected override unsafe void OnSetup(AtkUnitBase* addon) {
+    protected override void OnSetup(AtkUnitBase* addon) {
         scrollingAreaNode = new ScrollingAreaNode<VerticalListNode> {
             Position = ContentStartPosition,
             Size = ContentSize,
@@ -29,7 +29,7 @@ public class AddonRecentlyLooted : NativeAddon {
         RebuildList();
     }
 
-    protected override unsafe void OnFinalize(AtkUnitBase* addon)
+    protected override void OnFinalize(AtkUnitBase* addon)
         => System.NativeController.DisposeNode(ref scrollingAreaNode);
 
     public void AddInventoryItem(InventoryEventArgs itemEvent) {
@@ -37,7 +37,16 @@ public class AddonRecentlyLooted : NativeAddon {
         if (itemEvent is not (InventoryItemAddedArgs or InventoryItemChangedArgs)) return;
         if (itemEvent is InventoryItemChangedArgs changedArgs && changedArgs.OldItemState.Quantity >= changedArgs.Item.Quantity) return;
 
-        itemEvents.Add(new IndexedItemEvent(itemEvent, itemEvents.Count));
+        var inventoryItem = (InventoryItem*)itemEvent.Item.Address;
+        var changeAmount = itemEvent is InventoryItemChangedArgs changed ? changed.Item.Quantity - changed.OldItemState.Quantity : itemEvent.Item.Quantity;
+        
+        items.Add(new LootedItemInfo(
+            items.Count, 
+            inventoryItem->GetItemId(), 
+            inventoryItem->GetIconId(), 
+            inventoryItem->GetItemName(), 
+            changeAmount)
+        );
 
         if (IsOpen) {
             RebuildList();
@@ -48,7 +57,7 @@ public class AddonRecentlyLooted : NativeAddon {
         if (scrollingAreaNode is null) return;
         if (ListNode is null) return;
 
-        ListNode.SyncWithListData(itemEvents, node => node.Item, data => new LootItemNode {
+        ListNode.SyncWithListData(items, node => node.Item, data => new LootItemNode {
             Height = 36.0f,
             Width = scrollingAreaNode.ContentNode.Width,
             IsVisible = true,
@@ -65,4 +74,7 @@ public class AddonRecentlyLooted : NativeAddon {
         
         return left.Item.Index > right.Item.Index ? -1 : 1;
     }
+
+    public void ClearItems()
+        => items.Clear();
 }

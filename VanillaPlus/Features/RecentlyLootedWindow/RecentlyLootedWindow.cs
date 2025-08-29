@@ -87,8 +87,10 @@ public class RecentlyLootedWindow : GameModification {
         Services.CommandManager.RemoveHandler("/recentloot");
     }
 
-    private void OnLogin()
-        => enableTracking = true;
+    private void OnLogin() {
+        enableTracking = true;
+        recentlyLootedWindow?.ClearItems();
+    }
 
     private void OnLogout(int type, int code)
         => enableTracking = false;

@@ -1,12 +1,9 @@
 ﻿using System.Numerics;
 using Dalamud.Game.Addon.Events;
-using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using FFXIVClientStructs.FFXIV.Client.Enums;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
-using VanillaPlus.Extensions;
 using AtkItemTooltipArgs = FFXIVClientStructs.FFXIV.Component.GUI.AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
@@ -62,6 +59,8 @@ public unsafe class LootItemNode : SimpleComponentNode {
         
         CollisionNode.AddEvent(AddonEventType.MouseOver, _ => {
             IsHovered = true;
+
+            if (Item is null) return;
             
             var addon = RaptureAtkUnitManager.Instance()->GetAddonByNode((AtkResNode*)InternalComponentNode);
             if (addon is not null) {
@@ -70,7 +69,7 @@ public unsafe class LootItemNode : SimpleComponentNode {
                 tooltipArgs.Ctor();
                 tooltipArgs.ItemArgs = new AtkItemTooltipArgs {
                     Kind = DetailKind.ItemId,
-                    ItemId = (int) Item!.Event.Item.BaseItemId,
+                    ItemId = (int) Item.ItemId,
                 };
                 
                 AtkStage.Instance()->TooltipManager.ShowTooltip(
@@ -92,35 +91,21 @@ public unsafe class LootItemNode : SimpleComponentNode {
         set => hoveredBackgroundNode.IsVisible = value;
     }
 
-    public required IndexedItemEvent Item {
+    public required LootedItemInfo Item {
         get;
         set {
             field = value;
 
-            var inventoryItem = (InventoryItem*)value.Event.Item.Address;
-
-            iconImageNode.IconId = inventoryItem->GetIconId();
-            itemNameTextNode.ReadOnlySeString = inventoryItem->GetItemName();
+            iconImageNode.IconId = value.IconId;
+            itemNameTextNode.ReadOnlySeString = value.Name;
             
-            switch (value.Event) {
-                case InventoryItemAddedArgs addedArgs:
-                    if (addedArgs.Item.Quantity > 1) {
-                        itemQuantityTextNode.String = addedArgs.Item.Quantity.ToString();
-                    }
-                    break;
-                
-                case InventoryItemChangedArgs changedArgs:
-                    var quantity = changedArgs.Item.Quantity - changedArgs.OldItemState.Quantity;
-
-                    if (quantity > 1 ) {
-                        if (quantity < 10000) {
-                            itemQuantityTextNode.String = quantity.ToString();
-                        }
-                        else {
-                            itemQuantityTextNode.String = $"{quantity / 1000,3}k";
-                        }
-                    }
-                    break;
+            if (value.Quantity > 1 ) {
+                if (value.Quantity < 10000) {
+                    itemQuantityTextNode.String = value.Quantity.ToString();
+                }
+                else {
+                    itemQuantityTextNode.String = $"{value.Quantity / 1000,3}k";
+                }
             }
         }
     }
