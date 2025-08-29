@@ -112,8 +112,13 @@ public unsafe class LootItemNode : SimpleComponentNode {
                 case InventoryItemChangedArgs changedArgs:
                     var quantity = changedArgs.Item.Quantity - changedArgs.OldItemState.Quantity;
 
-                    if (quantity > 1) {
-                        itemQuantityTextNode.String = quantity.ToString();
+                    if (quantity > 1 ) {
+                        if (quantity < 10000) {
+                            itemQuantityTextNode.String = quantity.ToString();
+                        }
+                        else {
+                            itemQuantityTextNode.String = $"{quantity / 1000,3}k";
+                        }
                     }
                     break;
             }
