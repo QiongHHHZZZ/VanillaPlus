@@ -77,7 +77,10 @@ public unsafe class CastBarAetheryteNames : GameModification {
     private bool OnTeleport(Telepo* thisPtr, uint aetheryteId, byte subIndex) {
         try {
             teleportInfo = null;
-            thisPtr->UpdateAetheryteList();
+
+            if (thisPtr->TeleportList.Count is 0) {
+                thisPtr->UpdateAetheryteList();
+            }
 
             foreach (var teleportEntry in thisPtr->TeleportList) {
                 if (teleportEntry.AetheryteId == aetheryteId && teleportEntry.SubIndex == subIndex) {
