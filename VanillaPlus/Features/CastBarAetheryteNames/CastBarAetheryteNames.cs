@@ -2,7 +2,6 @@
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Hooking;
-using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using Lumina.Excel.Sheets;
@@ -29,12 +28,10 @@ public unsafe class CastBarAetheryteNames : GameModification {
     public override string ImageName => "CastBarAetheryteNames.png";
 
     public override void OnEnable() {
-        UpdateTeleportList();
         teleportHook = Services.GameInteropProvider.HookFromAddress<Telepo.Delegates.Teleport>(Telepo.MemberFunctionPointers.Teleport, OnTeleport);
         teleportHook?.Enable();
         
         Services.ClientState.TerritoryChanged += OnTerritoryChanged;
-        Services.ClientState.Login += UpdateTeleportList;
         
         Services.AddonLifecycle.RegisterListener(AddonEvent.PostRefresh, "_CastBar", OnCastBarRefresh);
     }
@@ -43,7 +40,6 @@ public unsafe class CastBarAetheryteNames : GameModification {
         Services.AddonLifecycle.UnregisterListener(OnCastBarRefresh);
         
         Services.ClientState.TerritoryChanged -= OnTerritoryChanged;
-        Services.ClientState.Login -= UpdateTeleportList;
         
         teleportHook?.Dispose();
         teleportHook = null;
@@ -78,16 +74,10 @@ public unsafe class CastBarAetheryteNames : GameModification {
         }
     }
 
-    private void UpdateTeleportList() {
-        if (!Services.ClientState.IsLoggedIn) return;
-        if (Control.Instance()->LocalPlayer is null) return;
-
-        Telepo.Instance()->UpdateAetheryteList();
-    }
-    
     private bool OnTeleport(Telepo* thisPtr, uint aetheryteId, byte subIndex) {
         try {
             teleportInfo = null;
+            thisPtr->UpdateAetheryteList();
 
             foreach (var teleportEntry in thisPtr->TeleportList) {
                 if (teleportEntry.AetheryteId == aetheryteId && teleportEntry.SubIndex == subIndex) {
