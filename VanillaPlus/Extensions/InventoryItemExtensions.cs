@@ -26,6 +26,7 @@ public static class InventoryItemExtensions {
             baseIconId += 1_000_000;
         }
 
+        Services.PluginLog.Debug($"Resolved {item.ItemId}'s iconId to: {baseIconId}");
         return baseIconId;
     }
 
@@ -39,6 +40,8 @@ public static class InventoryItemExtensions {
         else if (item.IsCollectable())
             itemName += " " + SeIconChar.Collectible.ToIconString();
 
+        Services.PluginLog.Debug($"Resolved {item.ItemId}'s name to to: {itemName}");
+        
         return new Lumina.Text.SeStringBuilder()
             .PushColorType(ItemUtil.GetItemRarityColorType(item.ItemId))
             .Append(itemName)
