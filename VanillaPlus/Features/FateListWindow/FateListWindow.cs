@@ -28,7 +28,7 @@ public class FateListWindow : GameModification {
     public override void OnEnable() {
         config = AddonConfig.Load("FateList.addon.json", [VirtualKey.CONTROL, VirtualKey.F]);
 
-        addonFateList = new AddonFateList() {
+        addonFateList = new AddonFateList {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 400.0f),
             InternalName = "FateList",
