@@ -94,25 +94,25 @@ public unsafe class FateEntryNode : SimpleComponentNode {
         });
         
         AddTimeline(new TimelineBuilder()
-                    .BeginFrameSet(1, 120)
-                    .AddLabel(1, 1, AtkTimelineJumpBehavior.Start, 0)
-                    .AddLabel(60, 0, AtkTimelineJumpBehavior.LoopForever, 1)
-                    .AddLabel(61, 2, AtkTimelineJumpBehavior.Start, 0)
-                    .AddLabel(120, 0, AtkTimelineJumpBehavior.LoopForever, 2)
-                    .EndFrameSet()
-                    .Build());
-        
+            .BeginFrameSet(1, 120)
+            .AddLabel(1, 1, AtkTimelineJumpBehavior.Start, 0)
+            .AddLabel(60, 0, AtkTimelineJumpBehavior.LoopForever, 1)
+            .AddLabel(61, 2, AtkTimelineJumpBehavior.Start, 0)
+            .AddLabel(120, 0, AtkTimelineJumpBehavior.LoopForever, 2)
+            .EndFrameSet()
+            .Build());
+
         timeRemainingNode.AddTimeline(new TimelineBuilder()
-                  .BeginFrameSet(1, 60)
-                  .AddFrame(1, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
-                  .EndFrameSet()
-                  .BeginFrameSet(61, 120)
-                  .AddFrame(61, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
-                  .AddFrame(80, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
-                  .AddFrame(100, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
-                  .AddFrame(120, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
-                  .EndFrameSet()
-                  .Build());
+          .BeginFrameSet(1, 60)
+          .AddFrame(1, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
+          .EndFrameSet()
+          .BeginFrameSet(61, 120)
+          .AddFrame(61, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
+          .AddFrame(80, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
+          .AddFrame(100, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
+          .AddFrame(120, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
+          .EndFrameSet()
+          .Build());
         
         Timeline?.PlayAnimation(1);
     }
@@ -156,10 +156,10 @@ public unsafe class FateEntryNode : SimpleComponentNode {
         timeRemainingNode.Size = new Vector2(50.0f, Height / 2.0f);
         timeRemainingNode.Position = new Vector2(Width - timeRemainingNode.Width, 0.0f);
 
-        levelNode.Size = new Vector2(Width / 4.0f, Height / 2.0f);
+        levelNode.Size = new Vector2(75.0f, Height / 2.0f);
         levelNode.Position = new Vector2(iconNode.Width + 4.0f, Height / 2.0f);
         
-        progressNode.Size = new Vector2(Width / 3.0f, Height / 3.0f);
+        progressNode.Size = new Vector2(Width - iconNode.Width - 4.0f - timeRemainingNode.Width - levelNode.Width - 4.0f, Height / 3.0f);
         progressNode.Position = new Vector2(iconNode.Width + levelNode.Width + 4.0f, Height / 2.0f + (Height / 3.0f) / 4.0f);
 
         nameNode.Size = new Vector2(Width - iconNode.Width - 4.0f - timeRemainingNode.Width, Height / 2.0f);
