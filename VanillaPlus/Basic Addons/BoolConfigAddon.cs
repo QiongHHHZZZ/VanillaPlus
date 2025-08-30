@@ -9,7 +9,7 @@ namespace VanillaPlus.Basic_Addons;
 
 public record BoolConfigEntry(string Category, string Label, bool InitialState, Action<bool> Callback);
 
-public class AddonBoolConfig : NativeAddon {
+public class BoolConfigAddon : NativeAddon {
 
     private ScrollingAreaNode<TabbedVerticalListNode>? mainListNode;
     

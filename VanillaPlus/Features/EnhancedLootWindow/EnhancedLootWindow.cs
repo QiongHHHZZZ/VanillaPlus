@@ -28,7 +28,7 @@ public unsafe class EnhancedLootWindow : GameModification {
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@LootWindowDuplicateUniqueItemIndicator"),
     };
 
-    private AddonBoolConfig? configWindow;
+    private BoolConfigAddon? configWindow;
     private EnhancedLootWindowConfig? config;
     private AddonController<AddonNeedGreed>? needGreedController;
 
@@ -39,7 +39,7 @@ public unsafe class EnhancedLootWindow : GameModification {
 
     public override void OnEnable() {
         config = EnhancedLootWindowConfig.Load();
-        configWindow = new AddonBoolConfig {
+        configWindow = new BoolConfigAddon {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 150.0f),
             InternalName = "EnhancedLootWindowConfig",

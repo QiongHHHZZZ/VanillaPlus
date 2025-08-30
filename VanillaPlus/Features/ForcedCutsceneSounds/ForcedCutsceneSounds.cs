@@ -42,13 +42,13 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     private Hook<CutSceneControllerDtorDelegate>? cutSceneControllerDtorHook;
 
     private ForcedCutsceneSoundsConfig? config;
-    private AddonBoolConfig? configWindow;
+    private BoolConfigAddon? configWindow;
 
     public override void OnEnable() {
         wasMuted = [];
         
         config = ForcedCutsceneSoundsConfig.Load();
-        configWindow = new AddonBoolConfig {
+        configWindow = new BoolConfigAddon {
             NativeController = System.NativeController,
             Size = new Vector2(325.0f, 375.0f),
             InternalName = "ForcedCutsceneConfig",

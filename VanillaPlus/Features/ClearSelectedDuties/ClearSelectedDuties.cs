@@ -22,11 +22,11 @@ public class ClearSelectedDuties : GameModification {
     };
 
     private ClearSelectedDutiesConfig? config;
-    private AddonBoolConfig? configWindow;
+    private BoolConfigAddon? configWindow;
 
     public override void OnEnable() {
         config = ClearSelectedDutiesConfig.Load();
-        configWindow = new AddonBoolConfig {
+        configWindow = new BoolConfigAddon {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 125.0f),
             InternalName = "ClearSelectedConfig",
