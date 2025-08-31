@@ -3,6 +3,7 @@ using System.Numerics;
 using Dalamud.Game.Addon.Events;
 using Dalamud.Game.ClientState.Fates;
 using Dalamud.Game.Text;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes.TimelineBuilding;
@@ -87,6 +88,7 @@ public unsafe class FateEntryNode : SimpleComponentNode {
             agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId);
             agentMap->FlagMarkerCount = 0;
             agentMap->SetFlagMapMarker(agentMap->CurrentTerritoryId, agentMap->CurrentMapId, Fate.Position, Fate.MapIconId);
+            RaptureAtkModule.Instance()->FocusAddon(agentMap->AddonId);
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
