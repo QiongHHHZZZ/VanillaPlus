@@ -103,16 +103,16 @@ public unsafe class FateEntryNode : SimpleComponentNode {
             .Build());
 
         timeRemainingNode.AddTimeline(new TimelineBuilder()
-          .BeginFrameSet(1, 60)
-          .AddFrame(1, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
-          .EndFrameSet()
-          .BeginFrameSet(61, 120)
-          .AddFrame(61, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
-          .AddFrame(80, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
-          .AddFrame(100, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
-          .AddFrame(120, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
-          .EndFrameSet()
-          .Build());
+            .BeginFrameSet(1, 60)
+            .AddFrame(1, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
+            .EndFrameSet()
+            .BeginFrameSet(61, 120)
+            .AddFrame(61, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
+            .AddFrame(80, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
+            .AddFrame(100, multiplyColor: new Vector3(100.0f, 50.0f, 50.0f))
+            .AddFrame(120, multiplyColor: new Vector3(100.0f, 100.0f, 100.0f))
+            .EndFrameSet()
+            .Build());
         
         Timeline?.PlayAnimation(1);
     }
