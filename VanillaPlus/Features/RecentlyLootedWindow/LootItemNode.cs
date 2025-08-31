@@ -4,6 +4,7 @@ using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
+using VanillaPlus.Basic_Nodes;
 using AtkItemTooltipArgs = FFXIVClientStructs.FFXIV.Component.GUI.AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
@@ -11,9 +12,8 @@ namespace VanillaPlus.Features.RecentlyLootedWindow;
 public unsafe class LootItemNode : SimpleComponentNode {
 
     private readonly NineGridNode hoveredBackgroundNode;
-    private readonly IconImageNode iconImageNode;
+    private readonly IconWithCountNode iconNode;
     private readonly TextNode itemNameTextNode;
-    private readonly TextNode itemQuantityTextNode;
     
     public LootItemNode() {
         hoveredBackgroundNode = new SimpleNineGridNode {
@@ -28,26 +28,12 @@ public unsafe class LootItemNode : SimpleComponentNode {
             IsVisible = false,
         };
         System.NativeController.AttachNode(hoveredBackgroundNode, this);
-        
-        iconImageNode = new IconImageNode {
-            NodeId = 3,
-            Size = new Vector2(32.0f, 32.0f),
-            Position = new Vector2(2.0f, 2.0f),
-            IconId = 19,
-            IsVisible = true,
-        };
-        System.NativeController.AttachNode(iconImageNode, this);
 
-        itemQuantityTextNode = new TextNode {
-            NodeId = 4,
-            Size = new Vector2(32.0f, 8.0f),
-            Position = new Vector2(0.0f, 28.0f), 
+        iconNode = new IconWithCountNode {
+            NodeId = 3,
             IsVisible = true,
-            AlignmentType = AlignmentType.BottomRight,
-            TextFlags = TextFlags.Edge,
-            FontSize = 12,
         };
-        System.NativeController.AttachNode(itemQuantityTextNode, this);
+        System.NativeController.AttachNode(iconNode, this);
 
         itemNameTextNode = new TextNode {
             NodeId = 5,
@@ -96,24 +82,20 @@ public unsafe class LootItemNode : SimpleComponentNode {
         set {
             field = value;
 
-            iconImageNode.IconId = value.IconId;
+            iconNode.IconId = value.IconId;
             itemNameTextNode.ReadOnlySeString = value.Name;
-            
-            if (value.Quantity > 1 ) {
-                if (value.Quantity < 10000) {
-                    itemQuantityTextNode.String = value.Quantity.ToString();
-                }
-                else {
-                    itemQuantityTextNode.String = $"{value.Quantity / 1000,3}k";
-                }
-            }
+            iconNode.Count = value.Quantity;
         }
     }
     
     protected override void OnSizeChanged() {
         base.OnSizeChanged();
-        itemNameTextNode.Size = Size - new Vector2(iconImageNode.X + iconImageNode.Width + 4.0f, 0.0f);
-        itemNameTextNode.Position = new Vector2(iconImageNode.X + iconImageNode.Width + 4.0f, 0.0f);
+
+        iconNode.Size = new Vector2(Height, Height);
+        iconNode.Position = Vector2.Zero;
+
+        itemNameTextNode.Size = new Vector2(Width - iconNode.Width - 4.0f, Height);
+        itemNameTextNode.Position = new Vector2(iconNode.Width + 4.0f, 0.0f);
         
         hoveredBackgroundNode.Size = Size;
     }

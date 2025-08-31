@@ -1,6 +1,10 @@
-﻿using System.Numerics;
+﻿using System.Linq;
+using System.Numerics;
+using Dalamud.Game.ClientState.Fates;
 using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.Command;
+using KamiToolKit.Nodes;
+using KamiToolKit.System;
+using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.FateListWindow;
@@ -18,61 +22,52 @@ public class FateListWindow : GameModification {
         ],
     };
 
-    private AddonFateList? addonFateList;
-    private AddonConfig? config;
-    private KeybindListener? keybindListener;
-    private AddonConfigWindow? addonConfigWindow;
+    private NodeListAddon? addonFateList;
     
     public override string ImageName => "FateListWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("FateList.addon.json", [VirtualKey.CONTROL, VirtualKey.F]);
-
-        addonFateList = new AddonFateList {
+        addonFateList = new NodeListAddon {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 400.0f),
             InternalName = "FateList",
             Title = "Fate List",
-        };
-        
-        keybindListener = new KeybindListener {
-            KeybindCallback = () => {
-                if (config.WindowSize != Vector2.Zero) {
-                    addonFateList.Size = config.WindowSize;
-                }
-
-                addonFateList.Toggle();
-            },
-            KeyCombo = config.OpenKeyCombo,
+            OpenCommand = "/fatelist",
+            UpdateListFunction = UpdateList,
         };
 
-        addonConfigWindow = new AddonConfigWindow("Fate List", config, keybind => {
-            keybindListener.KeyCombo = keybind;
-        });
+        addonFateList.Initialize([VirtualKey.CONTROL, VirtualKey.F] );
 
-        OpenConfigAction = addonConfigWindow.Toggle;
-
-        Services.CommandManager.AddHandler("/fatelist", new CommandInfo(OnFateListCommand) {
-            DisplayOrder = 3,
-            HelpMessage = "Opens the Fate List Window",
-        });
+        OpenConfigAction = addonFateList.OpenAddonConfig;
     }
-
-    private void OnFateListCommand(string command, string arguments)
-        => addonFateList?.Open();
 
     public override void OnDisable() {
         addonFateList?.Dispose();
         addonFateList = null;
-        
-        addonConfigWindow?.Dispose();
-        addonConfigWindow = null;
-        
-        keybindListener?.Dispose();
-        keybindListener = null;
+    }
 
-        config = null;
+    private static bool UpdateList(VerticalListNode listNode) {
+        var validFates = Services.FateTable.Where(fate => fate is { State: FateState.Running }).ToList();
+        var listChanged = listNode.SyncWithListData(validFates, node => node.Fate, data => new FateEntryNode {
+            Size = new Vector2(listNode.Width, 53.0f),
+            IsVisible = true,
+            Fate = data,
+        });
+
+        if (listChanged) {
+            listNode.ReorderNodes(Comparison);
+        }
+
+        foreach (var fateNode in listNode.GetNodes<FateEntryNode>()) {
+            fateNode.Update();
+        }
+
+        return listChanged;
+    }
+
+    private static int Comparison(NodeBase x, NodeBase y) {
+        if (x is not FateEntryNode left || y is not FateEntryNode right) return 0;
         
-        Services.CommandManager.RemoveHandler("/fatelist");
+        return left.Fate.TimeRemaining.CompareTo(right.Fate.TimeRemaining);
     }
 }

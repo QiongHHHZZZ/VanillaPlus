@@ -1,17 +1,20 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using Dalamud.Game.Addon.Events;
+using FFXIVClientStructs.FFXIV.Client.Enums;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
+using VanillaPlus.Basic_Nodes;
 using VanillaPlus.Extensions;
+using AtkItemTooltipArgs = FFXIVClientStructs.FFXIV.Component.GUI.AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs;
 
 namespace VanillaPlus.Features.ListInventory;
 
 public unsafe class InventoryItemNode : SimpleComponentNode {
     
     private readonly NineGridNode hoveredBackgroundNode;
-    private readonly IconImageNode itemIconImageNode;
-    private readonly TextNode itemCountTextNode;
+
+    private readonly IconWithCountNode iconNode;
     private readonly TextNode itemNameTextNode;
     private readonly TextNode levelTextNode;
     private readonly TextNode itemLevelTextNode;
@@ -30,20 +33,11 @@ public unsafe class InventoryItemNode : SimpleComponentNode {
         };
         System.NativeController.AttachNode(hoveredBackgroundNode, this);
 
-        itemIconImageNode = new IconImageNode {
+        iconNode = new IconWithCountNode {
             NodeId = 3,
             IsVisible = true,
         };
-        System.NativeController.AttachNode(itemIconImageNode, this);
-
-        itemCountTextNode = new TextNode {
-            NodeId = 4,
-            IsVisible = true,
-            AlignmentType = AlignmentType.BottomRight,
-            TextFlags = TextFlags.Edge,
-            FontSize = 12,
-        };
-        System.NativeController.AttachNode(itemCountTextNode, this);
+        System.NativeController.AttachNode(iconNode, this);
 
         itemNameTextNode = new TextNode {
             NodeId = 5,
@@ -68,21 +62,36 @@ public unsafe class InventoryItemNode : SimpleComponentNode {
         System.NativeController.AttachNode(itemLevelTextNode, this);
         
         CollisionNode.AddEvent(AddonEventType.MouseOver, _ => {
-            if (IsVisible) {
-                IsHovered = true;
-                OnHovered?.Invoke(this, true);
+            IsHovered = true;
+
+            if (Item is null) return;
+            
+            var addon = RaptureAtkUnitManager.Instance()->GetAddonByNode((AtkResNode*)InternalComponentNode);
+            if (addon is not null) {
+                
+                var tooltipArgs = new AtkTooltipManager.AtkTooltipArgs();
+                tooltipArgs.Ctor();
+                tooltipArgs.ItemArgs = new AtkItemTooltipArgs {
+                    Kind = DetailKind.InventoryItem,
+                    InventoryType = Item.Item.Container,
+                    Slot = Item.Item.Slot,
+                    BuyQuantity = -1,
+                    Flag1 = 0,
+                };
+
+                AtkStage.Instance()->TooltipManager.ShowTooltip(
+                    AtkTooltipManager.AtkTooltipType.Item,
+                    addon->Id,
+                    (AtkResNode*)InternalComponentNode,
+                    &tooltipArgs);
             }
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
-            if (IsVisible) {
-                OnHovered?.Invoke(this, false);
-            }
             IsHovered = false;
+            HideTooltip();
         });
     }
-    
-    public Action<InventoryItemNode, bool>? OnHovered { get; set; }
     
     public bool IsHovered {
         get => hoveredBackgroundNode.IsVisible;
@@ -100,9 +109,9 @@ public unsafe class InventoryItemNode : SimpleComponentNode {
             field = value;
             var item = value.Item.GetLinkedItem();
 
-            itemIconImageNode.IconId = item->GetIconId();
+            iconNode.IconId = item->GetIconId();
             itemNameTextNode.ReadOnlySeString = item->GetItemName();
-            itemCountTextNode.String = value.ItemCount.ToString();
+            iconNode.Count = value.ItemCount;
 
             if (value.Level > 1) {
                 levelTextNode.String = $"Lv. {value.Level, 3}";
@@ -123,11 +132,8 @@ public unsafe class InventoryItemNode : SimpleComponentNode {
     protected override void OnSizeChanged() {
         base.OnSizeChanged();
 
-        itemIconImageNode.Size = new Vector2(Height, Height);
-        itemIconImageNode.Position = new Vector2(0.0f, 0.0f);
-
-        itemCountTextNode.Size = new Vector2(32.0f, Height / 4.0f );
-        itemCountTextNode.Position = new Vector2(0.0f, Height * 3.0f / 4.0f + 4.0f);
+        iconNode.Size = new Vector2(Height, Height);
+        iconNode.Position = Vector2.Zero;
 
         itemLevelTextNode.Size = new Vector2(64.0f, Height);
         itemLevelTextNode.Position = new Vector2(Width - itemLevelTextNode.Width, 0.0f);
@@ -135,8 +141,8 @@ public unsafe class InventoryItemNode : SimpleComponentNode {
         levelTextNode.Size = new Vector2(64.0f, Height);
         levelTextNode.Position = new Vector2(Width - levelTextNode.Width - itemLevelTextNode.Width, 0.0f);
 
-        itemNameTextNode.Size = new Vector2(Width - itemIconImageNode.Width - itemLevelTextNode.Width - levelTextNode.Width - 8.0f, Height);
-        itemNameTextNode.Position = new Vector2(itemIconImageNode.Width + 4.0f, 0.0f);
+        itemNameTextNode.Size = new Vector2(Width - iconNode.Width - itemLevelTextNode.Width - levelTextNode.Width - 8.0f, Height);
+        itemNameTextNode.Position = new Vector2(iconNode.Width + 4.0f, 0.0f);
 
         hoveredBackgroundNode.Size = Size + new Vector2(6.0f, 6.0f);
         hoveredBackgroundNode.Position = new Vector2(-3.0f, -3.0f);

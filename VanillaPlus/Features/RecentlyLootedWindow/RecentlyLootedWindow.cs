@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.Command;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using KamiToolKit.Nodes;
+using KamiToolKit.System;
+using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
 using VanillaPlus.Utilities;
+using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 
-public class RecentlyLootedWindow : GameModification {
+public unsafe class RecentlyLootedWindow : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Recently Looted Items Window",
         Description = "Adds a window that shows a scrollable list of all items that you have looted this session.\n\n" +
@@ -22,41 +26,29 @@ public class RecentlyLootedWindow : GameModification {
         ],
     };
 
-    private AddonRecentlyLooted? recentlyLootedWindow;
-    private AddonConfig? config;
-    private AddonConfigWindow? addonConfigWindow;
-    private KeybindListener? keybindListener;
+    private NodeListAddon? addonRecentlyLooted;
 
     private bool enableTracking;
+    private List<LootedItemInfo>? items;
+    private bool updateRequested;
 
     public override string ImageName => "RecentlyLootedWindow.png";
 
     public override void OnEnable() {
-        config = AddonConfig.Load("RecentlyLooted.addon.json", [VirtualKey.CONTROL, VirtualKey.L]);
+        items = [];
 
-        recentlyLootedWindow = new AddonRecentlyLooted() {
+        addonRecentlyLooted = new NodeListAddon {
             NativeController = System.NativeController,
             Size = new Vector2(250.0f, 350.0f),
             InternalName = "RecentlyLooted",
             Title = "Recently Looted Items",
+            OpenCommand = "/recentloot",
+            UpdateListFunction = UpdateList,
         };
         
-        keybindListener = new KeybindListener {
-            KeybindCallback = () => {
-                if (config.WindowSize != Vector2.Zero) {
-                    recentlyLootedWindow.Size = config.WindowSize;
-                }
+        addonRecentlyLooted.Initialize([VirtualKey.CONTROL, VirtualKey.L]);
 
-                recentlyLootedWindow.Toggle();
-            },
-            KeyCombo = config.OpenKeyCombo,
-        };
-        
-        addonConfigWindow = new AddonConfigWindow("Recently Looted Items", config, keybind => {
-            keybindListener.KeyCombo = keybind;
-        });
-
-        OpenConfigAction = addonConfigWindow.Toggle;
+        OpenConfigAction = addonRecentlyLooted.OpenAddonConfig;
 
         enableTracking = Services.ClientState.IsLoggedIn;
 
@@ -64,47 +56,73 @@ public class RecentlyLootedWindow : GameModification {
         Services.ClientState.Login += OnLogin;
         Services.ClientState.Logout += OnLogout;
 
-        Services.CommandManager.AddHandler("/recentloot", new CommandInfo(OnListInventoryCommand) {
-            DisplayOrder = 3,
-            HelpMessage = "Open Recently Looted Window",
-        });
+        updateRequested = true;
     }
 
     public override void OnDisable() {
-        recentlyLootedWindow?.Dispose();
-        recentlyLootedWindow = null;
-        
-        addonConfigWindow?.Dispose();
-        addonConfigWindow = null;
-        
-        keybindListener?.Dispose();
-        keybindListener = null;
+        addonRecentlyLooted?.Dispose();
+        addonRecentlyLooted = null;
+
+        items?.Clear();
+        items = null;
 
         Services.GameInventory.InventoryChanged -= OnRawItemAdded;
         Services.ClientState.Login -= OnLogin;
         Services.ClientState.Logout -= OnLogout;
-        
-        Services.CommandManager.RemoveHandler("/recentloot");
     }
 
     private void OnLogin() {
         enableTracking = true;
-        recentlyLootedWindow?.ClearItems();
+        items?.Clear();
     }
 
     private void OnLogout(int type, int code)
         => enableTracking = false;
-
-    private void OnListInventoryCommand(string command, string arguments)
-        => recentlyLootedWindow?.Toggle();
 
     private void OnRawItemAdded(IReadOnlyCollection<InventoryEventArgs> events) {
         if (!enableTracking) return;
         
         foreach (var eventData in events) {
             if (!Inventory.StandardInventories.Contains(eventData.Item.ContainerType)) continue;
+            
+            if (!Services.ClientState.IsLoggedIn) return;
+            if (eventData is not (InventoryItemAddedArgs or InventoryItemChangedArgs)) return;
+            if (eventData is InventoryItemChangedArgs changedArgs && changedArgs.OldItemState.Quantity >= changedArgs.Item.Quantity) return;
 
-            recentlyLootedWindow?.AddInventoryItem(eventData);
+            var inventoryItem = (InventoryItem*)eventData.Item.Address;
+            var changeAmount = eventData is InventoryItemChangedArgs changed ? changed.Item.Quantity - changed.OldItemState.Quantity : eventData.Item.Quantity;
+        
+            items?.Add(new LootedItemInfo(
+                items.Count, 
+                inventoryItem->GetItemId(), 
+                inventoryItem->GetIconId(), 
+                inventoryItem->GetItemName(), 
+                changeAmount)
+            );
+
+            updateRequested = true;
         }
+    }
+    
+    private bool UpdateList(VerticalListNode listNode) {
+        if (!updateRequested) return false;
+        if (items is null) return false;
+        
+        var listUpdated = listNode.SyncWithListData(items, node => node.Item, data => new LootItemNode {
+            Size = new Vector2(listNode.Width, 36.0f),
+            IsVisible = true,
+            Item = data,
+        });
+
+        listNode.ReorderNodes(Comparison);
+
+        updateRequested = false;
+        return listUpdated;
+    }
+    
+    private static int Comparison(NodeBase x, NodeBase y) {
+        if (x is not LootItemNode left ||  y is not LootItemNode right) return 0;
+        
+        return left.Item.Index > right.Item.Index ? -1 : 1;
     }
 }
