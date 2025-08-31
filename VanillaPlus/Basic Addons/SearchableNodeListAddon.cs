@@ -116,6 +116,8 @@ public unsafe class SearchableNodeListAddon : NodeListAddon {
 
         mainContainerNode.AddDummy(4.0f);
         mainContainerNode.AddNode(ScrollingAreaNode);
+        
+        DoListUpdate(true);
     }
     
     protected override void OnFinalize(AtkUnitBase* addon) {

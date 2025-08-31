@@ -90,22 +90,24 @@ public unsafe class NodeListAddon : NativeAddon {
         };
         ScrollingAreaNode.ContentNode.FitContents = true;
         AttachNode(ScrollingAreaNode);
+        
+        DoListUpdate(true);
     }
     
     /// <summary>
     ///     Return true to indicate contents were changed.
     /// </summary>
-    public delegate bool UpdateList(VerticalListNode listNode);
+    public delegate bool UpdateList(VerticalListNode listNode, bool isOpening);
     
     public required UpdateList UpdateListFunction { get; init; }
 
     protected override void OnUpdate(AtkUnitBase* addon)
         => DoListUpdate();
 
-    public virtual void DoListUpdate() {
+    public void DoListUpdate(bool isOpening = false) {
         if (ScrollingAreaNode is null) return;
         
-        if (UpdateListFunction(ListNode)) {
+        if (UpdateListFunction(ListNode, isOpening)) {
             ScrollingAreaNode.ContentHeight = ListNode.Nodes.Sum(node => node.IsVisible ? node.Height : 0.0f);
         }
     }

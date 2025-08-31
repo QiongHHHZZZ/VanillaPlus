@@ -104,8 +104,8 @@ public unsafe class RecentlyLootedWindow : GameModification {
         }
     }
     
-    private bool UpdateList(VerticalListNode listNode) {
-        if (!updateRequested) return false;
+    private bool UpdateList(VerticalListNode listNode, bool isOpening) {
+        if (!updateRequested && !isOpening) return false;
         if (items is null) return false;
         
         var listUpdated = listNode.SyncWithListData(items, node => node.Item, data => new LootItemNode {

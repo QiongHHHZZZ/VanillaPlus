@@ -80,8 +80,8 @@ public unsafe class ListInventory : GameModification {
         addonListInventory?.DoListUpdate();
     }
 
-    private bool OnListUpdated(VerticalListNode list) {
-        if (!updateRequested) return false;
+    private bool OnListUpdated(VerticalListNode list, bool isOpening) {
+        if (!updateRequested && !isOpening) return false;
 
         var filteredInventoryItems = GetInventoryItems()
             .Where(item => item.IsRegexMatch(searchString))

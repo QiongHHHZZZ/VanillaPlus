@@ -46,7 +46,7 @@ public class FateListWindow : GameModification {
         addonFateList = null;
     }
 
-    private static bool UpdateList(VerticalListNode listNode) {
+    private static bool UpdateList(VerticalListNode listNode, bool isOpening) {
         var validFates = Services.FateTable.Where(fate => fate is { State: FateState.Running }).ToList();
         var listChanged = listNode.SyncWithListData(validFates, node => node.Fate, data => new FateEntryNode {
             Size = new Vector2(listNode.Width, 53.0f),
