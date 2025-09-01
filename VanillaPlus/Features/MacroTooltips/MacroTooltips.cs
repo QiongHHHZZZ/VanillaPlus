@@ -48,13 +48,14 @@ public unsafe class MacroTooltips : GameModification {
         resolveMacroIconFunction = null;
     }
 
-    private void OnShowMacroTooltip(AddonActionBarBase* a1, AtkResNode* a2, NumberArrayData* numberArray, StringArrayData* a4, int numberArrayIndex, int stringArrayIndex) {
-        showTooltipHook!.Original(a1, a2, numberArray, a4, numberArrayIndex, stringArrayIndex);
+    private void OnShowMacroTooltip(AddonActionBarBase* a1, AtkResNode* a2, NumberArrayData* numberArray, StringArrayData* stringArray, int numberArrayIndex, int stringArrayIndex) {
+        showTooltipHook!.Original(a1, a2, numberArray, stringArray, numberArrayIndex, stringArrayIndex);
 
         try {
             // In ActionBarNumberArray, the first hotbar starts at index 15
             var realSlotId = (numberArrayIndex - 15) % 16;
             var realHotbarId = (numberArrayIndex - 15) / 272;
+            var originalTooltip = stringArray->StringArray[stringArrayIndex];
 
             var hotbarSlot = RaptureHotbarModule.Instance()->Hotbars[realHotbarId].Slots[realSlotId];
             if (hotbarSlot is { CommandType: RaptureHotbarModule.HotbarSlotType.Macro, ApparentSlotType: RaptureHotbarModule.HotbarSlotType.Action }) {
@@ -71,7 +72,7 @@ public unsafe class MacroTooltips : GameModification {
                 tooltipArgs->ActionArgs.Id = (int)*rowId;
                 tooltipArgs->ActionArgs.Kind = DetailKind.Action;
                 tooltipArgs->ActionArgs.Flags = 1;
-                tooltipArgs->TextArgs.Text = GetMacroFromCommandId(hotbarSlot.CommandId).Name.StringPtr;
+                tooltipArgs->TextArgs.Text = originalTooltip;
 
                 AtkStage.Instance()->TooltipManager.ShowTooltip(
                     AtkTooltipManager.AtkTooltipType.Action |  AtkTooltipManager.AtkTooltipType.Text,
@@ -84,15 +85,5 @@ public unsafe class MacroTooltips : GameModification {
         catch (Exception e) {
             Services.PluginLog.Error(e, "Exception in OnShowMacroTooltip");
         }
-    }
-    
-    private static ref RaptureMacroModule.Macro GetMacroFromCommandId(uint commandId) {
-        var macroModule = RaptureMacroModule.Instance();
-
-        if (commandId >= 0x100) {
-            return ref macroModule->Shared[(int)commandId - 0x100];
-        }
-
-        return ref macroModule->Individual[(int)commandId];
     }
 }
