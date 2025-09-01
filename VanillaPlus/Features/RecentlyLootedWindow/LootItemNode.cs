@@ -1,11 +1,9 @@
 ﻿using System.Numerics;
 using Dalamud.Game.Addon.Events;
-using FFXIVClientStructs.FFXIV.Client.Enums;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
 using VanillaPlus.Basic_Nodes;
-using AtkItemTooltipArgs = FFXIVClientStructs.FFXIV.Component.GUI.AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs;
+using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 
@@ -47,28 +45,12 @@ public unsafe class LootItemNode : SimpleComponentNode {
             IsHovered = true;
 
             if (Item is null) return;
-            
-            var addon = RaptureAtkUnitManager.Instance()->GetAddonByNode((AtkResNode*)InternalComponentNode);
-            if (addon is not null) {
-                
-                var tooltipArgs = new AtkTooltipManager.AtkTooltipArgs();
-                tooltipArgs.Ctor();
-                tooltipArgs.ItemArgs = new AtkItemTooltipArgs {
-                    Kind = DetailKind.ItemId,
-                    ItemId = (int) Item.ItemId,
-                };
-                
-                AtkStage.Instance()->TooltipManager.ShowTooltip(
-                    AtkTooltipManager.AtkTooltipType.Item,
-                    addon->Id,
-                    (AtkResNode*)InternalComponentNode,
-                    &tooltipArgs);
-            }
+            AtkStage.Instance()->ShowItemTooltip((AtkResNode*)CollisionNode, Item.ItemId);
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
             IsHovered = false;
-            HideTooltip();
+            CollisionNode.HideTooltip();
         });
     }
     

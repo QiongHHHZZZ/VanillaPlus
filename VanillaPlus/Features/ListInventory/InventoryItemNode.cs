@@ -65,31 +65,12 @@ public unsafe class InventoryItemNode : SimpleComponentNode {
             IsHovered = true;
 
             if (Item is null) return;
-            
-            var addon = RaptureAtkUnitManager.Instance()->GetAddonByNode((AtkResNode*)InternalComponentNode);
-            if (addon is not null) {
-                
-                var tooltipArgs = new AtkTooltipManager.AtkTooltipArgs();
-                tooltipArgs.Ctor();
-                tooltipArgs.ItemArgs = new AtkItemTooltipArgs {
-                    Kind = DetailKind.InventoryItem,
-                    InventoryType = Item.Item.Container,
-                    Slot = Item.Item.Slot,
-                    BuyQuantity = -1,
-                    Flag1 = 0,
-                };
-
-                AtkStage.Instance()->TooltipManager.ShowTooltip(
-                    AtkTooltipManager.AtkTooltipType.Item,
-                    addon->Id,
-                    (AtkResNode*)InternalComponentNode,
-                    &tooltipArgs);
-            }
+            AtkStage.Instance()->ShowInventoryItemTooltip((AtkResNode*)CollisionNode, Item.Item.Container, Item.Item.Slot);
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
             IsHovered = false;
-            HideTooltip();
+            CollisionNode.HideTooltip();
         });
     }
     

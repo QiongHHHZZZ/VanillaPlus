@@ -1,11 +1,11 @@
 ﻿using System;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
-using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using VanillaPlus.Classes;
+using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.MacroTooltips;
 
@@ -68,18 +68,7 @@ public unsafe class MacroTooltips : GameModification {
 
                 resolveMacroIconFunction?.Invoke(RaptureMacroModule.Instance(), UIModule.Instance(), slotType, rowId, isShared ? 1 : 0, macroIndex, itemId);
 
-                var tooltipArgs = stackalloc AtkTooltipManager.AtkTooltipArgs[1];
-                tooltipArgs->ActionArgs.Id = (int)*rowId;
-                tooltipArgs->ActionArgs.Kind = DetailKind.Action;
-                tooltipArgs->ActionArgs.Flags = 1;
-                tooltipArgs->TextArgs.Text = originalTooltip;
-
-                AtkStage.Instance()->TooltipManager.ShowTooltip(
-                    AtkTooltipManager.AtkTooltipType.Action |  AtkTooltipManager.AtkTooltipType.Text,
-                    a1->Id,
-                    a2,
-                    tooltipArgs
-                );
+                AtkStage.Instance()->ShowActionTooltip(a2, *rowId, originalTooltip);
             }
         }
         catch (Exception e) {
