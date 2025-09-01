@@ -68,14 +68,13 @@ public unsafe class MacroTooltips : GameModification {
                 resolveMacroIconFunction?.Invoke(RaptureMacroModule.Instance(), UIModule.Instance(), slotType, rowId, isShared ? 1 : 0, macroIndex, itemId);
 
                 var tooltipArgs = stackalloc AtkTooltipManager.AtkTooltipArgs[1];
-                tooltipArgs->ActionArgs = new AtkTooltipManager.AtkTooltipArgs.AtkTooltipActionArgs {
-                    Id = (int)*rowId,
-                    Kind = DetailKind.Action,
-                    Flags = 1,
-                };
+                tooltipArgs->ActionArgs.Id = (int)*rowId;
+                tooltipArgs->ActionArgs.Kind = DetailKind.Action;
+                tooltipArgs->ActionArgs.Flags = 1;
+                tooltipArgs->TextArgs.Text = GetMacroFromCommandId(hotbarSlot.CommandId).Name.StringPtr;
 
                 AtkStage.Instance()->TooltipManager.ShowTooltip(
-                    AtkTooltipManager.AtkTooltipType.Action,
+                    AtkTooltipManager.AtkTooltipType.Action |  AtkTooltipManager.AtkTooltipType.Text,
                     a1->Id,
                     a2,
                     tooltipArgs
@@ -85,5 +84,15 @@ public unsafe class MacroTooltips : GameModification {
         catch (Exception e) {
             Services.PluginLog.Error(e, "Exception in OnShowMacroTooltip");
         }
+    }
+    
+    private static ref RaptureMacroModule.Macro GetMacroFromCommandId(uint commandId) {
+        var macroModule = RaptureMacroModule.Instance();
+
+        if (commandId >= 0x100) {
+            return ref macroModule->Shared[(int)commandId - 0x100];
+        }
+
+        return ref macroModule->Individual[(int)commandId];
     }
 }
