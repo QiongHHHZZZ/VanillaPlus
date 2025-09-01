@@ -1,12 +1,9 @@
 ﻿using System.Numerics;
 using Dalamud.Game.Addon.Events;
-using FFXIVClientStructs.FFXIV.Client.Enums;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
 using VanillaPlus.Basic_Nodes;
 using VanillaPlus.Extensions;
-using AtkItemTooltipArgs = FFXIVClientStructs.FFXIV.Component.GUI.AtkTooltipManager.AtkTooltipArgs.AtkTooltipItemArgs;
 
 namespace VanillaPlus.Features.ListInventory;
 
