@@ -57,8 +57,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         erroringImageNode = new IconImageNode {
             NodeId = 5,
             IconId = 61502,
-            ImageNodeFlags = 0,
-            WrapMode = 2,
+            FitTexture = true,
             Tooltip = "Failed to load, this module has been disabled",
         };
         System.NativeController.AttachNode(erroringImageNode, this);
