@@ -19,6 +19,7 @@ public unsafe class ResourceBarPercentages : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "Initial Changelog"),
         ],
+        Tags = [ "Party List", "Parameter Bars" ],
     };
 
     private ResourceBarPercentagesConfig? config;

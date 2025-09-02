@@ -20,6 +20,7 @@ public unsafe class HideMpBars : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),
         ],
+        Tags = [ "Party List" ],
     };
 
     private List<uint>? manaUsingClassJobs;
