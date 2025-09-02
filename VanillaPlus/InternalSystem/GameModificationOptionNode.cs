@@ -74,6 +74,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         experimentalImageNode = new IconImageNode {
             NodeId = 7,
             IconId = 60073,
+            FitTexture = true,
             Tooltip = "Caution, this feature is experimental.\nMay contain bugs or crash your game.",
         };
         System.NativeController.AttachNode(experimentalImageNode, this);
