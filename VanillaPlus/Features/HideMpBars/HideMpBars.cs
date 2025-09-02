@@ -10,7 +10,6 @@ using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.HideMpBars;
 
-// Template GameModification for more easily creating your own, can copy this entire folder and rename it.
 public unsafe class HideMpBars : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Hide MP Bars",
