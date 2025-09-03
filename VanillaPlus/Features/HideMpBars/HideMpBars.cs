@@ -39,7 +39,8 @@ public unsafe class HideMpBars : GameModification {
     
     private void OnPartyListDraw(AddonEvent type, AddonArgs args) {
         if (manaUsingClassJobs is null) return;
-        if (Services.ClientState.LocalPlayer is not { } localPlayer) return;
+        if (Services.ClientState.LocalPlayer is not { ClassJob: { IsValid: true, Value: var classJob } } localPlayer) return;
+        if (classJob.IsCrafter() || classJob.IsGatherer()) return;
 
         var addon = args.GetAddon<AddonPartyList>();
 
@@ -49,6 +50,8 @@ public unsafe class HideMpBars : GameModification {
         }
         else {
             foreach (var hudMember in AgentHUD.Instance()->GetSizedHudMemberSpan()) {
+                if (addon->PartyMembers.Length >= hudMember.Index) continue;
+                
                 var mpGaugeNode = addon->PartyMembers[hudMember.Index].MPGaugeBar->OwnerNode;
                 mpGaugeNode->ToggleVisibility(manaUsingClassJobs.Contains(hudMember.Object->ClassJob));
             }
