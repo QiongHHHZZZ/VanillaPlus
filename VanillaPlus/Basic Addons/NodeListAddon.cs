@@ -38,7 +38,7 @@ public unsafe class NodeListAddon : NativeAddon {
         });
     }
 
-    protected override void Dispose(bool disposing) {
+    public override void Dispose() {
         config = null;
         
         addonConfigWindow?.Dispose();
@@ -51,7 +51,7 @@ public unsafe class NodeListAddon : NativeAddon {
             Services.CommandManager.RemoveHandler(OpenCommand);
         }
         
-        base.Dispose(disposing);
+        base.Dispose();
     }
 
     public string? OpenCommand {
