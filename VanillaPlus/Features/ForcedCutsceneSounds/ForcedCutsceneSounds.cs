@@ -50,50 +50,23 @@ public unsafe class ForcedCutsceneSounds : GameModification {
         config = ForcedCutsceneSoundsConfig.Load();
         configWindow = new BoolConfigAddon {
             NativeController = System.NativeController,
-            Size = new Vector2(325.0f, 375.0f),
+            Size = new Vector2(325.0f, 385.0f),
             InternalName = "ForcedCutsceneConfig",
             Title = "Forced Cutscene Sounds Config",
             OnClose = () => config.Save(),
         };
         
-        configWindow.AddConfigEntry(new BoolConfigEntry("General", "Restore mute state after cutscene", config.Restore, b => {
-            config.Restore = b;
-            config.Save();
-        }));
-        
-        configWindow.AddConfigEntry(new BoolConfigEntry("Toggles", "Unmute Master Volume", config.HandleMaster, b => {
-            config.HandleMaster = b;
-            config.Save();
-        }));
-        configWindow.AddConfigEntry(new BoolConfigEntry("Toggles", "Unmute BGM", config.HandleBgm, b => {
-            config.HandleBgm = b;
-            config.Save();
-        }));
-        configWindow.AddConfigEntry(new BoolConfigEntry("Toggles", "Unmute Sound Effects", config.HandleSe, b => {
-            config.HandleSe = b;
-            config.Save();
-        }));
-        configWindow.AddConfigEntry(new BoolConfigEntry("Toggles", "Unmute Voice", config.HandleVoice, b => {
-            config.HandleVoice = b;
-            config.Save();
-        }));
-        configWindow.AddConfigEntry(new BoolConfigEntry("Toggles", "Unmute Ambient Sounds", config.HandleEnv, b => {
-            config.HandleEnv = b;
-            config.Save();
-        }));
-        configWindow.AddConfigEntry(new BoolConfigEntry("Toggles", "Unmute System Sounds", config.HandleSystem, b => {
-            config.HandleSystem = b;
-            config.Save();
-        }));
-        configWindow.AddConfigEntry(new BoolConfigEntry("Toggles", "Unmute Performance", config.HandlePerform, b => {
-            config.HandlePerform = b;
-            config.Save();
-        }));
-        
-        configWindow.AddConfigEntry(new BoolConfigEntry("Special", "Disable in MSQ Roulette", config.DisableInMsqRoulette, b => {
-            config.Restore = b;
-            config.Save();
-        }));
+        configWindow.AddConfigEntry("General", "Restore mute state after cutscene", config, nameof(config.Restore));
+
+        configWindow.AddConfigEntry("Toggles", "Unmute Master Volume", config, nameof(config.HandleMaster));
+        configWindow.AddConfigEntry("Toggles", "Unmute BGM", config, nameof(config.HandleBgm));
+        configWindow.AddConfigEntry("Toggles", "Unmute Sound Effects", config, nameof(config.HandleSe));
+        configWindow.AddConfigEntry("Toggles", "Unmute Voice", config, nameof(config.HandleVoice));
+        configWindow.AddConfigEntry("Toggles", "Unmute Ambient Sounds", config, nameof(config.HandleEnv));
+        configWindow.AddConfigEntry("Toggles", "Unmute System Sounds", config, nameof(config.HandleSystem));
+        configWindow.AddConfigEntry("Toggles", "Unmute Performance", config, nameof(config.HandlePerform));
+
+        configWindow.AddConfigEntry("Special", "Disable in MSQ Roulette", config, nameof(config.DisableInMsqRoulette));
         
         OpenConfigAction = configWindow.Toggle;
         

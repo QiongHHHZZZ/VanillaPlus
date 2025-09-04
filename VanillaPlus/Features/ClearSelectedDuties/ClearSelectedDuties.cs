@@ -34,10 +34,7 @@ public class ClearSelectedDuties : GameModification {
             OnClose = () => config.Save(),
         };
         
-        configWindow.AddConfigEntry(new BoolConfigEntry("Settings", "Disable when Unrestricted", config.DisableWhenUnrestricted, b => {
-            config.DisableWhenUnrestricted = b;
-            config.Save();
-        }));
+        configWindow.AddConfigEntry("Settings", "Disable when Unrestricted", config, nameof(config.DisableWhenUnrestricted));
         
         OpenConfigAction = configWindow.Toggle;
         
@@ -68,6 +65,6 @@ public class ClearSelectedDuties : GameModification {
         agent->AgentInterface.SendCommand(0, [ 12, 1 ]);
     }
 
-    private unsafe bool IsRouletteTab(AddonContentsFinder* addon)
+    private static unsafe bool IsRouletteTab(AddonContentsFinder* addon)
         => addon->SelectedRadioButton is 0;
 }

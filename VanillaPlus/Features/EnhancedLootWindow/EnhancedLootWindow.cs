@@ -47,15 +47,8 @@ public unsafe class EnhancedLootWindow : GameModification {
             OnClose = () => config.Save(),
         };
         
-        configWindow.AddConfigEntry(new BoolConfigEntry("Settings", "Mark Un-obtainable Items", config.MarkUnobtainableItems, b => {
-            config.MarkUnobtainableItems = b;
-            config.Save();
-        }));
-        
-        configWindow.AddConfigEntry(new BoolConfigEntry("Settings", "Mark Already Unlocked Items", config.MarkAlreadyObtainedItems, b => {
-            config.MarkAlreadyObtainedItems = b;
-            config.Save();
-        }));
+        configWindow.AddConfigEntry("Settings", "Mark Un-obtainable Items", config, nameof(config.MarkUnobtainableItems));
+        configWindow.AddConfigEntry("Settings", "Mark Already Unlocked Items", config, nameof(config.MarkAlreadyObtainedItems));
 
         OpenConfigAction = configWindow.Toggle;
 

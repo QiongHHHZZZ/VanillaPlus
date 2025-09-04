@@ -1,13 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
+using VanillaPlus.Classes;
+using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Basic_Addons;
 
-public record BoolConfigEntry(string Category, string Label, bool InitialState, Action<bool> Callback);
+public record BoolConfigEntry(string Category, string Label, bool InitialState, ISavable ConfigObject, MemberInfo ConfigMemberInfo) {
+    public void Callback(bool newValue) {
+        ConfigMemberInfo.SetValue(ConfigObject, newValue);
+        ConfigObject.Save();
+    }
+}
 
 public class BoolConfigAddon : NativeAddon {
 
@@ -22,6 +30,7 @@ public class BoolConfigAddon : NativeAddon {
             IsVisible = true,
             ContentHeight = ContentSize.Y,
         };
+        AttachNode(mainListNode);
 
         var tabbedListNode = mainListNode.ContentNode;
 
@@ -45,27 +54,37 @@ public class BoolConfigAddon : NativeAddon {
             tabbedListNode.AddTab(1);
             
             foreach (var option in categoryGroups) {
-                tabbedListNode.AddNode(new CheckboxNode {
+                var newCheckboxNode = new CheckboxNode {
                     OnClick = option.Callback,
                     Height = 24.0f,
                     String = option.Label,
                     IsChecked = option.InitialState,
                     IsVisible = true,
-                });
+                };
+                
+                tabbedListNode.AddNode(newCheckboxNode);
             }
             
             tabbedListNode.AddTab(-1);
         }
         
         mainListNode.ContentHeight = mainListNode.ContentNode.Height;
-        AttachNode(mainListNode);
     }
 
     protected override unsafe void OnHide(AtkUnitBase* addon)
         => OnClose();
 
-    public void AddConfigEntry(BoolConfigEntry entry)
+    private void AddConfigEntry(BoolConfigEntry entry)
         => entries.Add(entry);
 
     public required Action OnClose { get; init; }
+
+    public void AddConfigEntry(string category, string label, ISavable config, string memberName) {
+        var memberInfo = config.GetType().GetMember(memberName).FirstOrDefault();
+        if (memberInfo is null) return;
+        
+        var initialValue = memberInfo.GetValue<bool>(config);
+        
+        AddConfigEntry(new BoolConfigEntry(category, label, initialValue, config, memberInfo));
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace VanillaPlus.Classes;
 
-public abstract class GameModificationConfig<T> where T : GameModificationConfig<T>, new() {
+public abstract class GameModificationConfig<T> : ISavable where T : GameModificationConfig<T>, new() {
     protected abstract string FileName { get; }
     public static T Load() {
         var configFileName = new T().FileName;
