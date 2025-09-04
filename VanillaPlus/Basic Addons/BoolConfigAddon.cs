@@ -74,9 +74,6 @@ public class BoolConfigAddon : NativeAddon {
     protected override unsafe void OnHide(AtkUnitBase* addon)
         => OnClose();
 
-    private void AddConfigEntry(BoolConfigEntry entry)
-        => entries.Add(entry);
-
     public required Action OnClose { get; init; }
 
     public void AddConfigEntry(string category, string label, ISavable config, string memberName) {
@@ -85,6 +82,6 @@ public class BoolConfigAddon : NativeAddon {
         
         var initialValue = memberInfo.GetValue<bool>(config);
         
-        AddConfigEntry(new BoolConfigEntry(category, label, initialValue, config, memberInfo));
+        entries.Add(new BoolConfigEntry(category, label, initialValue, config, memberInfo));
     }
 }
