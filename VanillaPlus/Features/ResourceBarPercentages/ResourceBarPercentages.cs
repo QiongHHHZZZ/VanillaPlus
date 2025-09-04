@@ -79,7 +79,7 @@ public unsafe class ResourceBarPercentages : GameModification {
         if (!config.PartyListEnabled) return;
 
         var addon = args.GetAddon<AddonPartyList>();
-        if (Services.ClientState.LocalPlayer is null) return;
+        if (Services.ClientState.LocalPlayer is not { EntityId: var playerId } ) return;
 
         foreach (var hudMember in AgentHUD.Instance()->GetSizedHudMemberSpan()) {
             if (hudMember.EntityId == 0) continue;
@@ -88,7 +88,7 @@ public unsafe class ResourceBarPercentages : GameModification {
 
             var hpGaugeTextNode = partyMember.HPGaugeComponent->GetTextNodeById(2);
             if (hpGaugeTextNode is not null) {
-                var isSelf = hudMember.Index == 0;
+                var isSelf = hudMember.EntityId == playerId;
                 if (isSelf && config.PartyListSelf || !isSelf && config.PartyListOtherMembers) {
                     hpGaugeTextNode->SetText(GetCorrectText((uint)hudPartyMember.CurrentHealth, (uint)hudPartyMember.MaxHealth));
                 } else {

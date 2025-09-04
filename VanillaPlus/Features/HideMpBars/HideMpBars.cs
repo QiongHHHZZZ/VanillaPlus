@@ -39,18 +39,20 @@ public unsafe class HideMpBars : GameModification {
     
     private void OnPartyListDraw(AddonEvent type, AddonArgs args) {
         if (manaUsingClassJobs is null) return;
-        if (Services.ClientState.LocalPlayer is not { ClassJob: { IsValid: true, Value: var classJob } } localPlayer) return;
-        if (classJob.IsCrafter() || classJob.IsGatherer()) return;
+        if (Services.ClientState.LocalPlayer is not { ClassJob: { IsValid: true, Value: var classJob }, EntityId: var playerId } localPlayer) return;
 
         var addon = args.GetAddon<AddonPartyList>();
 
         if (GroupManager.Instance()->MainGroup.MemberCount is 0) {
+            if (classJob.IsCrafter() || classJob.IsGatherer()) return;
+
             var mpGaugeNode = addon->PartyMembers[0].MPGaugeBar->OwnerNode;
             mpGaugeNode->ToggleVisibility(manaUsingClassJobs.Contains(localPlayer.ClassJob.RowId));
         }
         else {
             foreach (var hudMember in AgentHUD.Instance()->GetSizedHudMemberSpan()) {
                 if (hudMember.EntityId is 0) continue;
+                if (hudMember.EntityId == playerId && ( classJob.IsCrafter() || classJob.IsGatherer() )) continue;
                 
                 var mpGaugeNode = addon->PartyMembers[hudMember.Index].MPGaugeBar->OwnerNode;
                 mpGaugeNode->ToggleVisibility(manaUsingClassJobs.Contains(hudMember.Object->ClassJob));
