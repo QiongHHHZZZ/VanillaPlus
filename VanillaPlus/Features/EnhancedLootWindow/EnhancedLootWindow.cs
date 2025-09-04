@@ -112,7 +112,7 @@ public unsafe class EnhancedLootWindow : GameModification {
                 Size = new Vector2(20.0f, 24.0f),
                 Position = new Vector2(22.0f, 20.0f),
                 Alpha = 175,
-                FitTexture = true,
+                WrapMode = WrapMode.Tile,
             };
             
             padlockNodes.Add(newPadlockNode);
