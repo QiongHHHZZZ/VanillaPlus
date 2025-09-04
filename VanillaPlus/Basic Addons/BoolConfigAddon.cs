@@ -11,7 +11,7 @@ using VanillaPlus.Extensions;
 namespace VanillaPlus.Basic_Addons;
 
 public record BoolConfigEntry(string Category, string Label, bool InitialState, ISavable ConfigObject, MemberInfo ConfigMemberInfo) {
-    public void Callback(bool newValue) {
+    public void OnOptionChanged(bool newValue) {
         ConfigMemberInfo.SetValue(ConfigObject, newValue);
         ConfigObject.Save();
     }
@@ -55,7 +55,7 @@ public class BoolConfigAddon : NativeAddon {
             
             foreach (var option in categoryGroups) {
                 var newCheckboxNode = new CheckboxNode {
-                    OnClick = option.Callback,
+                    OnClick = option.OnOptionChanged,
                     Height = 24.0f,
                     String = option.Label,
                     IsChecked = option.InitialState,
