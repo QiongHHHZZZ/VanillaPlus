@@ -111,7 +111,7 @@ public unsafe class EnhancedLootWindow : GameModification {
                 TextureSize = new Vector2(20.0f, 24.0f),
                 Size = new Vector2(20.0f, 24.0f),
                 Position = new Vector2(22.0f, 20.0f),
-                Alpha = 175,
+                Alpha = 200,
                 WrapMode = WrapMode.Tile,
             };
             
