@@ -7,7 +7,11 @@ public class ResourceBarPercentagesConfig : GameModificationConfig<ResourceBarPe
 
     public bool PartyListEnabled = true;
     public bool PartyListSelf = true;
-    public bool PartyListOtherMembers = true;
+    public bool PartyListMembers = true;
+    public bool PartyListHpEnabled = true;
+    public bool PartyListMpEnabled = true;
+    public bool PartyListGpEnabled = true;
+    public bool PartyListCpEnabled = true;
 
     public bool ParameterWidgetEnabled = true;
     public bool ParameterHpEnabled = true;
@@ -17,4 +21,5 @@ public class ResourceBarPercentagesConfig : GameModificationConfig<ResourceBarPe
 
     public bool PercentageSignEnabled = true;
     public int DecimalPlaces = 0;
+    public bool ShowDecimalsBelowHundredOnly = false;
 }
