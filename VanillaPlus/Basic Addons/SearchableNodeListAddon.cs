@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
@@ -11,7 +10,6 @@ namespace VanillaPlus.Basic_Addons;
 public unsafe class SearchableNodeListAddon : NodeListAddon {
 
     private TextInputNode? textInputNode;
-    private TextNode? searchLabelNode;
     private TextDropDownNode? sortDropdownNode;
     
     private VerticalListNode? mainContainerNode;
@@ -71,23 +69,9 @@ public unsafe class SearchableNodeListAddon : NodeListAddon {
 
         textInputNode = new TextInputNode {
             IsVisible = true,
+            PlaceholderString = "Search . . .",
         };
         textInputNode.SeString = searchText;
-
-        searchLabelNode = new TextNode {
-            Position = new Vector2(10.0f, 6.0f),
-            TextColor = ColorHelper.GetColor(3),
-            String = "Search . . .",
-            IsVisible = searchText.IsNullOrEmpty(),
-        };
-
-        textInputNode.OnFocused += () => {
-            searchLabelNode.IsVisible = false;
-        };
-
-        textInputNode.OnUnfocused += () => {
-            searchLabelNode.IsVisible = searchText.IsNullOrEmpty();
-        };
 
         textInputNode.OnInputReceived += newSearchString => {
             searchText = newSearchString.ToString();
@@ -112,8 +96,6 @@ public unsafe class SearchableNodeListAddon : NodeListAddon {
         sortDropdownNode.Width = widgetsContainerNode.AreaRemaining;
         widgetsContainerNode.AddNode(sortDropdownNode);
 
-        AttachNode(searchLabelNode, textInputNode);
-
         mainContainerNode.AddDummy(4.0f);
         mainContainerNode.AddNode(ScrollingAreaNode);
         
@@ -123,7 +105,6 @@ public unsafe class SearchableNodeListAddon : NodeListAddon {
     protected override void OnFinalize(AtkUnitBase* addon) {
         System.NativeController.DisposeNode(ref sortDropdownNode);
         System.NativeController.DisposeNode(ref ScrollingAreaNode);
-        System.NativeController.DisposeNode(ref searchLabelNode);
         System.NativeController.DisposeNode(ref textInputNode);
     }
 

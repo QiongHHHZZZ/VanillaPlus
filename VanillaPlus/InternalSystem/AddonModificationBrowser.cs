@@ -21,7 +21,6 @@ public class AddonModificationBrowser : NativeAddon {
     
     private HorizontalFlexNode searchContainerNode = null!;
     private TextInputNode searchBoxNode = null!;
-    private TextNode searchLabelNode = null!;
     private ScrollingAreaNode<TreeListNode> optionContainerNode = null!;
     private ResNode descriptionContainerNode = null!;
     private ImGuiImageNode descriptionImageNode = null!;
@@ -116,26 +115,9 @@ public class AddonModificationBrowser : NativeAddon {
         searchBoxNode = new TextInputNode {
             IsVisible = true,
             OnInputReceived = OnSearchBoxInputReceived,
+            PlaceholderString = "Search . . .",
         };
         searchContainerNode.AddNode(searchBoxNode);
-
-        searchLabelNode = new TextNode {
-            Position = new Vector2(10.0f, 6.0f),
-            IsVisible = true,
-            TextColor = ColorHelper.GetColor(3),
-            String = "Search . . .",
-        };
-        System.NativeController.AttachNode(searchLabelNode, searchBoxNode);
-
-        searchBoxNode.OnFocused += () => {
-            searchLabelNode.IsVisible = false;
-        };
-
-        searchBoxNode.OnUnfocused += () => {
-            if (searchBoxNode.SeString.ToString() is "") {
-                searchLabelNode.IsVisible = true;
-            }
-        };
     }
 
     private void BuildDescriptionContainer() {
