@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Keys;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
 using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
+using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.ListInventory;
 
-public unsafe class ListInventory : GameModification {
+public class ListInventory : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "List Inventory Window",
         Description = "Adds a window that displays your inventory as a list, with toggleable filters.",
@@ -83,9 +81,7 @@ public unsafe class ListInventory : GameModification {
     private bool OnListUpdated(VerticalListNode list, bool isOpening) {
         if (!updateRequested && !isOpening) return false;
 
-        var filteredInventoryItems = GetInventoryItems()
-            .Where(item => item.IsRegexMatch(searchString))
-            .ToList();
+        var filteredInventoryItems = Inventory.GetInventoryItems(searchString);
 
         var listUpdated = list.SyncWithListData(filteredInventoryItems, node => node.Item, data => new InventoryItemNode {
             Size = new Vector2(list.Width, 32.0f),
@@ -122,32 +118,5 @@ public unsafe class ListInventory : GameModification {
         var reverseModifier = filterReversed ? -1 : 1;
         
         return ( result is 0 ? string.CompareOrdinal(leftItem.Name, rightItem.Name) : result ) * reverseModifier;
-    }
-    
-    private static List<ItemInfo> GetInventoryItems() {
-        List<InventoryType> inventories = [ InventoryType.Inventory1, InventoryType.Inventory2, InventoryType.Inventory3, InventoryType.Inventory4 ];
-        List<InventoryItem> items = [];
-
-        foreach (var inventory in inventories) {
-            var container = InventoryManager.Instance()->GetInventoryContainer(inventory);
-
-            for (var index = 0; index < container->Size; ++index) {
-                ref var item = ref container->Items[index];
-                if (item.ItemId is 0) continue;
-                
-                items.Add(item);
-            }
-        }
-
-        List<ItemInfo> itemInfos = [];
-        itemInfos.AddRange(from itemGroups in items.GroupBy(item => item.ItemId)
-                           where itemGroups.Key is not 0
-                           let item = itemGroups.First()
-                           let itemCount = itemGroups.Sum(duplicateItem => duplicateItem.Quantity)
-                           select new ItemInfo {
-                               Item = item, ItemCount = itemCount,
-                           });
-
-        return itemInfos;
     }
 }
