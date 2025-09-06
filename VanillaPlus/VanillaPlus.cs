@@ -41,10 +41,6 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
         System.KeyListener = new KeyListener();
         System.ModificationManager = new ModificationManager();
-        
-        #if DEBUG
-        Services.Framework.RunOnTick(OpenModificationBrowser, delayTicks: 5);
-        #endif
     }
 
     private static void Handler(string command, string arguments) {
