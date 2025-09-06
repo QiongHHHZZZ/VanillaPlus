@@ -21,15 +21,12 @@ public static class InventoryItemExtensions {
             }
         }
 
-        Services.PluginLog.Debug($"Resolved {item.GetItemId()}'s iconId to: {iconId}");
         return iconId;
     }
 
     public static ReadOnlySeString GetItemName(ref this InventoryItem item) {
         var itemId = item.GetItemId();
         var itemName = ItemUtil.GetItemName(itemId);
-
-        Services.PluginLog.Debug($"Resolved {itemId}'s name to to: {itemName}");
         
         return new Lumina.Text.SeStringBuilder()
             .PushColorType(ItemUtil.GetItemRarityColorType(itemId))
