@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
@@ -58,6 +59,19 @@ public static class InventoryItemExtensions {
         }
 
         item = null;
+        return false;
+    }
+
+    public static bool IsRegexMatch(this ref InventoryItem item, string searchString) {
+        const RegexOptions regexOptions = RegexOptions.CultureInvariant | RegexOptions.IgnoreCase;
+
+        var itemData = Services.DataManager.GetExcelSheet<Item>().GetRow(item.ItemId);
+        
+        if (Regex.IsMatch(itemData.Name.ToString(), searchString, regexOptions)) return true;
+        if (Regex.IsMatch(itemData.Description.ToString(), searchString, regexOptions)) return true;
+        if (Regex.IsMatch(itemData.LevelEquip.ToString(), searchString, regexOptions)) return true;
+        if (Regex.IsMatch(itemData.LevelItem.RowId.ToString(), searchString, regexOptions)) return true;
+
         return false;
     }
 }
