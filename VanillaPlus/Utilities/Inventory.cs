@@ -60,6 +60,6 @@ public static unsafe class Inventory {
         return itemInfos;
     }
     
-    public static List<ItemInfo> GetInventoryItems(string filterString) 
-        => GetInventoryItems().Where(item => item.IsRegexMatch(filterString)).ToList();
+    public static List<ItemInfo> GetInventoryItems(string filterString, bool invert = false) 
+        => GetInventoryItems().Where(item => item.IsRegexMatch(filterString) != invert).ToList();
 }
