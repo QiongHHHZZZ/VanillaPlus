@@ -13,7 +13,6 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.InstancedWaymarks;

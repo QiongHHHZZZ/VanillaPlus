@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.ListInventory;
 

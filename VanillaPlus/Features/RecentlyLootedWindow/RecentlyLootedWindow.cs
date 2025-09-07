@@ -8,7 +8,6 @@ using KamiToolKit.System;
 using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
 using VanillaPlus.Utilities;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 

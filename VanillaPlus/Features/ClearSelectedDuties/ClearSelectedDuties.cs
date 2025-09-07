@@ -6,7 +6,6 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.ClearSelectedDuties;
 

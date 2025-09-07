@@ -5,7 +5,6 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.MacroTooltips;
 

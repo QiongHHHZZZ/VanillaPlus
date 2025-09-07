@@ -6,7 +6,6 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Basic_Addons;
 

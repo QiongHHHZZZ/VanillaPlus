@@ -8,7 +8,6 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Extensions;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 using Action = Lumina.Excel.Sheets.Action;
 using ActionBarSlotNumberArray = FFXIVClientStructs.FFXIV.Client.UI.Arrays.ActionBarNumberArray.ActionBarBarNumberArray.ActionBarSlotNumberArray;
 

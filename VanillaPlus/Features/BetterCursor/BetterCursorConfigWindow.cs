@@ -2,7 +2,6 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.BetterCursor;
 

@@ -7,7 +7,6 @@ using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using KamiToolKit;
 using Lumina.Extensions;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.InventorySearchBar;
 

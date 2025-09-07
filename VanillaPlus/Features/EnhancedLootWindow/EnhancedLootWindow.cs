@@ -12,7 +12,6 @@ using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
 using VanillaPlus.Basic_Addons;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Features.EnhancedLootWindow;
 

@@ -5,7 +5,6 @@ using System.Linq;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Classes;
 

@@ -12,7 +12,6 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
 using FFXIVClientStructs.FFXIV.Client.UI;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Classes;
 

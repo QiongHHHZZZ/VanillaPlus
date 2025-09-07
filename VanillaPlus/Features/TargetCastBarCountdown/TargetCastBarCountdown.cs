@@ -11,7 +11,6 @@ using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
-using VanillaPlus.Extensions;
 using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.TargetCastBarCountdown;

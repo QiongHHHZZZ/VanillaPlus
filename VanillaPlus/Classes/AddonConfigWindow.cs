@@ -6,7 +6,6 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
-using VanillaPlus.Extensions;
 
 namespace VanillaPlus.Classes;
 
