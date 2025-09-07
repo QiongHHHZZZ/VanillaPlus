@@ -7,7 +7,6 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
-using KamiToolKit.Extensions;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
 
