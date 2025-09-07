@@ -47,8 +47,8 @@ public unsafe class MacroTooltips : GameModification {
         resolveMacroIconFunction = null;
     }
 
-    private void OnShowMacroTooltip(AddonActionBarBase* a1, AtkResNode* a2, NumberArrayData* numberArray, StringArrayData* stringArray, int numberArrayIndex, int stringArrayIndex) {
-        showTooltipHook!.Original(a1, a2, numberArray, stringArray, numberArrayIndex, stringArrayIndex);
+    private void OnShowMacroTooltip(AddonActionBarBase* a1, AtkResNode* macroResNode, NumberArrayData* numberArray, StringArrayData* stringArray, int numberArrayIndex, int stringArrayIndex) {
+        showTooltipHook!.Original(a1, macroResNode, numberArray, stringArray, numberArrayIndex, stringArrayIndex);
 
         try {
             // In ActionBarNumberArray, the first hotbar starts at index 15
@@ -67,7 +67,7 @@ public unsafe class MacroTooltips : GameModification {
 
                 resolveMacroIconFunction?.Invoke(RaptureMacroModule.Instance(), UIModule.Instance(), slotType, rowId, isShared ? 1 : 0, macroIndex, itemId);
 
-                AtkStage.Instance()->ShowActionTooltip(a2, *rowId, originalTooltip);
+                macroResNode->ShowActionTooltip(*rowId, originalTooltip);
             }
         }
         catch (Exception e) {

@@ -7,7 +7,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace VanillaPlus.Extensions;
 
 public static unsafe class AtkStageExtensions {
-    public static void ShowActionTooltip(ref this AtkStage stage, AtkResNode* node, uint actionId, string? textLabel = null) {
+    public static void ShowActionTooltip(this ref AtkResNode node, uint actionId, string? textLabel = null) {
+        fixed (AtkResNode* nodePointer = &node) {
+            AtkStage.Instance()->ShowActionTooltip(nodePointer, actionId, textLabel);
+        }
+    }
+
+    private static void ShowActionTooltip(ref this AtkStage stage, AtkResNode* node, uint actionId, string? textLabel = null) {
         using var stringBuffer = new Utf8String();
 
         var tooltipType = AtkTooltipManager.AtkTooltipType.Action;
@@ -35,6 +41,12 @@ public static unsafe class AtkStageExtensions {
         );
     }
 
+    public static void ShowItemTooltip(ref this AtkResNode node, uint itemId) {
+        fixed (AtkResNode* nodePointer = &node) {
+            AtkStage.Instance()->ShowItemTooltip(nodePointer, itemId);
+        }
+    }
+    
     public static void ShowItemTooltip(ref this AtkStage stage, AtkResNode* node, uint itemId) {
         var tooltipArgs = stackalloc AtkTooltipManager.AtkTooltipArgs[1];
         tooltipArgs->Ctor();
@@ -52,7 +64,13 @@ public static unsafe class AtkStageExtensions {
         );
     }
 
-    public static void ShowInventoryItemTooltip(ref this AtkStage stage, AtkResNode* node, InventoryType container, short slot) {
+    public static void ShowInventoryItemTooltip(ref this AtkResNode node, InventoryType container, short slot) {
+        fixed (AtkResNode* nodePointer = &node) {
+            AtkStage.Instance()->ShowInventoryItemTooltip(nodePointer, container, slot);
+        }
+    }
+
+    private static void ShowInventoryItemTooltip(ref this AtkStage stage, AtkResNode* node, InventoryType container, short slot) {
         var tooltipArgs = stackalloc AtkTooltipManager.AtkTooltipArgs[1];
         tooltipArgs->Ctor();
         tooltipArgs->ItemArgs.Kind = DetailKind.InventoryItem;

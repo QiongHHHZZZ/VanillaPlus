@@ -44,7 +44,8 @@ public unsafe class LootItemNode : SimpleComponentNode {
             IsHovered = true;
 
             if (Item is null) return;
-            AtkStage.Instance()->ShowItemTooltip((AtkResNode*)CollisionNode, Item.ItemId);
+            AtkResNode* node = CollisionNode;
+            node->ShowItemTooltip(Item.ItemId);
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
