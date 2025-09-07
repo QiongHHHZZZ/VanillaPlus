@@ -38,6 +38,7 @@ public unsafe class HideMpBars : GameModification {
     }
     
     private void OnPartyListDraw(AddonEvent type, AddonArgs args) {
+        if (Services.ClientState.IsPvP) return;
         if (manaUsingClassJobs is null) return;
         if (Services.ClientState.LocalPlayer is not { ClassJob: { IsValid: true, Value: var classJob }, EntityId: var playerId } localPlayer) return;
 
