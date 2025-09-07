@@ -1,17 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
 using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using KamiToolKit;
-using KamiToolKit.Nodes;
 using Lumina.Extensions;
 using VanillaPlus.Classes;
 using VanillaPlus.Extensions;
-using SeStringBuilder = Lumina.Text.SeStringBuilder;
 
 namespace VanillaPlus.Features.InventorySearchBar;
 
@@ -30,34 +26,17 @@ public unsafe class InventorySearchBar : GameModification {
     private AddonController<AddonInventoryLarge>? largeInventoryController;
     private AddonController<AddonInventory>? inventoryController;
 
-    private TextInputNode? expandedInventorySearchBoxNode;
-    private TextInputNode? largeInventorySearchBoxNode;
-    private TextInputNode? inventorySearchBoxNode;
-
-    private ImageNode? expandedHelpNode;
-    private ImageNode? largeHelpNode;
-    private ImageNode? inventoryHelpNode;
+    private TextInputWithHintNode? expandedInputText;
+    private TextInputWithHintNode? largeInputText;
+    private TextInputWithHintNode? inventoryInputText;
 
     private int inventoryLargeSelectedTab;
     private int inventorySelectedTab;
     
     public override void OnEnable() {
-        expandedInventoryController = new AddonController<AddonInventoryExpansion>("InventoryExpansion");
-        expandedInventoryController.OnAttach += AttachExpansionNodes;
-        expandedInventoryController.OnDetach += DetachExpansionNodes;
-        expandedInventoryController.Enable();
-        
-        largeInventoryController = new AddonController<AddonInventoryLarge>("InventoryLarge");
-        largeInventoryController.OnAttach += AttachLargeNodes;
-        largeInventoryController.OnUpdate += OnInventoryLargeUpdate;
-        largeInventoryController.OnDetach += DetachLargeNodes;
-        largeInventoryController.Enable();
-        
-        inventoryController = new AddonController<AddonInventory>("Inventory");
-        inventoryController.OnAttach += AttachInventoryNodes;
-        inventoryController.OnUpdate += OnInventoryUpdate;
-        inventoryController.OnDetach += DetachInventoryNodes;
-        inventoryController.Enable();
+        AddExpandedInventoryController();
+        AddLargeInventoryController();
+        AddInventoryController();
     }
 
     public override void OnDisable() {
@@ -71,48 +50,104 @@ public unsafe class InventorySearchBar : GameModification {
         inventoryController = null;
     }
 
-    private static TextInputNode GetInputTextNode(Action<SeString> searchCallback, Vector2 headerSize, Vector2 searchBoxSize) => new() {
-        Position = headerSize / 2.0f - searchBoxSize / 2.0f + new Vector2(0.0f, 10.0f),
-        Size = searchBoxSize,
-        PlaceholderString = "Search . . .",
-        OnInputReceived = searchCallback,
-        IsVisible = true,
-    };
+    private void AddExpandedInventoryController() {
+        expandedInventoryController = new AddonController<AddonInventoryExpansion>("InventoryExpansion");
+        expandedInventoryController.OnAttach += addon => {
+            var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
+            var searchBoxSize = new Vector2(275.0f, 28.0f);
 
-    private static ImageNode GetTooltipNode(Vector2 headerSize, Vector2 searchBoxSize) => new SimpleImageNode {
-        Position = headerSize / 2.0f + new Vector2(searchBoxSize.X / 2.0f, - searchBoxSize.Y / 2) + new Vector2(5.0f, 10.0f),
-        Size = new Vector2(28.0f, 28.0f),
-        TexturePath = "ui/uld/CircleButtons.tex",
-        TextureCoordinates = new Vector2(112.0f, 84.0f),
-        TextureSize = new Vector2(28.0f, 28.0f),
-        Tooltip = new SeStringBuilder()
-            .Append("[VanillaPlus]: Supports Regex Search")
-            .AppendNewLine()
-            .Append("Start input with '$' to search by description")
-            .ToReadOnlySeString()
-            .ToDalamudString(),
-        EventFlagsSet = true,
-        IsVisible = true,
-    };
+            expandedInputText = new TextInputWithHintNode {
+                Position = headerSize / 2.0f - searchBoxSize / 2.0f + new Vector2(25.0f, 10.0f),
+                Size = searchBoxSize,
+                OnInputReceived = searchString => UpdateInventoryExpansion(addon, searchString),
+                IsVisible = true,
+            };
+            System.NativeController.AttachNode(expandedInputText, addon->WindowNode);
+        };
 
-    private void AttachExpansionNodes(AddonInventoryExpansion* addon) {
-        var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
-        var searchBoxSize = new Vector2(250.0f, 28.0f);
-
-        expandedInventorySearchBoxNode = GetInputTextNode(searchString => UpdateInventoryExpansion(addon, searchString), headerSize, searchBoxSize);
-        System.NativeController.AttachNode(expandedInventorySearchBoxNode, addon->WindowNode);
+        expandedInventoryController.OnUpdate += addon => {
+            if (expandedInputText is null) return;
+            if (inventoryLargeSelectedTab != addon->TabIndex) {
+                UpdateInventoryExpansion(addon, expandedInputText.SearchString);
+            }
         
-        expandedHelpNode = GetTooltipNode(headerSize, searchBoxSize);
-        System.NativeController.AttachNode(expandedHelpNode, addon->WindowNode);
+            inventoryLargeSelectedTab = addon->TabIndex;
+        };
+
+        expandedInventoryController.OnDetach += addon => {
+            UpdateInventoryExpansion(addon, string.Empty);
+            System.NativeController.DisposeNode(ref expandedInputText);
+        };
+
+        expandedInventoryController.Enable();
+    }
+
+    private void AddLargeInventoryController() {
+        largeInventoryController = new AddonController<AddonInventoryLarge>("InventoryLarge");
+        largeInventoryController.OnAttach += addon => {
+            var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
+            var searchBoxSize = new Vector2(250.0f, 28.0f);
+        
+            largeInputText = new TextInputWithHintNode {
+                Position = headerSize / 2.0f - searchBoxSize / 2.0f + new Vector2(25.0f, 10.0f),
+                Size = searchBoxSize,
+                OnInputReceived = searchString => UpdateInventoryLarge(addon, searchString),
+                IsVisible = true,
+            };
+            System.NativeController.AttachNode(largeInputText, addon->WindowNode);
+        };
+
+        largeInventoryController.OnUpdate += addon => {
+            if (largeInputText is null) return;
+            if (inventoryLargeSelectedTab != addon->TabIndex) {
+                UpdateInventoryLarge(addon, largeInputText.SearchString);
+            }
+        
+            inventoryLargeSelectedTab = addon->TabIndex;
+        };
+
+        largeInventoryController.OnDetach += addon => {
+            UpdateInventoryLarge(addon, string.Empty);
+            System.NativeController.DisposeNode(ref largeInputText);
+        };
+
+        largeInventoryController.Enable();
+    }
+
+    private void AddInventoryController() {
+        inventoryController = new AddonController<AddonInventory>("Inventory");
+        inventoryController.OnAttach += addon => {
+            var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
+            var searchBoxSize = new Vector2(150.0f, 28.0f);
+
+            inventoryInputText = new TextInputWithHintNode {
+                Position = headerSize / 2.0f - searchBoxSize / 2.0f + new Vector2(25.0f, 10.0f),
+                Size = searchBoxSize,
+                OnInputReceived = searchString => UpdateInventory(addon, searchString),
+                IsVisible = true,
+            };
+            System.NativeController.AttachNode(inventoryInputText, addon->WindowNode);
+        };
+
+        inventoryController.OnUpdate += addon => {
+            if (inventoryInputText is null) return;
+            if (inventorySelectedTab != addon->TabIndex) {
+                UpdateInventory(addon, inventoryInputText.SearchString);
+            }
+
+            inventorySelectedTab = addon->TabIndex;
+        };
+        
+        inventoryController.OnDetach += addon => {
+            UpdateInventory(addon, string.Empty);
+            System.NativeController.DisposeNode(ref inventoryInputText);
+        };
+
+        inventoryController.Enable();
     }
 
     private static void UpdateInventoryExpansion(AddonInventoryExpansion* _, SeString searchString) {
-        string[] inventoryGridNames = [
-            "InventoryGrid0E",
-            "InventoryGrid1E",
-            "InventoryGrid2E",
-            "InventoryGrid3E",
-        ];
+        string[] inventoryGridNames = [ "InventoryGrid0E", "InventoryGrid1E", "InventoryGrid2E", "InventoryGrid3E" ];
 
         foreach (var inventoryType in Enumerable.Range(0, 4)) {
             var inventoryName = inventoryGridNames[inventoryType];
@@ -123,31 +158,11 @@ public unsafe class InventorySearchBar : GameModification {
         }
     }
 
-    private void DetachExpansionNodes(AddonInventoryExpansion* addon) {
-        UpdateInventoryExpansion(addon, string.Empty);
-        System.NativeController.DisposeNode(ref expandedInventorySearchBoxNode);
-        System.NativeController.DisposeNode(ref expandedHelpNode);
-    }
-
-    private void AttachLargeNodes(AddonInventoryLarge* addon) {
-        var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
-        var searchBoxSize = new Vector2(250.0f, 28.0f);
-        
-        largeInventorySearchBoxNode = GetInputTextNode(searchString => UpdateInventoryLarge(addon, searchString), headerSize, searchBoxSize);
-        System.NativeController.AttachNode(largeInventorySearchBoxNode, addon->WindowNode);
-        
-        largeHelpNode = GetTooltipNode(headerSize, searchBoxSize);
-        System.NativeController.AttachNode(largeHelpNode, addon->WindowNode);
-    }
-
     private static void UpdateInventoryLarge(AddonInventoryLarge* addon, SeString searchString) {
-        string[] inventoryGridNames = [
-            "InventoryGrid0",
-            "InventoryGrid1",
-        ];
+        string[] inventoryGridNames = [ "InventoryGrid0", "InventoryGrid1" ];
 
         var selectedTab = addon->TabIndex;
-        
+
         foreach (var inventoryType in Enumerable.Range(0, 2)) {
             var inventoryName = inventoryGridNames[inventoryType];
             var inventoryGrid = Services.GameGui.GetAddonByName<AddonInventoryGrid>(inventoryName);
@@ -156,53 +171,12 @@ public unsafe class InventorySearchBar : GameModification {
             FadeInventoryNodes(searchString, inventoryGrid, inventoryType + selectedTab * 2);
         }
     }
-    
-    private void OnInventoryLargeUpdate(AddonInventoryLarge* addon) {
-        if (largeInventorySearchBoxNode is null) return;
-        if (inventoryLargeSelectedTab != addon->TabIndex) {
-            UpdateInventoryLarge(addon, largeInventorySearchBoxNode.SeString);
-        }
-        
-        inventoryLargeSelectedTab = addon->TabIndex;
-    }
-
-    private void DetachLargeNodes(AddonInventoryLarge* addon) {
-        UpdateInventoryLarge(addon, string.Empty);
-        System.NativeController.DisposeNode(ref largeInventorySearchBoxNode);
-        System.NativeController.DisposeNode(ref largeHelpNode);
-    }
-
-    private void AttachInventoryNodes(AddonInventory* addon) {
-        var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
-        var searchBoxSize = new Vector2(100.0f, 28.0f);
-        
-        inventorySearchBoxNode = GetInputTextNode(searchString => UpdateInventory(addon, searchString), headerSize, searchBoxSize);
-        System.NativeController.AttachNode(inventorySearchBoxNode, addon->WindowNode);
-        
-        inventoryHelpNode = GetTooltipNode(headerSize, searchBoxSize);
-        System.NativeController.AttachNode(inventoryHelpNode, addon->WindowNode);
-    }
 
     private static void UpdateInventory(AddonInventory* addon, SeString searchString) {
         var selectedTab = addon->TabIndex;
         var inventoryGrid = Services.GameGui.GetAddonByName<AddonInventoryGrid>("InventoryGrid");
-        
+
         FadeInventoryNodes(searchString, inventoryGrid, selectedTab);
-    }
-
-    private void OnInventoryUpdate(AddonInventory* addon) {
-        if (inventorySearchBoxNode is null) return;
-        if (inventorySelectedTab != addon->TabIndex) {
-            UpdateInventory(addon, inventorySearchBoxNode.SeString);
-        }
-        
-        inventorySelectedTab = addon->TabIndex;
-    }
-
-    private void DetachInventoryNodes(AddonInventory* addon) {
-        UpdateInventory(addon, string.Empty);
-        System.NativeController.DisposeNode(ref inventorySearchBoxNode);
-        System.NativeController.DisposeNode(ref inventoryHelpNode);
     }
 
     private static void FadeInventoryNodes(SeString searchString, AddonInventoryGrid* inventoryGrid, int inventoryType) {
