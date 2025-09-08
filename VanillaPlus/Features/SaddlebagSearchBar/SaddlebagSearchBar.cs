@@ -28,15 +28,6 @@ public unsafe class SaddlebagSearchBar : GameModification {
     private int inventorySelectedTab;
     
     public override void OnEnable() {
-        AddExpandedInventoryController();
-    }
-
-    public override void OnDisable() {
-        saddlebagInventoryController?.Dispose();
-        saddlebagInventoryController = null;
-    }
-
-    private void AddExpandedInventoryController() {
         saddlebagInventoryController = new AddonController<AddonInventoryBuddy>("InventoryBuddy");
         saddlebagInventoryController.OnAttach += addon => {
             var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
@@ -68,18 +59,19 @@ public unsafe class SaddlebagSearchBar : GameModification {
         saddlebagInventoryController.Enable();
     }
 
-    private static void UpdateSaddlebag(AddonInventoryBuddy* addon, SeString searchString) {
-        FadeInventoryNodes(searchString, addon);
+    public override void OnDisable() {
+        saddlebagInventoryController?.Dispose();
+        saddlebagInventoryController = null;
     }
 
-    private static void FadeInventoryNodes(SeString searchString, AddonInventoryBuddy* inventoryGrid) {
-        var sorter = inventoryGrid->TabIndex switch {
+    private static void UpdateSaddlebag(AddonInventoryBuddy* addon, SeString searchString) {
+        var sorter = addon->TabIndex switch {
             0 => ItemOrderModule.Instance()->SaddleBagSorter,
             1 => ItemOrderModule.Instance()->PremiumSaddleBagSorter,
-            _ => throw new Exception($"Saddlebag Tab Not Supported: {inventoryGrid->TabIndex}"),
+            _ => throw new Exception($"Saddlebag Tab Not Supported: {addon->TabIndex}"),
         };
 
-        foreach (var index in Enumerable.Range(0, inventoryGrid->Slots.Length)) {
+        foreach (var index in Enumerable.Range(0, addon->Slots.Length)) {
             var sorterItem = sorter->Items
                 .FirstOrNull(item => item.Value->Page == index / sorter->ItemsPerPage && item.Value->Slot == index % sorter->ItemsPerPage);
             if (sorterItem is null) continue;
@@ -87,7 +79,7 @@ public unsafe class SaddlebagSearchBar : GameModification {
             var inventoryItem = sorter->GetInventoryItem(sorterItem);
             if (inventoryItem is null) continue;
 
-            var inventorySlot = inventoryGrid->Slots[index].Value;
+            var inventorySlot = addon->Slots[index].Value;
             if (inventorySlot is null) continue;
 
             var slotNode = inventorySlot->OwnerNode;
