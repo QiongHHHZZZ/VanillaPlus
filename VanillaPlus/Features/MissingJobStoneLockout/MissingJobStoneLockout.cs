@@ -30,7 +30,9 @@ public unsafe class MissingJobStoneLockout : GameModification {
     private TextNode? warningTextNode;
     private bool suppressed;
     private int clickCount;
-    
+
+    public override string ImageName => "MissingJobStone.png";
+
     public override void OnEnable() {
         contentsFinderController = new AddonController<AddonContentsFinder>("ContentsFinder");
         contentsFinderController.OnAttach += AttachNodes;

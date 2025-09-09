@@ -28,6 +28,8 @@ public unsafe class QuestListWindow : GameModification {
     private bool filterReversed;
     private bool updateRequested;
 
+    public override string ImageName => "QuestList.png";
+
     public override void OnEnable() {
         addonQuestList = new SearchableNodeListAddon {
             NativeController = System.NativeController,

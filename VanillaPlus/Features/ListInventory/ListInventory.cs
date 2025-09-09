@@ -30,7 +30,9 @@ public class ListInventory : GameModification {
     private string searchString = string.Empty;
     private bool filterReversed;
     private bool updateRequested;
-    
+
+    public override string ImageName => "ListInventory.png";
+
     public override void OnEnable() {
         addonListInventory = new SearchableNodeListAddon {
             NativeController = System.NativeController,

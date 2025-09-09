@@ -26,7 +26,9 @@ public unsafe class SaddlebagSearchBar : GameModification {
 
     private TextInputWithHintNode? inputText;
     private int inventorySelectedTab;
-    
+
+    public override string ImageName => "SaddlebagSearchBar.png";
+
     public override void OnEnable() {
         saddlebagInventoryController = new AddonController<AddonInventoryBuddy>("InventoryBuddy");
         saddlebagInventoryController.OnAttach += addon => {

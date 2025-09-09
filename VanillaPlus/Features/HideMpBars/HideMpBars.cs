@@ -22,7 +22,9 @@ public unsafe class HideMpBars : GameModification {
     };
 
     private List<uint>? manaUsingClassJobs;
-    
+
+    public override string ImageName => "HideMpBars.png";
+
     public override void OnEnable() {
         manaUsingClassJobs = Services.DataManager.GetManaUsingClassJobs().ToList();
         

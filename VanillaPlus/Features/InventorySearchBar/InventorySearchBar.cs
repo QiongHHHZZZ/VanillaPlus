@@ -31,7 +31,9 @@ public unsafe class InventorySearchBar : GameModification {
 
     private int inventoryLargeSelectedTab;
     private int inventorySelectedTab;
-    
+
+    public override string ImageName => "InventorySearchBar.png";
+
     public override void OnEnable() {
         AddExpandedInventoryController();
         AddLargeInventoryController();

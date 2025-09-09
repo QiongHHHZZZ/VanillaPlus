@@ -27,6 +27,8 @@ public unsafe class ResourceBarPercentages : GameModification {
     private const short MpDisabledXOffset = -17;
     private const short MpEnabledXOffset = 4;
 
+    public override string ImageName => "ResourcePercentages.png";
+
     public override void OnEnable() {
         config = ResourceBarPercentagesConfig.Load();
         configWindow = new ResourceBarPercentagesConfigWindow(config, OnConfigChanged);

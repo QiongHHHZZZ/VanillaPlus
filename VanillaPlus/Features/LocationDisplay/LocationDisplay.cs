@@ -45,7 +45,9 @@ public unsafe class LocationDisplay : GameModification {
 
     private LocationDisplayConfig? config;
     private LocationDisplayConfigWindow? configWindow;
-    
+
+    public override string ImageName => "LocationDisplay.png";
+
     public override void OnEnable() {
         config = LocationDisplayConfig.Load();
         configWindow = new LocationDisplayConfigWindow(config, UpdateDtrText);

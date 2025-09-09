@@ -33,7 +33,9 @@ public unsafe class ArmourySearchBar : GameModification {
 
     private bool? configFadeUnusable;
     private bool searchStarted;
-    
+
+    public override string ImageName => "ArmourySearchBar.png";
+
     public override void OnEnable() {
         armouryInventoryController = new AddonController<AddonArmouryBoard>("ArmouryBoard");
         armouryInventoryController.OnAttach += addon => {

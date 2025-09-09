@@ -33,7 +33,9 @@ public unsafe class InstancedWaymarks : GameModification {
     private int slotClicked = -1;
     private InstancedWaymarksConfig? config;
     private WaymarkRenameWindow? renameWindow;
-    
+
+    public override string ImageName => "InstanceWaymarks.png";
+
     public override void OnEnable() {
         config = InstancedWaymarksConfig.Load();
         
