@@ -28,6 +28,8 @@ public unsafe class ClearTextInputs : GameModification {
 
     private List<Pointer<AtkCollisionNode>>? registeredEventNodes;
 
+    public override bool IsExperimental => true;
+
     public override void OnEnable() {
         registeredEventNodes = [];
         
