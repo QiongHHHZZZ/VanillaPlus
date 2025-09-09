@@ -46,7 +46,7 @@ public unsafe class ClearTextInputs : GameModification {
         if (customEventListener is not null) {
             foreach (var node in registeredEventNodes ?? []) {
                 if (node.Value is null) continue;
-                if (node.Value == AtkEventTarget.StaticVirtualTablePointer) continue;
+                if (node.Value->VirtualTable == AtkEventTarget.StaticVirtualTablePointer) continue; // Node has been disposed already
 
                 node.Value->AtkEventManager.UnregisterEvent(AtkEventType.MouseClick, 0x80000, customEventListener.EventListener, false);
             }
