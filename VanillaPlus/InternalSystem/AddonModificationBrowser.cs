@@ -22,6 +22,7 @@ public class AddonModificationBrowser : NativeAddon {
     private TextInputNode searchBoxNode = null!;
     private ScrollingAreaNode<TreeListNode> optionContainerNode = null!;
     private ResNode descriptionContainerNode = null!;
+    private ResNode descriptionImageFrame = null!;
     private ImGuiImageNode descriptionImageNode = null!;
     private BorderNineGridNode borderNineGridNode = null!;
     private TextNode descriptionImageTextNode = null!;
@@ -42,6 +43,9 @@ public class AddonModificationBrowser : NativeAddon {
 
     private readonly List<TreeListCategoryNode> categoryNodes = [];
     private readonly List<GameModificationOptionNode> modificationOptionNodes = [];
+
+    private bool isImageEnlarged;
+    private bool isImageHovered;
 
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
         categoryNodes.Clear();
@@ -160,24 +164,53 @@ public class AddonModificationBrowser : NativeAddon {
             TextColor = ColorHelper.GetColor(3),
         };
         System.NativeController.AttachNode(descriptionVersionTextNode, descriptionContainerNode);
-                        
-        descriptionImageNode = new ImGuiImageNode {
-            FitTexture = true,
-            EventFlagsSet = true,
+
+        descriptionImageFrame = new ResNode {
+            IsVisible = true,
         };
-        
+        System.NativeController.AttachNode(descriptionImageFrame, descriptionContainerNode);
+
+        descriptionImageNode = new ImGuiImageNode {
+            EventFlagsSet = true,
+            IsVisible = true,
+            FitTexture = true,
+        };
+
         descriptionImageNode.AddEvent(AddonEventType.MouseClick, _ => {
-            if (descriptionImageNode.Scale == Vector2.One * 2.5f) {
-                descriptionImageNode.Scale = Vector2.One;
-            }
-            else {
+            if (!isImageEnlarged) {
                 descriptionImageNode.Scale = new Vector2(2.5f, 2.5f);
             }
+            else {
+                if (isImageHovered) {
+                    descriptionImageNode.Scale = new Vector2(1.05f, 1.05f);
+                }
+                else {
+                    descriptionImageNode.Scale = Vector2.One;
+                }
+            }
+
+            isImageEnlarged = !isImageEnlarged;
         });
-        System.NativeController.AttachNode(descriptionImageNode, descriptionContainerNode);
+
+        descriptionImageNode.AddEvent(AddonEventType.MouseOver, _ => {
+            if (isImageEnlarged) return;
+
+            descriptionImageNode.Scale = new Vector2(1.05f, 1.05f);
+            isImageHovered = true;
+        });
+        
+        descriptionImageNode.AddEvent(AddonEventType.MouseOut, _ => {
+            if (isImageEnlarged) return;
+            
+            descriptionImageNode.Scale = Vector2.One;
+            isImageHovered = false;
+        });
+        System.NativeController.AttachNode(descriptionImageNode, descriptionImageFrame);
         
         borderNineGridNode = new BorderNineGridNode {
             IsVisible = true,
+            Alpha = 125,
+            Offsets = new Vector4(40.0f),
         };
         System.NativeController.AttachNode(borderNineGridNode, descriptionImageNode);
     }
@@ -227,13 +260,13 @@ public class AddonModificationBrowser : NativeAddon {
         if (selectedOption.Modification.Modification.ImageName is { } assetName) {
             Task.Run(() => LoadModuleImage(assetName));
             
-            descriptionImageNode.IsVisible = true;
+            descriptionImageFrame.IsVisible = true;
             descriptionImageTextNode.IsVisible = true;
             descriptionTextNode.IsVisible = false;
             descriptionImageTextNode.String = selectedOption.Modification.Modification.ModificationInfo.Description;
         }
         else {
-            descriptionImageNode.IsVisible = false;
+            descriptionImageFrame.IsVisible = false;
             descriptionImageTextNode.IsVisible = false;
             descriptionTextNode.IsVisible = true;
             descriptionTextNode.String = selectedOption.Modification.Modification.ModificationInfo.Description;
@@ -251,6 +284,30 @@ public class AddonModificationBrowser : NativeAddon {
             Assets.LoadedTextures.Add(texture);
             descriptionImageNode.LoadTexture(texture);
             descriptionImageNode.TextureSize = texture.Size;
+
+            if (texture.Width > texture.Height) {
+                var ratio = texture.Width / descriptionImageFrame.Width;
+                var multiplier = 1 / ratio;
+
+                descriptionImageNode.Width = descriptionImageFrame.Width;
+                descriptionImageNode.Height = texture.Height * multiplier;
+                descriptionImageNode.Y = (descriptionImageFrame.Width - descriptionImageNode.Height) / 2.0f;
+                descriptionImageNode.X = 0.0f;
+            }
+            else {
+                var ratio = texture.Height / descriptionImageFrame.Width;
+                var multiplier = 1 / ratio;
+
+                descriptionImageNode.Height = descriptionImageFrame.Width;
+                descriptionImageNode.Width = texture.Width * multiplier;
+                descriptionImageNode.X = (descriptionImageFrame.Width - descriptionImageNode.Width) / 2.0f;
+                descriptionImageNode.Y = 0.0f;
+            }
+
+            descriptionImageNode.Origin = descriptionImageNode.Size / 2.0f;
+            
+            borderNineGridNode.Position = new Vector2(-16.0f, -16.0f);
+            borderNineGridNode.Size = descriptionImageNode.Size + new Vector2(32.0f, 32.0f);
         }
         catch (Exception e) {
             Services.PluginLog.Error(e, "Exception while loading Module Image");
@@ -267,9 +324,9 @@ public class AddonModificationBrowser : NativeAddon {
         descriptionTextNode.IsVisible = true;
         descriptionTextNode.String = "Please select an option on the left";
 
-        descriptionImageNode.Scale = Vector2.One;
+        descriptionImageFrame.Scale = Vector2.One;
         
-        descriptionImageNode.IsVisible = false;
+        descriptionImageFrame.IsVisible = false;
         descriptionImageTextNode.IsVisible = false;
         descriptionVersionTextNode.IsVisible = false;
         changelogButtonNode.IsVisible = false;
@@ -301,14 +358,15 @@ public class AddonModificationBrowser : NativeAddon {
 
     private void UpdateSizes() {
         searchContainerNode.Size = new Vector2(mainContainerNode.Width, 28.0f);
+
         optionContainerNode.Position = new Vector2(0.0f, searchContainerNode.Height + ItemPadding);
         optionContainerNode.Size = new Vector2(mainContainerNode.Width * 3.0f / 5.0f - ItemPadding, mainContainerNode.Height - searchContainerNode.Height - ItemPadding);
+
         descriptionContainerNode.Position = new Vector2(mainContainerNode.Width * 3.0f / 5.0f, searchContainerNode.Height + ItemPadding);
         descriptionContainerNode.Size = new Vector2(mainContainerNode.Width * 2.0f / 5.0f, mainContainerNode.Height - searchContainerNode.Height - ItemPadding);
 
-        descriptionImageNode.Size = new Vector2(descriptionContainerNode.Width * 0.66f, descriptionContainerNode.Width * 0.66f);
-        descriptionImageNode.Origin = descriptionImageNode.Size / 2.0f;
-        descriptionImageNode.Position = new Vector2(descriptionContainerNode.Width * 0.33f / 2.0f, descriptionContainerNode.Width * 0.33f / 4.0f);
+        descriptionImageFrame.Size = new Vector2(descriptionContainerNode.Width * 0.8f, descriptionContainerNode.Width * 0.8f);
+        descriptionImageFrame.Position = new Vector2(descriptionContainerNode.Width * 0.2f / 2.0f, descriptionContainerNode.Width * 0.2f / 4.0f);
 
         changelogButtonNode.Size = new Vector2(125.0f, 28.0f);
         changelogButtonNode.Position = new Vector2(0.0f, descriptionContainerNode.Height - changelogButtonNode.Height - ItemPadding);
@@ -316,11 +374,8 @@ public class AddonModificationBrowser : NativeAddon {
         descriptionVersionTextNode.Size = new Vector2(200.0f, 28.0f);
         descriptionVersionTextNode.Position = descriptionContainerNode.Size - descriptionVersionTextNode.Size - new Vector2(8.0f, 8.0f);
 
-        descriptionImageTextNode.Size = new Vector2(descriptionContainerNode.Width - 16.0f, descriptionContainerNode.Height - descriptionImageNode.Y - descriptionImageNode.Height - descriptionVersionTextNode.Height - 14.0f);
-        descriptionImageTextNode.Position = new Vector2(8.0f, descriptionImageNode.Position.Y + descriptionImageNode.Height + 8.0f);
-
-        borderNineGridNode.Size = descriptionImageNode.Size + new Vector2(30.0f, 30.0f);
-        borderNineGridNode.Position = new Vector2(-15.0f, -15.0f);
+        descriptionImageTextNode.Size = new Vector2(descriptionContainerNode.Width - 16.0f, descriptionContainerNode.Height - descriptionImageFrame.Y - descriptionImageFrame.Height - descriptionVersionTextNode.Height - 14.0f);
+        descriptionImageTextNode.Position = new Vector2(8.0f, descriptionImageFrame.Position.Y + descriptionImageFrame.Height + 8.0f);
         
         descriptionTextNode.Size = descriptionContainerNode.Size - new Vector2(16.0f, 16.0f) - new Vector2(0.0f, descriptionVersionTextNode.Height);
         descriptionTextNode.Position = new Vector2(8.0f, 8.0f);
