@@ -55,7 +55,8 @@ public unsafe class HideMpBars : GameModification {
             foreach (var hudMember in AgentHUD.Instance()->GetSizedHudMemberSpan()) {
                 if (hudMember.EntityId is 0) continue;
                 if (hudMember.EntityId == playerId && ( classJob.IsCrafter() || classJob.IsGatherer() )) continue;
-                
+                if (hudMember.Object is null) continue;
+
                 var mpGaugeNode = addon->PartyMembers[hudMember.Index].MPGaugeBar->OwnerNode;
                 mpGaugeNode->ToggleVisibility(manaUsingClassJobs.Contains(hudMember.Object->ClassJob));
             }
