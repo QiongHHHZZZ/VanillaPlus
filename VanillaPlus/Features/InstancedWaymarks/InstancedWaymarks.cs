@@ -151,7 +151,7 @@ public unsafe class InstancedWaymarks : GameModification {
         var result = File.ReadAllBytes(dataFilePath);
 
         if (result.Length < size) {
-            Services.PluginLog.Debug("Not data to load, creating new file.");
+            Services.PluginLog.Debug("No data to load, creating new file.");
             result = new byte[size];
             FilesystemUtil.WriteAllBytesSafe(dataFilePath, result);
         }
