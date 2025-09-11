@@ -9,7 +9,7 @@ using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
 
-namespace VanillaPlus.Basic_Addons;
+namespace VanillaPlus.BasicAddons;
 
 public unsafe class NodeListAddon : NativeAddon {
     protected ScrollingAreaNode<VerticalListNode>? ScrollingAreaNode;

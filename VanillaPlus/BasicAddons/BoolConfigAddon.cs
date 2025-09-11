@@ -7,7 +7,7 @@ using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
 
-namespace VanillaPlus.Basic_Addons;
+namespace VanillaPlus.BasicAddons;
 
 public record BoolConfigEntry(string Category, string Label, bool InitialState, ISavable ConfigObject, MemberInfo ConfigMemberInfo) {
     public void OnOptionChanged(bool newValue) {

@@ -5,7 +5,7 @@ using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using VanillaPlus.Basic_Addons;
+using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.ForcedCutsceneSounds;

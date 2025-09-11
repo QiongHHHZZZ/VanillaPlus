@@ -5,7 +5,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 
-namespace VanillaPlus.Basic_Addons;
+namespace VanillaPlus.BasicAddons;
 
 public unsafe class SearchableNodeListAddon : NodeListAddon {
 

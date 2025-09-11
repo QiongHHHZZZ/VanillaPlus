@@ -5,7 +5,7 @@ using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
-using VanillaPlus.Basic_Addons;
+using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
 using VanillaPlus.Utilities;
 

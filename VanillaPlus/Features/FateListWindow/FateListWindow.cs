@@ -4,7 +4,7 @@ using Dalamud.Game.ClientState.Fates;
 using Dalamud.Game.ClientState.Keys;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
-using VanillaPlus.Basic_Addons;
+using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.FateListWindow;

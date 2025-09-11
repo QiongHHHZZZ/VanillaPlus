@@ -2,7 +2,7 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
 
-namespace VanillaPlus.Basic_Nodes;
+namespace VanillaPlus.BasicNodes;
 
 public class IconWithCountNode : ResNode {
 

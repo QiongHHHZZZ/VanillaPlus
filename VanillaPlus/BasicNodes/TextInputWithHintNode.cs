@@ -5,7 +5,7 @@ using KamiToolKit.Nodes;
 using Lumina.Text;
 using SeString = Dalamud.Game.Text.SeStringHandling.SeString;
 
-namespace VanillaPlus.Basic_Nodes;
+namespace VanillaPlus.BasicNodes;
 
 public class TextInputWithHintNode : SimpleComponentNode {
     private readonly TextInputNode textInputNode;

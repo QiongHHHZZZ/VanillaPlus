@@ -2,7 +2,7 @@
 using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
-using VanillaPlus.Basic_Nodes;
+using VanillaPlus.BasicNodes;
 
 namespace VanillaPlus.Features.ListInventory;
 
