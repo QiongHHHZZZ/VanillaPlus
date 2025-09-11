@@ -152,7 +152,7 @@ public unsafe class InventorySearchBar : GameModification {
 
         foreach (var inventoryType in Enumerable.Range(0, 4)) {
             var inventoryName = inventoryGridNames[inventoryType];
-            var inventoryGrid = Services.GameGui.InternalGetAddonByName<AddonInventoryGrid>(inventoryName);
+            var inventoryGrid = Services.GameGui.GetAddonByName<AddonInventoryGrid>(inventoryName);
             if (inventoryGrid is null) continue;
 
             FadeInventoryNodes(searchString, inventoryGrid, inventoryType);
@@ -166,7 +166,7 @@ public unsafe class InventorySearchBar : GameModification {
 
         foreach (var inventoryType in Enumerable.Range(0, 2)) {
             var inventoryName = inventoryGridNames[inventoryType];
-            var inventoryGrid = Services.GameGui.InternalGetAddonByName<AddonInventoryGrid>(inventoryName);
+            var inventoryGrid = Services.GameGui.GetAddonByName<AddonInventoryGrid>(inventoryName);
             if (inventoryGrid is null) continue;
 
             FadeInventoryNodes(searchString, inventoryGrid, inventoryType + selectedTab * 2);
@@ -175,7 +175,7 @@ public unsafe class InventorySearchBar : GameModification {
 
     private static void UpdateInventory(AddonInventory* addon, SeString searchString) {
         var selectedTab = addon->TabIndex;
-        var inventoryGrid = Services.GameGui.InternalGetAddonByName<AddonInventoryGrid>("InventoryGrid");
+        var inventoryGrid = Services.GameGui.GetAddonByName<AddonInventoryGrid>("InventoryGrid");
 
         FadeInventoryNodes(searchString, inventoryGrid, selectedTab);
     }

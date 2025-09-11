@@ -74,7 +74,7 @@ public unsafe class WindowBackground : GameModification {
         Services.AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, config.Addons, OnAddonUpdate);
 
         foreach (var addonName in config.Addons) {
-            var addonPointer = Services.GameGui.InternalGetAddonByName<AtkUnitBase>(addonName);
+            var addonPointer = Services.GameGui.GetAddonByName<AtkUnitBase>(addonName);
             if (addonPointer is not null) {
                 AttachNode(addonPointer);
             }
@@ -132,7 +132,7 @@ public unsafe class WindowBackground : GameModification {
         if (config is null) return;
         
         foreach (var background in addonBackgrounds ?? []) {
-            var addon = Services.GameGui.InternalGetAddonByName<AtkUnitBase>(background.AddonName);
+            var addon = Services.GameGui.GetAddonByName<AtkUnitBase>(background.AddonName);
             if (addon is not null) {
                 background.ImageNode.Color = config.Color;
                 background.ImageNode.Position = -config.Padding / 2.0f;
