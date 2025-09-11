@@ -13,7 +13,11 @@ public class SampleGameModification : GameModification {
             new ChangeLogInfo(1, "InitialChangelog"),
         ],
     };
-    
+
+    // public override string ImageName => "RetainerSearchBar.png";
+
+    // public override bool IsExperimental => true;
+
     public override void OnEnable() {
     }
 
