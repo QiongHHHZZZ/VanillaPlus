@@ -93,7 +93,7 @@ public unsafe class ResourceBarPercentages : GameModification {
     }
 
     private void OnPartyListDisable() {
-        var addon = Services.GameGui.GetAddonByName<AddonPartyList>("_PartyList");
+        var addon = Services.GameGui.InternalGetAddonByName<AddonPartyList>("_PartyList");
         if (addon is null) return;
         
         foreach (var member in addon->GetHudMembers()) {
@@ -151,7 +151,7 @@ public unsafe class ResourceBarPercentages : GameModification {
     }
 
     private void OnParameterDisable() {
-        var addon = Services.GameGui.GetAddonByName<AddonParameterWidget>("_ParameterWidget");
+        var addon = Services.GameGui.InternalGetAddonByName<AddonParameterWidget>("_ParameterWidget");
         if (addon is null) return;
         if (Services.ClientState.LocalPlayer is not { } localPlayer) return;
 
