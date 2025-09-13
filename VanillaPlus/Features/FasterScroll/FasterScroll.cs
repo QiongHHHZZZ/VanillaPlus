@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Numerics;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using VanillaPlus.BasicAddons.Config;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.FasterScroll;
@@ -21,12 +23,21 @@ public class FasterScroll : GameModification {
     private Hook<AtkComponentScrollBar.Delegates.ReceiveEvent>? scrollBarReceiveEventHook;
 
     private FasterScrollConfig? config;
-    private FasterScrollConfigWindow? configWindow;
+    private ConfigAddon? configWindow;
 
     public override void OnEnable() {
         config = FasterScrollConfig.Load();
-        configWindow = new FasterScrollConfigWindow(config);
-        configWindow.AddToWindowSystem();
+        configWindow = new ConfigAddon {
+            NativeController = System.NativeController,
+            Size = new Vector2(400.0f, 125.0f),
+            InternalName = "FasterScrollConfig",
+            Title = "Faster Scrollbars Config",
+            Config = config,
+        };
+
+        configWindow.AddCategory("Settings")
+            .AddFloatSlider("Speed Multiplier", 0.5f, 4.0f, 2, 0.05f, nameof(config.SpeedMultiplier));
+        
         OpenConfigAction = configWindow.Toggle;
 
         Services.GameInteropProvider.InitializeFromAttributes(this);
@@ -37,7 +48,7 @@ public class FasterScroll : GameModification {
         scrollBarReceiveEventHook?.Dispose();
         scrollBarReceiveEventHook = null;
         
-        configWindow?.RemoveFromWindowSystem();
+        configWindow?.Dispose();
         configWindow = null;
 
         config = null;

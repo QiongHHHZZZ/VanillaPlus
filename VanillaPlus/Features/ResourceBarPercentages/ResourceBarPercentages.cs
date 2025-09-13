@@ -1,9 +1,11 @@
 using System.Globalization;
+using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using Lumina.Excel.Sheets;
+using VanillaPlus.BasicAddons.Config;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.ResourceBarPercentages;
@@ -22,7 +24,7 @@ public unsafe class ResourceBarPercentages : GameModification {
     };
 
     private ResourceBarPercentagesConfig? config;
-    private ResourceBarPercentagesConfigWindow? configWindow;
+    private ConfigAddon? configWindow;
 
     private const short MpDisabledXOffset = -17;
     private const short MpEnabledXOffset = 4;
@@ -31,8 +33,41 @@ public unsafe class ResourceBarPercentages : GameModification {
 
     public override void OnEnable() {
         config = ResourceBarPercentagesConfig.Load();
-        configWindow = new ResourceBarPercentagesConfigWindow(config, OnConfigChanged);
-        configWindow.AddToWindowSystem();
+        config.OnSave += OnConfigChanged;
+        
+        configWindow = new ConfigAddon {
+            NativeController = System.NativeController,
+            Size = new Vector2(400.0f, 550.0f),
+            InternalName = "ResourcePercentageConfig",
+            Title = "Resource Bar Percentages Config",
+            Config = config,
+        };
+
+        configWindow.AddCategory("Party List")
+            .AddCheckbox("Show on Party List", nameof(config.PartyListEnabled))
+            .AddIndent()
+            .AddCheckbox("Apply to Player", nameof(config.PartyListSelf))
+            .AddCheckbox("Apply to Party Members", nameof(config.PartyListMembers))
+            .AddCheckbox("Change HP", nameof(config.PartyListHpEnabled))
+            .AddCheckbox("Change MP", nameof(config.PartyListMpEnabled))
+            .AddCheckbox("Change GP", nameof(config.PartyListGpEnabled))
+            .AddCheckbox("Change CP", nameof(config.PartyListCpEnabled));
+
+        configWindow.AddCategory("Parameter Widget")
+            .AddCheckbox("Show on Parameter Widget", nameof(config.ParameterWidgetEnabled))
+            .AddIndent()
+            .AddCheckbox("Change HP", nameof(config.ParameterHpEnabled))
+            .AddCheckbox("Change MP", nameof(config.ParameterMpEnabled))
+            .AddCheckbox("Change GP", nameof(config.ParameterGpEnabled))
+            .AddCheckbox("Change CP", nameof(config.ParameterCpEnabled));
+
+        configWindow.AddCategory("Percentage Sign")
+            .AddCheckbox("Show Percentage Sign %", nameof(config.PercentageSignEnabled));
+
+        configWindow.AddCategory("Percentage Format")
+            .AddIntSlider("Decimal Places", 0, 2, nameof(config.DecimalPlaces))
+            .AddCheckbox("Show Decimals Only While Below 100%", nameof(config.ShowDecimalsBelowHundredOnly));
+        
         OpenConfigAction = configWindow.Toggle;
 
         Services.AddonLifecycle.RegisterListener(AddonEvent.PostDraw, "_ParameterWidget", OnParameterDraw);
@@ -40,6 +75,18 @@ public unsafe class ResourceBarPercentages : GameModification {
 
         Services.AddonLifecycle.RegisterListener(AddonEvent.PostDraw, "_PartyList", OnPartyListDraw);
         Services.AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_PartyList", OnPartyListDraw);
+    }
+
+    public override void OnDisable() {
+        Services.AddonLifecycle.UnregisterListener(OnParameterDraw, OnPartyListDraw);
+
+        OnParameterDisable();
+        OnPartyListDisable();
+
+        configWindow?.Dispose();
+        configWindow = null;
+
+        config = null;
     }
 
     private void OnConfigChanged() {
@@ -52,18 +99,6 @@ public unsafe class ResourceBarPercentages : GameModification {
         if (!config.PartyListEnabled) {
             OnPartyListDisable();
         }
-    }
-
-    public override void OnDisable() {
-        Services.AddonLifecycle.UnregisterListener(OnParameterDraw, OnPartyListDraw);
-
-        OnParameterDisable();
-        OnPartyListDisable();
-
-        configWindow?.RemoveFromWindowSystem();
-        configWindow = null;
-
-        config = null;
     }
 
     private void OnParameterDraw(AddonEvent type, AddonArgs args) {

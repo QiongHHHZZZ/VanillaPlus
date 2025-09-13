@@ -4,7 +4,7 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using VanillaPlus.BasicAddons;
+using VanillaPlus.BasicAddons.Config;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.ClearSelectedDuties;
@@ -21,19 +21,20 @@ public class ClearSelectedDuties : GameModification {
     };
 
     private ClearSelectedDutiesConfig? config;
-    private BoolConfigAddon? configWindow;
+    private ConfigAddon? configWindow;
 
     public override void OnEnable() {
         config = ClearSelectedDutiesConfig.Load();
-        configWindow = new BoolConfigAddon {
+        configWindow = new ConfigAddon {
             NativeController = System.NativeController,
-            Size = new Vector2(300.0f, 125.0f),
+            Size = new Vector2(300.0f, 135.0f),
             InternalName = "ClearSelectedConfig",
             Title = "Clear Selected Duties Config",
-            OnClose = () => config.Save(),
+            Config = config,
         };
-        
-        configWindow.AddConfigEntry("Settings", "Disable when Unrestricted", config, nameof(config.DisableWhenUnrestricted));
+
+        configWindow.AddCategory("Settings")
+            .AddCheckbox("Disable when Unrestricted", nameof(config.DisableWhenUnrestricted));
         
         OpenConfigAction = configWindow.Toggle;
         

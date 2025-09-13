@@ -6,6 +6,7 @@ using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using VanillaPlus.BasicAddons.Config;
 using VanillaPlus.Classes;
 using Action = Lumina.Excel.Sheets.Action;
 using ActionBarSlotNumberArray = FFXIVClientStructs.FFXIV.Client.UI.Arrays.ActionBarNumberArray.ActionBarBarNumberArray.ActionBarSlotNumberArray;
@@ -33,16 +34,31 @@ public unsafe class FadeUnavailableActions : GameModification {
     private Dictionary<uint, Action?>? actionCache;
 
     private FadeUnavailableActionsConfig? config;
-    private FadeUnavailableActionsConfigWindow? configWindow;
+    private ConfigAddon? configWindow;
 
     public override string ImageName => "FadeUnavailableActions.png";
 
     public override void OnEnable() {
         actionCache = [];
-        
+
         config = FadeUnavailableActionsConfig.Load();
-        configWindow = new FadeUnavailableActionsConfigWindow(config);
-        configWindow.AddToWindowSystem();
+        configWindow = new ConfigAddon {
+            NativeController = System.NativeController,
+            Size = new Vector2(400.0f, 250.0f),
+            InternalName = "FadeUnavailableConfig",
+            Title = "Fade Unavailable Actions Config",
+            Config = config,
+        };
+
+        configWindow.AddCategory("Style Settings")
+            .AddIntSlider("Fade Percentage", 0, 90, nameof(config.FadePercentage))
+            .AddIntSlider("Redden Percentage", 5, 100,  nameof(config.ReddenPercentage));
+
+        configWindow.AddCategory("Feature Toggles")
+            .AddCheckbox("Apply Transparency to Frame", nameof(config.ApplyToFrame))
+            .AddCheckbox("Apply Only to Sync'd Actions", nameof(config.ApplyToSyncActions))
+            .AddCheckbox("Redden Skills out of Range", nameof(config.ReddenOutOfRange));
+        
         OpenConfigAction = configWindow.Toggle;
         
         Services.Hooker.InitializeFromAttributes(this);
@@ -53,7 +69,7 @@ public unsafe class FadeUnavailableActions : GameModification {
         onHotBarSlotUpdateHook?.Dispose();
         onHotBarSlotUpdateHook = null;
         
-        configWindow?.RemoveFromWindowSystem();
+        configWindow?.Dispose();
         configWindow = null;
 
         actionCache = null;

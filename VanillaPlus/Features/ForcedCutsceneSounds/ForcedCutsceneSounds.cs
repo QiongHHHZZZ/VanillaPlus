@@ -5,7 +5,7 @@ using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler;
 using FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using VanillaPlus.BasicAddons;
+using VanillaPlus.BasicAddons.Config;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.ForcedCutsceneSounds;
@@ -41,32 +41,35 @@ public unsafe class ForcedCutsceneSounds : GameModification {
     private Hook<CutSceneControllerDtorDelegate>? cutSceneControllerDtorHook;
 
     private ForcedCutsceneSoundsConfig? config;
-    private BoolConfigAddon? configWindow;
+    private ConfigAddon? configWindow;
 
     public override void OnEnable() {
         wasMuted = [];
         
         config = ForcedCutsceneSoundsConfig.Load();
-        configWindow = new BoolConfigAddon {
+        configWindow = new ConfigAddon {
             NativeController = System.NativeController,
-            Size = new Vector2(325.0f, 385.0f),
+            Size = new Vector2(330.0f, 385.0f),
             InternalName = "ForcedCutsceneConfig",
             Title = "Forced Cutscene Sounds Config",
-            OnClose = () => config.Save(),
+            Config = config,
         };
-        
-        configWindow.AddConfigEntry("General", "Restore mute state after cutscene", config, nameof(config.Restore));
 
-        configWindow.AddConfigEntry("Toggles", "Unmute Master Volume", config, nameof(config.HandleMaster));
-        configWindow.AddConfigEntry("Toggles", "Unmute BGM", config, nameof(config.HandleBgm));
-        configWindow.AddConfigEntry("Toggles", "Unmute Sound Effects", config, nameof(config.HandleSe));
-        configWindow.AddConfigEntry("Toggles", "Unmute Voice", config, nameof(config.HandleVoice));
-        configWindow.AddConfigEntry("Toggles", "Unmute Ambient Sounds", config, nameof(config.HandleEnv));
-        configWindow.AddConfigEntry("Toggles", "Unmute System Sounds", config, nameof(config.HandleSystem));
-        configWindow.AddConfigEntry("Toggles", "Unmute Performance", config, nameof(config.HandlePerform));
+        configWindow.AddCategory("General")
+            .AddCheckbox("Restore Mute State After Cutscene", nameof(config.Restore));
 
-        configWindow.AddConfigEntry("Special", "Disable in MSQ Roulette", config, nameof(config.DisableInMsqRoulette));
-        
+        configWindow.AddCategory("Toggles")
+            .AddCheckbox("Unmute Master Volume", nameof(config.HandleMaster))
+            .AddCheckbox("Unmute BGM", nameof(config.HandleBgm))
+            .AddCheckbox("Unmute Sound Effects", nameof(config.HandleSe))
+            .AddCheckbox("Unmute Voice", nameof(config.HandleVoice))
+            .AddCheckbox("Unmute Ambient Sounds", nameof(config.HandleEnv))
+            .AddCheckbox("Unmute System Sounds", nameof(config.HandleSystem))
+            .AddCheckbox("Unmute Performance", nameof(config.HandlePerform));
+
+        configWindow.AddCategory("Special")
+            .AddCheckbox("Disable in MSQ Roulette", nameof(config.DisableInMsqRoulette));
+
         OpenConfigAction = configWindow.Toggle;
         
         createCutSceneControllerHook = Services.GameInteropProvider.HookFromAddress<ScheduleManagement.Delegates.CreateCutSceneController>(

@@ -10,7 +10,7 @@ using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using Lumina.Excel.Sheets;
-using VanillaPlus.BasicAddons;
+using VanillaPlus.BasicAddons.Config;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.EnhancedLootWindow;
@@ -27,7 +27,7 @@ public unsafe class EnhancedLootWindow : GameModification {
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@LootWindowDuplicateUniqueItemIndicator"),
     };
 
-    private BoolConfigAddon? configWindow;
+    private ConfigAddon? configWindow;
     private EnhancedLootWindowConfig? config;
     private AddonController<AddonNeedGreed>? needGreedController;
 
@@ -38,16 +38,17 @@ public unsafe class EnhancedLootWindow : GameModification {
 
     public override void OnEnable() {
         config = EnhancedLootWindowConfig.Load();
-        configWindow = new BoolConfigAddon {
+        configWindow = new ConfigAddon {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 150.0f),
             InternalName = "EnhancedLootWindowConfig",
             Title = "Enhanced Loot Window Config",
-            OnClose = () => config.Save(),
+            Config = config,
         };
-        
-        configWindow.AddConfigEntry("Settings", "Mark Un-obtainable Items", config, nameof(config.MarkUnobtainableItems));
-        configWindow.AddConfigEntry("Settings", "Mark Already Unlocked Items", config, nameof(config.MarkAlreadyObtainedItems));
+
+        configWindow.AddCategory("Settings")
+            .AddCheckbox("Mark Unobtainable Items", nameof(config.MarkUnobtainableItems))
+            .AddCheckbox("Mark Already Unlocked Items", nameof(config.MarkAlreadyObtainedItems));
 
         OpenConfigAction = configWindow.Toggle;
 

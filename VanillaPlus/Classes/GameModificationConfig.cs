@@ -1,4 +1,6 @@
-﻿using VanillaPlus.Utilities;
+﻿using System;
+using System.Text.Json.Serialization;
+using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Classes;
 
@@ -14,5 +16,8 @@ public abstract class GameModificationConfig<T> : ISavable where T : GameModific
     public void Save() {
         Services.PluginLog.Debug($"Saving Config {FileName}");
         Config.SaveConfig(this, FileName);
+        OnSave?.Invoke();
     }
+
+    [JsonIgnore] public Action? OnSave { get; set; }
 }
