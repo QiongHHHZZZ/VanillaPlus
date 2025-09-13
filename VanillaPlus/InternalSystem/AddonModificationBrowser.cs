@@ -121,6 +121,7 @@ public class AddonModificationBrowser : NativeAddon {
             IsVisible = true,
             OnInputReceived = OnSearchBoxInputReceived,
             PlaceholderString = "Search . . .",
+            AutoSelectAll = true,
         };
         searchContainerNode.AddNode(searchBoxNode);
     }
