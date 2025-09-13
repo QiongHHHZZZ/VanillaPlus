@@ -68,11 +68,17 @@ public static class InventoryItemExtensions {
         // Skip any data access if string is empty
         if (searchString.IsNullOrEmpty()) return true;
 
+        var isDescriptionSearch = searchString.StartsWith('$');
+
+        if (isDescriptionSearch) {
+            searchString = searchString[1..];
+        }
+
         var itemData = Services.DataManager.GetExcelSheet<Item>().GetRow(item.ItemId);
 
         if (Regex.IsMatch(item.ItemId.ToString(), searchString)) return true;
         if (Regex.IsMatch(itemData.Name.ToString(), searchString, regexOptions)) return true;
-        if (Regex.IsMatch(itemData.Description.ToString(), searchString, regexOptions) && searchString.StartsWith('$')) return true;
+        if (Regex.IsMatch(itemData.Description.ToString(), searchString, regexOptions) && isDescriptionSearch) return true;
         if (Regex.IsMatch(itemData.LevelEquip.ToString(), searchString, regexOptions)) return true;
         if (Regex.IsMatch(itemData.LevelItem.RowId.ToString(), searchString, regexOptions)) return true;
 
