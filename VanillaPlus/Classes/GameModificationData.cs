@@ -8,11 +8,11 @@ public abstract class GameModificationData<T> where T : GameModificationData<T>,
         var configFileName = new T().FileName;
         
         Services.PluginLog.Debug($"Loading Data {configFileName}");
-        return Config.LoadData<T>(configFileName);
+        return Data.LoadData<T>(configFileName);
     } 
     
     public void Save() {
         Services.PluginLog.Debug($"Saving Data {FileName}");
-        Config.SaveData(this, FileName);
+        Data.SaveData(this, FileName);
     }
 }

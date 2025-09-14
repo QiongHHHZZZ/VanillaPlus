@@ -160,7 +160,7 @@ public unsafe class InstancedWaymarks : GameModification {
     }
 
     private static FileInfo GetDataFileInfo(uint contentFinderCondition) {
-        var directoryInfo = new DirectoryInfo(Path.Combine(Config.DataPath, "InstancedWaymarks"));
+        var directoryInfo = new DirectoryInfo(Path.Combine(Data.DataPath, "InstancedWaymarks"));
         if (!directoryInfo.Exists) {
             directoryInfo.Create();
         }

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using VanillaPlus.Utilities;
 
@@ -25,54 +24,46 @@ public static unsafe class PresetManager {
             var rawName = fileName[..fileName.IndexOf(".preset.data", StringComparison.OrdinalIgnoreCase)];
             fileList.Add(rawName);
         }
-        
+
         return fileList.Count is 0 ? [ DefaultString ] : fileList.Prepend(DontUseString).ToList();
     }
 
     public static void LoadPreset(string fileName) {
-        var address = Unsafe.AsPointer(ref AgentLookingForGroup.Instance()->StoredRecruitmentInfo);
+        var agent = AgentLookingForGroup.Instance();
+
+        var address = Unsafe.AsPointer(ref agent->StoredRecruitmentInfo);
         var size = sizeof(AgentLookingForGroup.RecruitmentSub);
 
-        var dataFilePath = GetDataFileInfo(fileName).FullName;
-        var result = File.ReadAllBytes(dataFilePath);
-
-        if (result.Length < size) {
-            Services.PluginLog.Debug("No data to load, creating new file.");
-            result = new byte[size];
-            FilesystemUtil.WriteAllBytesSafe(dataFilePath, result);
-        }
-
+        var result = Data.LoadBinaryData(size, "PartyFinderPresets", $"{fileName}.preset.data");
         Marshal.Copy(result, 0, (nint)address, size);
+
+        var extrasFile = Data.LoadData<PresetExtras>("PartyFinderPresets", $"{fileName}.extras.data");
+
+        agent->AvgItemLv = extrasFile.ItemLevel;
+        agent->AvgItemLvEnabled = extrasFile.ItemLevelEnabled;
     }
 
     public static void SavePreset(string fileName) {
-        var address = Unsafe.AsPointer(ref AgentLookingForGroup.Instance()->StoredRecruitmentInfo);
+        var agent = AgentLookingForGroup.Instance();
+        
+        var address = Unsafe.AsPointer(ref agent->StoredRecruitmentInfo);
         var size = sizeof(AgentLookingForGroup.RecruitmentSub);
 
-        var dataFilePath = GetDataFileInfo(fileName).FullName;
-        var dataSpan = new Span<byte>(address, size);
+        Data.SaveBinaryData(address, size, "PartyFinderPresets", $"{fileName}.preset.data");
 
-        FilesystemUtil.WriteAllBytesSafe(dataFilePath, dataSpan.ToArray());
+        Data.SaveData(new PresetExtras {
+            ItemLevel = agent->AvgItemLv,
+            ItemLevelEnabled = agent->AvgItemLvEnabled,
+        }, "PartyFinderPresets", $"{fileName}.extras.data");
     }
 
     private static DirectoryInfo GetPresetDirectory() {
-        var directoryInfo = new DirectoryInfo(Path.Combine(Config.DataPath, "PartyFinderPresets"));
+        var directoryInfo = new DirectoryInfo(Path.Combine(Data.DataPath, "PartyFinderPresets"));
         if (!directoryInfo.Exists) {
             directoryInfo.Create();
         }
 
         return directoryInfo;
-    }
-
-    private static FileInfo GetDataFileInfo(string presetName) {
-        var directoryInfo = GetPresetDirectory();
-
-        var fileInfo = new FileInfo(Path.Combine(directoryInfo.FullName, $"{presetName}.preset.data"));
-        if (!fileInfo.Exists) {
-            fileInfo.Create().Close();
-        }
-
-        return fileInfo;
     }
 
     public static bool IsValidFileName(string fileName)
