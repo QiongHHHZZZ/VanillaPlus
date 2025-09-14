@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
@@ -14,10 +15,10 @@ public unsafe class ConfigAddon : NativeAddon {
     
     public required ISavable Config { get; init; }
 
-    protected override void OnSetup(AtkUnitBase* addon) {
+    protected override void OnSetup(AtkUnitBase* addon) { // todo: add option to hide scrollbar
         configurationListNode = new ScrollingAreaNode<VerticalListNode> {
-            Size = ContentSize,
-            Position = ContentStartPosition,
+            Size = ContentSize + new Vector2(0.0f, ContentPadding.Y),
+            Position = ContentStartPosition - new Vector2(0.0f, ContentPadding.Y),
             IsVisible = true,
             ContentHeight = ContentSize.Y,
         };
