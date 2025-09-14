@@ -3,7 +3,6 @@ using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
-using Lumina.Text.ReadOnly;
 
 namespace VanillaPlus.BasicAddons;
 
