@@ -96,7 +96,6 @@ public class AddonSavePreset : NativeAddon {
             MaxListOptions = 10,
             Options = presetNames,
             IsVisible = false,
-            OnCollapseToggled = OnDropdownOpened,
         };
         AttachNode(textDropDownNode);
 
@@ -142,11 +141,6 @@ public class AddonSavePreset : NativeAddon {
         
         PresetManager.SavePreset(fileName);
         Close();
-    }
-
-    private void OnDropdownOpened(bool isCollapsed) {
-        confirmButtonNode.CollisionNode.EventFlagsSet = isCollapsed;
-        cancelButtonNode.CollisionNode.EventFlagsSet = isCollapsed;
     }
 
     private void OnShowCreateNew() {
