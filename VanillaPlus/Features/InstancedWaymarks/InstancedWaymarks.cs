@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Dalamud.Game.Addon.Lifecycle;
@@ -12,6 +13,8 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using Lumina.Excel.Sheets;
+using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
 using VanillaPlus.Utilities;
 
@@ -32,12 +35,20 @@ public unsafe class InstancedWaymarks : GameModification {
     private uint previousCfc;
     private int slotClicked = -1;
     private InstancedWaymarksConfig? config;
-    private WaymarkRenameWindow? renameWindow;
+    private RenameAddon? renameWindow;
 
     public override string ImageName => "InstanceWaymarks.png";
 
     public override void OnEnable() {
         config = InstancedWaymarksConfig.Load();
+        
+        renameWindow ??= new RenameAddon {
+            NativeController = System.NativeController,
+            Size = new Vector2(250.0f, 150.0f),
+            InternalName = "WaymarkRename",
+            Title = "Waymark Rename Window",
+            AutoSelectAll = true,
+        };
         
         Services.ClientState.TerritoryChanged += OnTerritoryChanged;
         Services.ContextMenu.OnMenuOpened += OnMenuOpened;
@@ -59,7 +70,7 @@ public unsafe class InstancedWaymarks : GameModification {
         
         LoadWaymarks(0);
 
-        renameWindow?.Close();
+        renameWindow?.Dispose();
         renameWindow = null;
         
         config = null;
@@ -116,17 +127,27 @@ public unsafe class InstancedWaymarks : GameModification {
     private void RenameContextMenuAction(IMenuItemClickedArgs menuItemClickedArgs) {
         if (slotClicked is -1) return;
         if (config is null) return;
+        if (renameWindow is null) return;
 
         var cfc = GameMain.Instance()->CurrentContentFinderConditionId;
+        string defaultName;
 
-        renameWindow ??= new WaymarkRenameWindow(config, cfc, slotClicked, () => {
-            renameWindow?.Close();
-            renameWindow?.RemoveFromWindowSystem();
-            renameWindow = null;
-        });
+        if (config.NamedWaymarks.TryGetValue(cfc, out var mapping) && mapping.TryGetValue(slotClicked, out var name)) {
+            defaultName = name;
+        }
+        else {
+            defaultName = Services.DataManager.GetExcelSheet<ContentFinderCondition>().GetRow(cfc).Name.ToString();
+        }
 
-        renameWindow.AddToWindowSystem();
-        renameWindow.Open();
+        renameWindow.ResultCallback = newString => {
+            config.NamedWaymarks.TryAdd(cfc, []);
+            config.NamedWaymarks[cfc].TryAdd(slotClicked, newString);
+            config.NamedWaymarks[cfc][slotClicked] = newString;
+            config.Save();
+        };
+
+        renameWindow.DefaultString = defaultName;
+        renameWindow.Toggle();
     }
     
     private static void SaveWaymarks(uint contentFinderCondition) {
