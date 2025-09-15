@@ -21,6 +21,7 @@ public unsafe class ConfigAddon : NativeAddon {
             Position = ContentStartPosition - new Vector2(0.0f, ContentPadding.Y),
             IsVisible = true,
             ContentHeight = ContentSize.Y,
+            AutoHideScrollBar = true,
         };
         AttachNode(configurationListNode);
 
