@@ -6,7 +6,7 @@ using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
 
-namespace VanillaPlus.BasicAddons.Config;
+namespace VanillaPlus.NativeElements.Config;
 
 public unsafe class ConfigAddon : NativeAddon {
     private ScrollingAreaNode<VerticalListNode>? configurationListNode;

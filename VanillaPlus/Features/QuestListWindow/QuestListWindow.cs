@@ -5,8 +5,8 @@ using Dalamud.Game.ClientState.Keys;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
 using Lumina.Excel.Sheets;
-using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
+using VanillaPlus.NativeElements.Addons;
 using Map = FFXIVClientStructs.FFXIV.Client.Game.UI.Map;
 
 namespace VanillaPlus.Features.QuestListWindow;

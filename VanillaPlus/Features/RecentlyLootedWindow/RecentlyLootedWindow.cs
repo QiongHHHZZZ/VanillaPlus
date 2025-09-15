@@ -5,8 +5,8 @@ using Dalamud.Game.Inventory.InventoryEventArgTypes;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
-using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
+using VanillaPlus.NativeElements.Addons;
 using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;

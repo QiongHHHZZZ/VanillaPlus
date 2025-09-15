@@ -4,7 +4,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Addon;
 using KamiToolKit.Nodes;
 
-namespace VanillaPlus.BasicAddons;
+namespace VanillaPlus.NativeElements.Addons;
 
 public class RenameAddon : NativeAddon {
     private TextInputNode? inputNode;

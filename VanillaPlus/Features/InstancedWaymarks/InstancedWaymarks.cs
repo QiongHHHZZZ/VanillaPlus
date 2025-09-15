@@ -14,8 +14,8 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel.Sheets;
-using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
+using VanillaPlus.NativeElements.Addons;
 using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.InstancedWaymarks;

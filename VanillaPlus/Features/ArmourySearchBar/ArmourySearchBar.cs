@@ -10,8 +10,8 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using FFXIVClientStructs.Interop;
 using KamiToolKit;
 using Lumina.Extensions;
-using VanillaPlus.BasicNodes;
 using VanillaPlus.Classes;
+using VanillaPlus.NativeElements.Nodes;
 
 namespace VanillaPlus.Features.ArmourySearchBar;
 

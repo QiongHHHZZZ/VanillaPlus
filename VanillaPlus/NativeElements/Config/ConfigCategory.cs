@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Numerics;
 using KamiToolKit.Nodes;
-using VanillaPlus.BasicAddons.Config.EntryTypes;
 using VanillaPlus.Classes;
+using VanillaPlus.NativeElements.Config.ConfigEntries;
 
-namespace VanillaPlus.BasicAddons.Config;
+namespace VanillaPlus.NativeElements.Config;
 
 public class ConfigCategory {
     public required string CategoryLabel { get; init; }

@@ -2,7 +2,7 @@
 using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Nodes;
-using VanillaPlus.BasicNodes;
+using VanillaPlus.NativeElements.Nodes;
 
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 

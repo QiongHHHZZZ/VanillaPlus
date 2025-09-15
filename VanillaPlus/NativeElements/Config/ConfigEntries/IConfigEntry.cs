@@ -1,6 +1,6 @@
 ﻿using KamiToolKit.System;
 
-namespace VanillaPlus.BasicAddons.Config.EntryTypes;
+namespace VanillaPlus.NativeElements.Config.ConfigEntries;
 
 public interface IConfigEntry {
     NodeBase BuildNode();

@@ -5,12 +5,15 @@ using KamiToolKit.Nodes;
 using KamiToolKit.Nodes.Slider;
 using KamiToolKit.System;
 
-namespace VanillaPlus.BasicAddons.Config.EntryTypes;
+namespace VanillaPlus.NativeElements.Config.ConfigEntries;
 
-public class IntSliderConfig : BaseConfigEntry {
-    public required Range Range { get; init; }
-    public required int InitialValue { get; init; }
-
+public class FloatSliderConfig : BaseConfigEntry {
+    public required float MinValue { get; init; }
+    public required float MaxValue { get; init; }
+    public required float InitialValue { get; init; }
+    public required int DecimalPlaces { get; init; }
+    public required float StepSpeed { get; init; }
+    
     public override NodeBase BuildNode() {
         var layoutNode = new HorizontalListNode {
             Height = 24.0f,
@@ -21,26 +24,27 @@ public class IntSliderConfig : BaseConfigEntry {
         var sliderNode = new SliderNode {
             Size = new Vector2(175.0f, 24.0f),
             IsVisible = true,
-            Range = Range,
-            OnValueChanged = OnOptionChanged,
-            Value = InitialValue,
+            DecimalPlaces = DecimalPlaces,
+            Range = (int)(MinValue * Math.Pow(10, DecimalPlaces))..(int)(MaxValue * Math.Pow(10, DecimalPlaces)),
+            OnValueChanged = newValue => OnOptionChanged(newValue / MathF.Pow(10, DecimalPlaces)),
+            Value = (int)(InitialValue * Math.Pow(10, DecimalPlaces)),
+            Step = (int)(StepSpeed * MathF.Pow(10, DecimalPlaces)),
         };
-
 
         var labelNode = new SimpleLabelNode {
             IsVisible = true,
             Size = new Vector2(0.0f, 24.0f),
-            String = Label,
             AlignmentType = AlignmentType.TopLeft,
+            String = Label,
         };
-            
+
         layoutNode.AddNode(sliderNode);
         layoutNode.AddNode(labelNode);
 
         return layoutNode;
     }
 
-    private void OnOptionChanged(int newValue) {
+    private void OnOptionChanged(float newValue) {
         MemberInfo.SetValue(Config, newValue);
         Config.Save();
     }

@@ -3,8 +3,8 @@ using System.Numerics;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using VanillaPlus.BasicAddons.Config;
 using VanillaPlus.Classes;
+using VanillaPlus.NativeElements.Config;
 
 namespace VanillaPlus.Features.FasterScroll;
 

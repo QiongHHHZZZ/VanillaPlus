@@ -1,7 +1,7 @@
 ﻿using KamiToolKit.Nodes;
 using KamiToolKit.System;
 
-namespace VanillaPlus.BasicAddons.Config.EntryTypes;
+namespace VanillaPlus.NativeElements.Config.ConfigEntries;
 
 public class CheckBoxConfig : BaseConfigEntry {
     public required bool InitialState { get; init; }

@@ -4,8 +4,8 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Keys;
 using KamiToolKit.Nodes;
 using KamiToolKit.System;
-using VanillaPlus.BasicAddons;
 using VanillaPlus.Classes;
+using VanillaPlus.NativeElements.Addons;
 using VanillaPlus.Utilities;
 
 namespace VanillaPlus.Features.ListInventory;

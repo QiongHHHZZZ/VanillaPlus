@@ -1,7 +1,7 @@
 ﻿using System;
 using KamiToolKit.System;
 
-namespace VanillaPlus.BasicAddons.Config.EntryTypes;
+namespace VanillaPlus.NativeElements.Config.ConfigEntries;
 
 public class IndentEntry : IConfigEntry {
     public NodeBase BuildNode()

@@ -2,7 +2,7 @@
 using KamiToolKit.System;
 using VanillaPlus.Classes;
 
-namespace VanillaPlus.BasicAddons.Config.EntryTypes;
+namespace VanillaPlus.NativeElements.Config.ConfigEntries;
 
 public abstract class BaseConfigEntry : IConfigEntry {
     public required string Label { get; init; }
