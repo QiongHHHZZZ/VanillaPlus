@@ -83,13 +83,12 @@ public static class FileHelpers {
         return newFile;
     }
 
-    public static void SaveBinaryFile(byte[] file, string filePath) {
+    public static void SaveBinaryFile(byte[] data, string filePath) {
         try {
-            var fileText = JsonSerializer.Serialize(file, file.GetType(), SerializerOptions);
-            FilesystemUtil.WriteAllTextSafe(filePath, fileText);
+            FilesystemUtil.WriteAllBytesSafe(filePath, data);
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, $"Error trying to save file {filePath}");
+            Services.PluginLog.Error(e, $"Error trying to save binary data {filePath}");
         }
     }
 

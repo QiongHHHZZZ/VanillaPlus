@@ -35,7 +35,7 @@ public static class Data {
     /// <summary>
     /// Saves a data file to PluginConfigs\VanillaPlus\Data\{FolderName}\{FileName}
     /// </summary>
-    public static void SaveData<T>(T data, string fileName, string folderName)
+    public static void SaveData<T>(T data, string folderName, string fileName)
         => FileHelpers.SaveFile(data, FileHelpers.GetFileInfo("Data", folderName, fileName).FullName);
     
     /// <summary>
@@ -54,6 +54,6 @@ public static class Data {
     /// <summary>
     /// Saves a binary file to PluginConfigs\VanillaPlus\Data\{FolderName}\{FileName}
     /// </summary>
-    public static unsafe void SaveBinaryData(void* address, int size, string folderName, string fileName)
-        => FileHelpers.SaveBinaryFile(new Span<byte>(address, size).ToArray(), FileHelpers.GetFileInfo("Data", folderName, fileName).FullName);
+    public static void SaveBinaryData(byte[] data, string folderName, string fileName)
+        => FileHelpers.SaveBinaryFile(data, FileHelpers.GetFileInfo("Data", folderName, fileName).FullName);
 }
