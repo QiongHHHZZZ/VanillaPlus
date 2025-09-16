@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VanillaPlus.Utilities;
+﻿namespace VanillaPlus.Utilities;
 
 public static class Data {
     public static string DataPath => FileHelpers.GetFileInfo("Data").FullName;
