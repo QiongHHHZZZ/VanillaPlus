@@ -48,8 +48,10 @@ public static unsafe class PresetManager {
         
         var address = Unsafe.AsPointer(ref agent->StoredRecruitmentInfo);
         var size = sizeof(AgentLookingForGroup.RecruitmentSub);
+        
+        var dataSpan = new Span<byte>(address, size);
 
-        Data.SaveBinaryData(address, size, "PartyFinderPresets", $"{fileName}.preset.data");
+        Data.SaveBinaryData(dataSpan.ToArray(), "PartyFinderPresets", $"{fileName}.preset.data");
 
         Data.SaveData(new PresetExtras {
             ItemLevel = agent->AvgItemLv,
@@ -68,4 +70,17 @@ public static unsafe class PresetManager {
 
     public static bool IsValidFileName(string fileName)
         => !fileName.Any(character => Enumerable.Contains(Path.GetInvalidFileNameChars(), character));
+
+    public static void DeletePreset(string fileName) {
+        var presetFile = FileHelpers.GetFileInfo("Data", "PartyFinderPresets", $"{fileName}.preset.data");
+        var extrasFile = FileHelpers.GetFileInfo("Data", "PartyFinderPresets", $"{fileName}.extras.data");
+
+        if (presetFile.Exists) {
+            presetFile.Delete();
+        }
+
+        if (extrasFile.Exists) {
+            extrasFile.Delete();
+        }
+    }
 }
