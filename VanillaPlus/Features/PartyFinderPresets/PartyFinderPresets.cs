@@ -129,7 +129,7 @@ public unsafe class PartyFinderPresets : GameModification {
     private static int Comparison(NodeBase x, NodeBase y) {
         if (x is not PresetEditNode left || y is not PresetEditNode right) return 0;
         
-        return string.CompareOrdinal(right.PresetName, left.PresetName);
+        return string.CompareOrdinal(left.PresetName, right.PresetName);
     }
 
     public override void OnDisable() {
