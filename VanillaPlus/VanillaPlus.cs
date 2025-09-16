@@ -20,7 +20,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
             NativeController = System.NativeController,
             InternalName = "VanillaPlusConfig",
             Title = "Vanilla Plus Modification Browser",
-            Size = new Vector2(836.0f, 560.0f),
+            Size = new Vector2(836.0f, 650.0f),
         };
 
         Services.CommandManager.AddHandler("/vanillaplus", new CommandInfo(Handler) {

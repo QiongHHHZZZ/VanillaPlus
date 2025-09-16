@@ -20,6 +20,7 @@ public unsafe class ArmourySearchBar : GameModification {
         DisplayName = "Armoury Search Bar",
         Description = "Adds a search bar to the armoury window.",
         Type = ModificationType.UserInterface,
+        SubType = ModificationSubType.Inventory,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),

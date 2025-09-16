@@ -63,33 +63,44 @@ public class AddonModificationBrowser : NativeAddon {
         BuildDescriptionContainer();
 
         addon->AdditionalFocusableNodes[0] = (AtkResNode*)descriptionImageNode.Node;
-        
-        var groupedOptions = System.ModificationManager.LoadedModifications
-                                   .Select(option => option)
-                                   .GroupBy(option => option.Modification.ModificationInfo.Type)
-                                   .OrderBy(option => option.Key);
+
+        var typeGroup = System.ModificationManager.LoadedModifications
+            .Select(option => option)
+            .GroupBy(option => option.Modification.ModificationInfo.Type);
 
         uint optionIndex = 0;
-        
-        foreach (var category in groupedOptions) {
+
+        var orderedTypeGroup = typeGroup.OrderBy(group => group.Key);
+        foreach (var category in orderedTypeGroup) {
             var newCategoryNode = new TreeListCategoryNode {
                 IsVisible = true,
                 SeString = category.Key.GetDescription(),
                 OnToggle = isVisible => OnCategoryToggled(isVisible, category.Key),
+                VerticalPadding = 0.0f,
             };
+            
+            var subTypeGroup = category
+                .GroupBy(option => option.Modification.ModificationInfo.SubType);
+            
+            var orderedSubTypeGroup = subTypeGroup.OrderBy(group => group.Key?.GetDescription());
+            foreach (var subCategory in orderedSubTypeGroup) {
+                if (subCategory.Key is not null) {
+                    newCategoryNode.AddHeader(subCategory.Key.GetDescription());
+                }
 
-            foreach (var mod in category.OrderBy(modification => modification.Modification.ModificationInfo.DisplayName)) {
-                var newOptionNode = new GameModificationOptionNode {
-                    NodeId = optionIndex++,
-                    Height = 42.0f,
-                    Modification = mod,
-                    IsVisible = true,
-                };
+                foreach (var mod in subCategory.OrderBy(modification => modification.Modification.ModificationInfo.DisplayName)) {
+                    var newOptionNode = new GameModificationOptionNode {
+                        NodeId = optionIndex++,
+                        Height = 38.0f,
+                        Modification = mod,
+                        IsVisible = true,
+                    };
 
-                newOptionNode.OnClick = () => OnOptionClicked(newOptionNode);
+                    newOptionNode.OnClick = () => OnOptionClicked(newOptionNode);
 
-                newCategoryNode.AddNode(newOptionNode);
-                modificationOptionNodes.Add(newOptionNode);
+                    newCategoryNode.AddNode(newOptionNode);
+                    modificationOptionNodes.Add(newOptionNode);
+                }
             }
             
             categoryNodes.Add(newCategoryNode);
@@ -349,7 +360,7 @@ public class AddonModificationBrowser : NativeAddon {
     }
 
     private void RecalculateScrollableAreaSize() {
-        optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height) + 10.0f;
+        optionContainerNode.ContentHeight = categoryNodes.Sum(node => node.Height) + 15.0f;
     }
 
     public void UpdateDisabledState() {
@@ -378,8 +389,8 @@ public class AddonModificationBrowser : NativeAddon {
         descriptionVersionTextNode.Size = new Vector2(200.0f, 28.0f);
         descriptionVersionTextNode.Position = descriptionContainerNode.Size - descriptionVersionTextNode.Size - new Vector2(8.0f, 8.0f);
 
-        descriptionImageTextNode.Size = new Vector2(descriptionContainerNode.Width - 16.0f, descriptionContainerNode.Height - descriptionImageFrame.Y - descriptionImageFrame.Height - descriptionVersionTextNode.Height - 14.0f);
-        descriptionImageTextNode.Position = new Vector2(8.0f, descriptionImageFrame.Position.Y + descriptionImageFrame.Height + 8.0f);
+        descriptionImageTextNode.Size = new Vector2(descriptionContainerNode.Width - 16.0f, descriptionContainerNode.Height - descriptionImageFrame.Y - descriptionImageFrame.Height - descriptionVersionTextNode.Height - 22.0f);
+        descriptionImageTextNode.Position = new Vector2(8.0f, descriptionImageFrame.Position.Y + descriptionImageFrame.Height + 16.0f);
         
         descriptionTextNode.Size = descriptionContainerNode.Size - new Vector2(16.0f, 16.0f) - new Vector2(0.0f, descriptionVersionTextNode.Height);
         descriptionTextNode.Position = new Vector2(8.0f, 8.0f);

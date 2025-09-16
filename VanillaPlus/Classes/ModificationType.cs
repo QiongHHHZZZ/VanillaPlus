@@ -16,6 +16,12 @@ public enum ModificationType {
     Debug,
     
     /// <summary>
+    /// Adds a new native window to the game
+    /// </summary>
+    [Description("Custom Native Windows")]
+    NewWindow,
+    
+    /// <summary>
     /// Modifies some aspect of the base games user interface
     /// </summary>
     [Description("UI Modification")]
@@ -26,13 +32,7 @@ public enum ModificationType {
     /// </summary>
     [Description("Game Behavior Modification")]
     GameBehavior,
-    
-    /// <summary>
-    /// Adds a new native window to the game
-    /// </summary>
-    [Description("Custom Native Windows")]
-    NewWindow,
-    
+
     /// <summary>
     /// Adds a new native overlay to the game
     /// </summary>

@@ -16,6 +16,7 @@ public unsafe class SaddlebagSearchBar : GameModification {
         DisplayName = "Saddlebag Search Bar",
         Description = "Adds a search bar to the saddlebag window.",
         Type = ModificationType.UserInterface,
+        SubType = ModificationSubType.Inventory,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),

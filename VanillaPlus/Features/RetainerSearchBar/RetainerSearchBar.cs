@@ -18,6 +18,7 @@ public unsafe class RetainerSearchBar : GameModification {
         DisplayName = "Retainer Search Bar",
         Description = "Adds a search bar to the retainer window.",
         Type = ModificationType.UserInterface,
+        SubType = ModificationSubType.Inventory,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),

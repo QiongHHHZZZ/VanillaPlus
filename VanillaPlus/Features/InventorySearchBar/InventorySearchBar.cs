@@ -15,6 +15,7 @@ public unsafe class InventorySearchBar : GameModification {
         DisplayName = "Inventory Search Bar",
         Description = "Adds a search bar to the inventory window.",
         Type = ModificationType.UserInterface,
+        SubType = ModificationSubType.Inventory,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),

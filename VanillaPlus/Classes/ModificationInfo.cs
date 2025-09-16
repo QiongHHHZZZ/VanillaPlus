@@ -10,6 +10,7 @@ public class ModificationInfo {
     public required string Description { get; init; }
     public required string[] Authors { get; init; }
     public required ModificationType Type { get; init; }
+    public ModificationSubType? SubType { get; init; }
     public required List<ChangeLogInfo> ChangeLog { get; init; } = [];
     public List<string> Tags { get; init; } = [];
     
@@ -24,6 +25,7 @@ public class ModificationInfo {
         // if (Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) return true; // Probably not a good idea to use this without a fuzzy matcher.
         if (Authors.Any(author => author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))) return true;
         if (Type.GetDescription().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) return true;
+        if (SubType is not null && SubType.GetDescription().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) return true;
         if (Tags.Any(tag => tag.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))) return true;
         
         return false;
