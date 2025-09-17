@@ -12,15 +12,16 @@ namespace VanillaPlus.Features.ListInventory;
 
 public class ListInventory : GameModification {
     public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "List Inventory Window",
+        DisplayName = "Inventory List Window",
         Description = "Adds a window that displays your inventory as a list, with toggleable filters.",
         Type = ModificationType.NewWindow,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),
             new ChangeLogInfo(2, "Added Sort by Quantity"),
-            new ChangeLogInfo(3, "Added `/listinventory` command to open window"),
+            new ChangeLogInfo(3, "Added '/listinventory' command to open window"),
             new ChangeLogInfo(4, "Sort Dropdown is now on another line, added reverse sort direction button"),
+            new ChangeLogInfo(5, "Renamed to be consistent with other features"),
         ],
     };
     
