@@ -14,7 +14,7 @@ public class SampleGameModification : GameModification {
         ],
     };
 
-    // public override string ImageName => "RetainerSearchBar.png";
+    // public override string ImageName => "SampleGameModification.png";
 
     // public override bool IsExperimental => true;
 
