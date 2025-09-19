@@ -44,12 +44,11 @@ public class IconWithCountNode : ResNode {
         get => int.Parse(countTextNode.String);
         set {
             if (ShowCountWhenOne || value > 1) {
-                if (value < 10000) {
-                    countTextNode.String = value.ToString();
-                }
-                else {
-                    countTextNode.String = $"{value / 1000,3}k";
-                }
+                countTextNode.String = value switch {
+                    >= 1_000_000 => $"{value / 1_000_000}m",
+                    >= 10_000 => $"{value / 1_000}k",
+                    _ => $"{value}",
+                };
             }
         }
     }
