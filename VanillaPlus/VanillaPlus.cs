@@ -61,6 +61,12 @@ public sealed class VanillaPlus : IDalamudPlugin {
         foreach (var asset in Assets.LoadedTextures) {
             asset.Dispose();
         }
+        Assets.LoadedTextures.Clear();
+
+        foreach (var (_, agentInfo) in AgentInterfaceExtensions.HookedAgents) {
+            agentInfo.ReceiveEventHook?.Dispose();
+        }
+        AgentInterfaceExtensions.HookedAgents.Clear();
 
         Services.PluginInterface.UiBuilder.OpenConfigUi -= OpenModificationBrowser;
         Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
