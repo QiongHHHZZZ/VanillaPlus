@@ -46,7 +46,9 @@ public unsafe class FadeLootButton : GameModification {
         notificationLootController.Enable();
     }
 
-    private void OnLootDisable(AtkUnitBase* addon) {
+    private static void OnLootDisable(AtkUnitBase* addon) {
+        if (addon->RootNode is null) return;
+
         addon->RootNode->Color.A = 255;
     }
 
@@ -62,6 +64,7 @@ public unsafe class FadeLootButton : GameModification {
     
     private void OnLootRefresh(AtkUnitBase* addon) {
         if (config is null) return;
+        if (addon->RootNode is null) return;
 
         if (AllLootRolled()) {
             addon->RootNode->Color.A = (byte)(255 * (1.0f - config.FadePercent));
