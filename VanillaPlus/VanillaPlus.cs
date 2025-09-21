@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿// #define AUTOOPEN
+
+using System.Numerics;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
@@ -41,6 +43,10 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
         System.KeyListener = new KeyListener();
         System.ModificationManager = new ModificationManager();
+        
+        #if AUTOOPEN
+        System.AddonModificationBrowser.Open();
+        #endif
     }
 
     private static void Handler(string command, string arguments) {
