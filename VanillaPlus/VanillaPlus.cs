@@ -1,5 +1,4 @@
-﻿// #define AUTOOPEN
-
+﻿using System.Diagnostics;
 using System.Numerics;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
@@ -43,22 +42,9 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
         System.KeyListener = new KeyListener();
         System.ModificationManager = new ModificationManager();
-        
-        #if AUTOOPEN
-        System.AddonModificationBrowser.Open();
-        #endif
-    }
 
-    private static void Handler(string command, string arguments) {
-        switch (command, arguments) {
-            case { command: "/vanillaplus" or "/plus", arguments: "" }:
-                System.AddonModificationBrowser.Open();
-                break;
-        }
+        AutoOpenBrowser(true);
     }
-
-    private void OpenModificationBrowser()
-        => System.AddonModificationBrowser.Open();
 
     public void Dispose() {
         System.KeyListener.Dispose();
@@ -84,4 +70,24 @@ public sealed class VanillaPlus : IDalamudPlugin {
 
         System.NativeController.Dispose();
     }
+
+    [Conditional("DEBUG")]
+    private void AutoOpenBrowser(bool enabled) {
+        if (!enabled) return;
+        
+        System.AddonModificationBrowser.Open();
+    }
+    
+    private static void Handler(string command, string arguments) {
+        switch (command, arguments) {
+            case { command: "/vanillaplus" or "/plus", arguments: "" }:
+                System.AddonModificationBrowser.Open();
+                break;
+        }
+    }
+
+    private void OpenModificationBrowser()
+        => System.AddonModificationBrowser.Open();
+
+
 }
