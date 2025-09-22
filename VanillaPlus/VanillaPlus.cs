@@ -43,7 +43,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
         System.KeyListener = new KeyListener();
         System.ModificationManager = new ModificationManager();
 
-        AutoOpenBrowser(true);
+        AutoOpenBrowser(false);
     }
 
     public void Dispose() {
@@ -72,7 +72,7 @@ public sealed class VanillaPlus : IDalamudPlugin {
     }
 
     [Conditional("DEBUG")]
-    private void AutoOpenBrowser(bool enabled) {
+    private static void AutoOpenBrowser(bool enabled) {
         if (!enabled) return;
         
         System.AddonModificationBrowser.Open();
