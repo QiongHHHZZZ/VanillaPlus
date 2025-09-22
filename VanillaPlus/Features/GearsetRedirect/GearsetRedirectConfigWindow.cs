@@ -33,8 +33,6 @@ public unsafe class GearsetRedirectConfigWindow : Window {
             .Where(territory => territory.PlaceName is { IsValid:true, RowId: not 0 })
             .OrderBy(territory => territory.PlaceName.Value.Name.ToString())
             .ToList();
-        
-        IsOpen = true;
     }
 
     public override void Draw() {
