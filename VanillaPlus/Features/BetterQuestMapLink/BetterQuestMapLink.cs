@@ -33,7 +33,7 @@ public unsafe class BetterQuestMapLink : GameModification {
         openMapHook!.Original(agent, data);
         
         try {
-            if (data->Type is MapType.QuestLog) {
+            if (data->Type is MapType.QuestLog && agent->CurrentMapId != data->MapId) {
                 data->Type = MapType.Centered;
                 data->TerritoryId = 0;
                 openMapHook!.Original(agent, data);
