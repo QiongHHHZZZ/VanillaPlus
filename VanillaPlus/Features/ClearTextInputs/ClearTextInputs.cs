@@ -24,6 +24,11 @@ public unsafe class ClearTextInputs : GameModification {
     [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 60 48 8B D9", DetourName = nameof(OnTextComponentSetup))]
     private Hook<AtkComponentTextInput.Delegates.Setup>? onTextComponentSetupHook;
 
+    public delegate bool SetFocusDelegate(AtkInputManager* inputManager, AtkResNode* resNode, AtkUnitBase* addon, int focusParam);
+
+    [Signature("E8 ?? ?? ?? ?? 49 8B 84 FF ?? ?? ?? ??")]
+    public SetFocusDelegate? SetFocus = null;
+
     private CustomEventListener? customEventListener;
 
     private List<Pointer<AtkCollisionNode>>? registeredEventNodes;
@@ -106,8 +111,8 @@ public unsafe class ClearTextInputs : GameModification {
         if (addon is null) return;
 
         // Little hacky, have to unfocus else it will remember its last input string when you press another key
-        Experimental.Instance.SetFocus?.Invoke(AtkStage.Instance()->AtkInputManager, null, addon, 0);
+        SetFocus?.Invoke(AtkStage.Instance()->AtkInputManager, null, addon, 0);
         component->SetText(string.Empty);
-        Experimental.Instance.SetFocus?.Invoke(AtkStage.Instance()->AtkInputManager, (AtkResNode*)collisionNode, addon, 0);
+        SetFocus?.Invoke(AtkStage.Instance()->AtkInputManager, (AtkResNode*)collisionNode, addon, 0);
     }
 }
