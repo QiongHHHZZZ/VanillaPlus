@@ -81,10 +81,13 @@ public unsafe class QuestEntryNode : SimpleComponentNode {
             if (QuestInfo is null) return;
 
             var agentMap = AgentMap.Instance();
-            agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId, QuestInfo.Name.ToString());
-            agentMap->FlagMarkerCount = 0;
-            agentMap->SetFlagMapMarker(agentMap->CurrentTerritoryId, agentMap->CurrentMapId, QuestInfo.Position, QuestInfo.IconId);
-            RaptureAtkModule.Instance()->FocusAddon(agentMap->AddonId);
+            if (agentMap is not null) {
+                var targetMap = QuestInfo.QuestData.IssuerLocation.Value.Map.Value;
+                agentMap->FlagMarkerCount = 0;
+                agentMap->SetFlagMapMarker(targetMap.RowId, targetMap.TerritoryType.RowId, QuestInfo.Position, QuestInfo.IconId);
+                agentMap->OpenMap(targetMap.RowId, targetMap.TerritoryType.RowId, QuestInfo.Name.ToString(), MapType.QuestLog);
+                agentMap->OpenMap(targetMap.RowId, targetMap.TerritoryType.RowId, QuestInfo.Name.ToString());
+            }
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {

@@ -86,10 +86,12 @@ public unsafe class FateEntryNode : SimpleComponentNode {
             if (Fate is null) return;
             
             var agentMap = AgentMap.Instance();
-            agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId);
-            agentMap->FlagMarkerCount = 0;
-            agentMap->SetFlagMapMarker(agentMap->CurrentTerritoryId, agentMap->CurrentMapId, Fate.Position, Fate.MapIconId);
-            RaptureAtkModule.Instance()->FocusAddon(agentMap->AddonId);
+            if (agentMap is not null) {
+                agentMap->FlagMarkerCount = 0;
+                agentMap->SetFlagMapMarker(agentMap->CurrentTerritoryId, agentMap->CurrentMapId, Fate.Position, Fate.IconId);
+                agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId, Fate.Name.ToString(), MapType.QuestLog);
+                agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId, Fate.Name.ToString());
+            }
         });
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
