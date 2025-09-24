@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 using Dalamud.Game.Addon.Events;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Classes;
@@ -82,11 +81,10 @@ public unsafe class QuestEntryNode : SimpleComponentNode {
 
             var agentMap = AgentMap.Instance();
             if (agentMap is not null) {
-                var targetMap = QuestInfo.QuestData.IssuerLocation.Value.Map.Value;
                 agentMap->FlagMarkerCount = 0;
-                agentMap->SetFlagMapMarker(targetMap.RowId, targetMap.TerritoryType.RowId, QuestInfo.Position, QuestInfo.IconId);
-                agentMap->OpenMap(targetMap.RowId, targetMap.TerritoryType.RowId, QuestInfo.Name.ToString(), MapType.QuestLog);
-                agentMap->OpenMap(targetMap.RowId, targetMap.TerritoryType.RowId, QuestInfo.Name.ToString());
+                agentMap->SetFlagMapMarker(agentMap->CurrentTerritoryId, agentMap->CurrentMapId, QuestInfo.Position, QuestInfo.IconId);
+                agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId, QuestInfo.Name.ToString(), MapType.QuestLog);
+                agentMap->OpenMap(agentMap->CurrentMapId, agentMap->CurrentTerritoryId, QuestInfo.Name.ToString());
             }
         });
         
