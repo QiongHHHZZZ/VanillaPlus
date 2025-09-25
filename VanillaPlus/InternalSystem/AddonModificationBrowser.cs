@@ -42,6 +42,7 @@ public class AddonModificationBrowser : NativeAddon {
     };
 
     private readonly List<TreeListCategoryNode> categoryNodes = [];
+    private readonly List<TreeListHeaderNode> headerNodes = [];
     private readonly List<GameModificationOptionNode> modificationOptionNodes = [];
 
     private bool isImageEnlarged;
@@ -50,6 +51,7 @@ public class AddonModificationBrowser : NativeAddon {
     protected override unsafe void OnSetup(AtkUnitBase* addon) {
         categoryNodes.Clear();
         modificationOptionNodes.Clear();
+        headerNodes.Clear();
         
         mainContainerNode = new ResNode {
             Position = ContentStartPosition,
@@ -85,7 +87,14 @@ public class AddonModificationBrowser : NativeAddon {
             var orderedSubTypeGroup = subTypeGroup.OrderBy(group => group.Key?.GetDescription());
             foreach (var subCategory in orderedSubTypeGroup) {
                 if (subCategory.Key is not null) {
-                    newCategoryNode.AddHeader(subCategory.Key.GetDescription());
+                    var newHeaderNode = new TreeListHeaderNode {
+                        Size = new Vector2(0.0f, 24.0f), 
+                        SeString = subCategory.Key.GetDescription(), 
+                        IsVisible = true,
+                    };
+                    
+                    newCategoryNode.AddNode(newHeaderNode);
+                    headerNodes.Add(newHeaderNode);
                 }
 
                 foreach (var mod in subCategory.OrderBy(modification => modification.Modification.ModificationInfo.DisplayName)) {
@@ -221,7 +230,6 @@ public class AddonModificationBrowser : NativeAddon {
         });
         System.NativeController.AttachNode(descriptionImageNode, descriptionImageFrame);
         
-        
         borderNineGridNode = new BorderNineGridNode {
             IsVisible = true,
             Alpha = 125,
@@ -251,6 +259,10 @@ public class AddonModificationBrowser : NativeAddon {
             if (isTarget) {
                 validOptions.Add(option);
             }
+        }
+
+        foreach (var headerNode in headerNodes) {
+            headerNode.IsVisible = searchTerm.ToString() == string.Empty;
         }
 
         foreach (var categoryNode in categoryNodes) {
