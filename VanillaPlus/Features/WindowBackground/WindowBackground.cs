@@ -113,12 +113,13 @@ public unsafe class WindowBackground : GameModification {
     private void AttachNode(AtkUnitBase* addon) {
         if (config is null) return;
         
-        if (!addonBackgrounds?.Any(background => background.AddonName == addon->NameString) ?? false) return; {
+        if (!addonBackgrounds?.Any(background => background.AddonName == addon->NameString) ?? false) {
             var newBackgroundNode = new BackgroundImageNode {
                 Size = addon->Size() + config.Padding,
                 Position = -config.Padding / 2.0f,
                 Color = config.Color,
                 IsVisible = true,
+                FitTexture = true,
             };
 
             if (addon->RootNode->ChildNode is not null) {

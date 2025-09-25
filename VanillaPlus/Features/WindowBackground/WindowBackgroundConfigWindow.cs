@@ -60,12 +60,13 @@ public unsafe class WindowBackgroundConfigWindow : Window {
     
     private void DrawAllAddons() {
         ImGui.Text("All Windows");
-        using var child = ImRaii.Child("All_Addons_Select", ImGui.GetContentRegionAvail());
-        if (!child) return;
-        ImGui.Spacing();
 
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
         ImGui.InputTextWithHint("##Search", "Search...", ref searchString);
+        ImGui.Spacing();
+        
+        using var child = ImRaii.Child("All_Addons_Select", ImGui.GetContentRegionAvail());
+        if (!child) return;
         ImGui.Spacing();
         
         var addonList = GetAddonNames().Where(name => name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
