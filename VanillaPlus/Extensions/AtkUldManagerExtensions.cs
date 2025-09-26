@@ -2,8 +2,8 @@
 
 namespace VanillaPlus.Extensions;
 
-public static class AtkUldManagerExtensions {
-    public static unsafe T* SearchNodeById<T>(this AtkUldManager atkUldManager, uint nodeId) where T : unmanaged {
+public static unsafe class AtkUldManagerExtensions {
+    public static T* SearchNodeById<T>(this AtkUldManager atkUldManager, uint nodeId) where T : unmanaged {
         foreach (var node in atkUldManager.Nodes) {
             if (node.Value is not null) {
                 if (node.Value->NodeId == nodeId)
@@ -14,6 +14,6 @@ public static class AtkUldManagerExtensions {
         return null;
     }
 
-    public static unsafe AtkResNode* SearchNodeById(this AtkUldManager atkUldManager, uint nodeId)
+    public static AtkResNode* SearchNodeById(this AtkUldManager atkUldManager, uint nodeId)
         => atkUldManager.SearchNodeById<AtkResNode>(nodeId);
 }
