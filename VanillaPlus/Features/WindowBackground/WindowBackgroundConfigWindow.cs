@@ -55,7 +55,7 @@ public unsafe class WindowBackgroundConfigWindow : Window {
         if (!child) return;
         ImGui.Spacing();
         
-        ImGuiClip.ClippedDraw(config.Addons, DrawAddonOption, 25.0f * ImGuiHelpers.GlobalScale);
+        ImGuiClip.ClippedDraw(config.Addons, option => DrawAddonOption(KnownColor.LimeGreen.Vector(), option), 25.0f * ImGuiHelpers.GlobalScale);
     }
     
     private void DrawAllAddons() {
@@ -69,42 +69,57 @@ public unsafe class WindowBackgroundConfigWindow : Window {
         if (!child) return;
         ImGui.Spacing();
         
-        var addonList = GetAddonNames().Where(name => name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+        var addonList = GetAddonNames().Where(addonInfo => addonInfo.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
         ImGuiClip.ClippedDraw(addonList, DrawAddonOption, 25.0f * ImGuiHelpers.GlobalScale);
     }
 
-    private static List<string> GetAddonNames() {
-        List<string> addonNames = [];
+    private record AddonInfo(bool IsVisible, string Name);
+
+    private static List<AddonInfo> GetAddonNames() {
+        List<AddonInfo> addonNames = [];
 
         foreach (var addon in RaptureAtkUnitManager.Instance()->AllLoadedUnitsList.Entries) {
             if (addon.Value is not null) {
-                addonNames.Add(addon.Value->NameString);
+                addonNames.Add(new AddonInfo(addon.Value->IsVisible, addon.Value->NameString));
             }
         }
 
         return addonNames;
     }
 
-    private void DrawAddonOption(string addonName) {
-        using var id = ImRaii.PushId(addonName);
-        var isTracked = config.Addons.Contains(addonName);
+    private void DrawAddonOption(AddonInfo addonInfo) {
+        var color = KnownColor.White.Vector();
+        if (!addonInfo.IsVisible) {
+            color = KnownColor.Gray.Vector();
+        }
+
+        if (config.Addons.Contains(addonInfo.Name)) {
+            color = KnownColor.LimeGreen.Vector();
+        }
+        
+        DrawAddonOption(color, addonInfo.Name);
+    }
+
+    private void DrawAddonOption(Vector4 color, string name) {
+        using var id = ImRaii.PushId(name);
+        var isTracked = config.Addons.Contains(name);
         
         if (isTracked) {
             if (Drawing.IconButton(FontAwesomeIcon.Trash)) {
-                config.Addons.Remove(addonName);
+                config.Addons.Remove(name);
                 configChangedCallback();
                 config.Save();
             }
         }
         else {
             if (Drawing.IconButton(FontAwesomeIcon.Plus)) {
-                config.Addons.Add(addonName);
+                config.Addons.Add(name);
                 configChangedCallback();
                 config.Save();
             }
         }
         
         ImGui.SameLine();
-        ImGui.TextColored(isTracked ? KnownColor.LimeGreen.Vector() : KnownColor.White.Vector(), addonName);
+        ImGui.TextColored(color, name);
     }
 }
