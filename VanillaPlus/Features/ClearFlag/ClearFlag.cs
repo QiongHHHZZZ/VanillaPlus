@@ -34,8 +34,13 @@ public unsafe class ClearFlag : GameModification {
             minimapMouseClick = Services.AddonEventManager.AddEvent((nint)addon, (nint)collisionNode, AddonEventType.MouseClick, OnMiniMapMouseClick);
         };
 
-        minimapController.OnDetach += _ => {
+        minimapController.OnDetach += addon => {
             Services.AddonEventManager.RemoveEventNullable(minimapMouseClick);
+            
+            var collisionNode = addon->GetNodeById<AtkCollisionNode>(19);
+            if (collisionNode is null) return;
+            collisionNode->DrawFlags &= ~(uint)DrawFlags.ClickableCursor;
+            
         };
 
         minimapController.Enable();
