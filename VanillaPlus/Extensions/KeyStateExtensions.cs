@@ -7,7 +7,7 @@ namespace VanillaPlus.Extensions;
 public static class KeyStateExtensions {
     public static bool IsKeybindPressed(this IKeyState keyState, IEnumerable<VirtualKey> keys) {
         foreach (var key in keys) {
-            if (!keyState[(int)key]) {
+            if (keyState.IsVirtualKeyValid(key) && !keyState[(int)key]) {
                 return false;
             }
         }
