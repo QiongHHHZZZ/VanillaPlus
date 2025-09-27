@@ -49,7 +49,7 @@ public class RenameAddon : NativeAddon {
         AttachNode(cancelButton);
     }
 
-    public string? PlaceholderString { get; set; }
+    public string PlaceholderString { get; set; } = string.Empty;
     public string DefaultString { get; set; } = string.Empty;
     public bool AutoSelectAll { get; set; }
 }
