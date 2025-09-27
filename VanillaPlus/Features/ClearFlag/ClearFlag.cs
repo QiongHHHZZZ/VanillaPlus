@@ -39,6 +39,7 @@ public unsafe class ClearFlag : GameModification {
             
             var collisionNode = addon->GetNodeById<AtkCollisionNode>(19);
             if (collisionNode is null) return;
+
             collisionNode->DrawFlags &= ~(uint)DrawFlags.ClickableCursor;
             
         };
