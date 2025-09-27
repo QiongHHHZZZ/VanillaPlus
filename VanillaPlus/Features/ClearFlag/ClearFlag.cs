@@ -3,6 +3,7 @@ using Dalamud.Game.Addon.Events.EventDataTypes;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
+using KamiToolKit.Classes;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.ClearFlag;
@@ -19,8 +20,6 @@ public unsafe class ClearFlag : GameModification {
     };
 
     private AddonController? minimapController;
-    private IAddonEventHandle? minimapMouseOver;
-    private IAddonEventHandle? minimapMouseOut;
     private IAddonEventHandle? minimapMouseClick;
     
     public override void OnEnable() {
@@ -30,14 +29,12 @@ public unsafe class ClearFlag : GameModification {
             var collisionNode = addon->GetNodeById<AtkCollisionNode>(19);
             if (collisionNode is null) return;
 
-            minimapMouseOver = Services.AddonEventManager.AddEvent((nint)addon, (nint)collisionNode, AddonEventType.MouseOver, OnMiniMapMouseOver);
-            minimapMouseOut = Services.AddonEventManager.AddEvent((nint)addon, (nint)collisionNode, AddonEventType.MouseOut, OnMiniMapMouseOut);
+            collisionNode->DrawFlags |= (uint)DrawFlags.ClickableCursor;
+
             minimapMouseClick = Services.AddonEventManager.AddEvent((nint)addon, (nint)collisionNode, AddonEventType.MouseClick, OnMiniMapMouseClick);
         };
 
         minimapController.OnDetach += _ => {
-            Services.AddonEventManager.RemoveEventNullable(minimapMouseOver);
-            Services.AddonEventManager.RemoveEventNullable(minimapMouseOut);
             Services.AddonEventManager.RemoveEventNullable(minimapMouseClick);
         };
 
@@ -48,12 +45,6 @@ public unsafe class ClearFlag : GameModification {
         minimapController?.Dispose();
         minimapController = null;
     }
-
-    private static void OnMiniMapMouseOver(AddonEventType atkEventType, AddonEventData data)
-        => Services.AddonEventManager.SetCursor(AddonCursorType.Clickable);
-
-    private static void OnMiniMapMouseOut(AddonEventType atkEventType, AddonEventData data)
-        => Services.AddonEventManager.ResetCursor();
 
     private static void OnMiniMapMouseClick(AddonEventType atkEventType, AddonEventData data) {
         if (data.IsRightClick() && AgentMap.Instance()->FlagMarkerCount is not 0) {

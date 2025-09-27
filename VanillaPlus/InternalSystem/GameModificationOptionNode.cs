@@ -95,11 +95,12 @@ public class GameModificationOptionNode : SimpleComponentNode {
             Tooltip = "Open configuration window",
         };
         System.NativeController.AttachNode(configButtonNode, this);
+
+        CollisionNode.DrawFlags = DrawFlags.ClickableCursor;
         
         CollisionNode.AddEvent(AddonEventType.MouseOver, _ => {
             if (!IsSelected) {
                 IsHovered = true;
-                Services.AddonEventManager.SetCursor(AddonCursorType.Clickable);
             }
         });
         
@@ -109,7 +110,6 @@ public class GameModificationOptionNode : SimpleComponentNode {
         
         CollisionNode.AddEvent(AddonEventType.MouseOut, _ => {
             IsHovered = false;
-            Services.AddonEventManager.ResetCursor();
         });
     }
 
