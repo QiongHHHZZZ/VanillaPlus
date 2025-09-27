@@ -45,6 +45,7 @@ public unsafe class PartyFinderPresets : GameModification {
             InternalName = "LookingForGroupPreset",
             Title = "Party Finder Preset",
             Subtitle = "Vanilla Plus",
+            DepthLayer = 5,
         };
 
         presetEditorAddon = new NodeListAddon {
@@ -175,7 +176,7 @@ public unsafe class PartyFinderPresets : GameModification {
     }
     
     private void SavePreset()
-        => savePresetWindow?.Open(5);
+        => savePresetWindow?.Open();
 
     private void BuildDropDownNode(AtkUnitBase* addon) {
         var presets = PresetManager.GetPresetNames();
