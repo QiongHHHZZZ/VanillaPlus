@@ -24,4 +24,5 @@ public class AddonConfig {
 
     public HashSet<VirtualKey> OpenKeyCombo = [];
     public Vector2 WindowSize = Vector2.Zero;
+    public bool KeybindEnabled = true;
 }

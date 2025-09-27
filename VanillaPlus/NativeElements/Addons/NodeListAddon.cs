@@ -23,6 +23,7 @@ public unsafe class NodeListAddon : NativeAddon {
         config = AddonConfig.Load($"{InternalName}.addon.json", defaultOpenCombo ?? []);
         
         keybindListener = new KeybindListener {
+            AddonConfig = config,
             KeybindCallback = () => {
                 if (config.WindowSize != Vector2.Zero) {
                     Size = config.WindowSize;
@@ -30,12 +31,9 @@ public unsafe class NodeListAddon : NativeAddon {
 
                 Toggle();
             },
-            KeyCombo = config.OpenKeyCombo,
         };
         
-        addonConfigWindow = new AddonConfigWindow(Title.ToString(), config, keybind => {
-            keybindListener.KeyCombo = keybind;
-        });
+        addonConfigWindow = new AddonConfigWindow(Title.ToString(), config);
     }
 
     public override void Dispose() {

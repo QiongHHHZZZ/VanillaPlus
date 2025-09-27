@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
-using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 
 namespace VanillaPlus.Classes;
@@ -13,15 +12,13 @@ public class AddonConfigWindow : Window, IDisposable {
     private readonly AddonConfig config;
     private KeybindModal? keybindModal;
 
-    public AddonConfigWindow(string windowName, AddonConfig config, Action<HashSet<VirtualKey>> onKeybindChanged) : base($"{windowName} Window Configuration", ImGuiWindowFlags.AlwaysAutoResize) {
+    public AddonConfigWindow(string windowName, AddonConfig config) : base($"{windowName} Window Configuration", ImGuiWindowFlags.AlwaysAutoResize) {
         this.config = config;
         
         keybindModal = new KeybindModal(windowName) {
             KeybindSetCallback = keyBind => {
                 config.OpenKeyCombo = keyBind;
                 config.Save();
-
-                onKeybindChanged(keyBind);
             },
         };
         
@@ -45,11 +42,19 @@ public class AddonConfigWindow : Window, IDisposable {
         ImGui.Text("Keybind");
         ImGui.Separator();
         
-        ImGui.Text(string.Join(" + ", config.OpenKeyCombo));
+        ImGuiHelpers.CenteredText(string.Join(" + ", config.OpenKeyCombo));
         
         ImGui.Spacing();
         ImGui.Spacing();
-        if (ImGui.Button("Edit Keybind")) {
+        ImGui.Spacing();
+
+        if (ImGui.Checkbox("Enable Keybind", ref config.KeybindEnabled)) {
+            config.Save();
+        }
+        
+        ImGui.SameLine(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
+
+        if (ImGui.Button("Edit Keybind", ImGuiHelpers.ScaledVector2(100.0f, 24.0f))) {
             keybindModal?.Open();
         }
     }
