@@ -113,7 +113,10 @@ public unsafe class KeybindModal : Window, IDisposable {
         
         ImGui.SameLine(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale * 2.0f - 5.0f);
         if (ImGui.Button("Accept", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
-            KeybindSetCallback.Invoke(combo);
+            if (!combo.Contains(VirtualKey.NO_KEY)) {
+                KeybindSetCallback.Invoke(combo);
+            }
+
             this.Close();
         }
     }
