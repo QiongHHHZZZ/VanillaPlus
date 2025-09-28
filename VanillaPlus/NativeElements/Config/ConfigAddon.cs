@@ -15,7 +15,7 @@ public unsafe class ConfigAddon : NativeAddon {
     
     public required ISavable Config { get; init; }
 
-    protected override void OnSetup(AtkUnitBase* addon) { // todo: add option to hide scrollbar
+    protected override void OnSetup(AtkUnitBase* addon) {
         configurationListNode = new ScrollingAreaNode<VerticalListNode> {
             Size = ContentSize + new Vector2(0.0f, ContentPadding.Y),
             Position = ContentStartPosition - new Vector2(0.0f, ContentPadding.Y),
