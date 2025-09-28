@@ -40,7 +40,7 @@ public unsafe class MacroLineNumbers : GameModification {
             
             foreach (var index in Enumerable.Range(0, 15)) {
                 var newTextNode = new TextNode {
-                    Position = new Vector2(460.0f, 118.0f + index * 14.2f),
+                    Position = new Vector2(460.0f, 119.0f + index * 14f),
                     Size = new Vector2(sizeOffset.X - 5.0f, 14.0f),
                     IsVisible = true,
                     String = $"{index + 1}",
