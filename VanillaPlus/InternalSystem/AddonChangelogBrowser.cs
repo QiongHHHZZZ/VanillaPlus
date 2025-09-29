@@ -22,6 +22,7 @@ public class AddonChangelogBrowser : NativeAddon {
             Position = ContentStartPosition,
             ContentHeight = 1000.0f,
             ScrollSpeed = 100,
+            AutoHideScrollBar = true,
         };
         AttachNode(scrollingAreaNode);
 
