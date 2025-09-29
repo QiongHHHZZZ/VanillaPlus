@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
@@ -14,14 +13,14 @@ public unsafe class InventorySearchAddonController : IDisposable {
     private Dictionary<string, TextInputWithHintNode>? inputTextNodes;
     private Dictionary<string, int>? selectedTabs;
 
-    public InventorySearchAddonController(Dictionary<string, Vector2> entries) {
+    public InventorySearchAddonController(params string[] addons) {
         inputTextNodes = [];
         selectedTabs = [];
 
-        inventoryController = new MultiAddonController(entries.Keys.ToArray());
+        inventoryController = new MultiAddonController(addons);
 
         inventoryController.OnAttach += addon => {
-            var size = entries[addon->NameString];
+            var size = new Vector2(addon->GetSize().X / 2.0f, 28.0f);
 
             var headerSize = new Vector2(addon->WindowHeaderCollisionNode->Width, addon->WindowHeaderCollisionNode->Height);
             var newInputNode = new TextInputWithHintNode {

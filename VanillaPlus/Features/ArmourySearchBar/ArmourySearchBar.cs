@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
-using Dalamud.Game.Config;
+﻿using Dalamud.Game.Config;
 using Dalamud.Utility;
 using VanillaPlus.Classes;
 
@@ -26,9 +24,7 @@ public class ArmourySearchBar : GameModification {
     public override string ImageName => "ArmourySearchBar.png";
 
     public override void OnEnable() {
-        armouryInventoryController = new InventorySearchAddonController(new Dictionary<string, Vector2> {
-            { "ArmouryBoard", new Vector2(200.0f, 28.0f) },
-        });
+        armouryInventoryController = new InventorySearchAddonController("ArmouryBoard");
 
         armouryInventoryController.PreSearch += searchString => {
             if (configFadeUnusable is null) {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
-using VanillaPlus.Classes;
+﻿using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.RetainerSearchBar;
 
@@ -21,10 +19,7 @@ public class RetainerSearchBar : GameModification {
     public override string ImageName => "RetainerSearchBar.png";
 
     public override void OnEnable() {
-        retainerInventoryController = new InventorySearchAddonController(new Dictionary<string, Vector2> {
-            { "InventoryRetainerLarge", new Vector2(250.0f, 28.0f) },
-            { "InventoryRetainer", new Vector2(150.0f, 28.0f) },
-        });
+        retainerInventoryController = new InventorySearchAddonController("InventoryRetainerLarge", "InventoryRetainer");
     }
 
     public override void OnDisable() {

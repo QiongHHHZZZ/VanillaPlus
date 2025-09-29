@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
-using VanillaPlus.Classes;
+﻿using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.SaddlebagSearchBar;
 
@@ -21,9 +19,7 @@ public class SaddlebagSearchBar : GameModification {
     public override string ImageName => "SaddlebagSearchBar.png";
 
     public override void OnEnable() {
-        saddlebagInventoryController = new InventorySearchAddonController(new Dictionary<string, Vector2> {
-            { "InventoryBuddy", new Vector2(275.0f, 28.0f) },
-        });
+        saddlebagInventoryController = new InventorySearchAddonController("InventoryBuddy");
     }
 
     public override void OnDisable() {

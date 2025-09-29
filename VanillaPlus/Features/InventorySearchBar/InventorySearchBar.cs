@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
-using VanillaPlus.Classes;
+﻿using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.InventorySearchBar;
 
@@ -21,11 +19,7 @@ public class InventorySearchBar : GameModification {
     private InventorySearchAddonController? inventoryController;
 
     public override void OnEnable() {
-        inventoryController = new InventorySearchAddonController(new Dictionary<string, Vector2> {
-            {"InventoryExpansion", new Vector2(275.0f, 28.0f)},
-            {"InventoryLarge", new Vector2(250.0f, 28.0f)},
-            {"Inventory", new Vector2(150.0f, 28.0f)},
-        });
+        inventoryController = new InventorySearchAddonController("InventoryExpansion", "InventoryLarge", "Inventory");
     }
 
     public override void OnDisable() {
