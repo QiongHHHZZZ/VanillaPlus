@@ -59,14 +59,14 @@ public unsafe class InventorySearchAddonController : IDisposable {
     }
     
     public void Dispose() {
-        inputTextNodes?.Clear();
-        inputTextNodes = null;
-        
-        selectedTabs?.Clear();
-        selectedTabs = null;
-        
         inventoryController?.Dispose();
         inventoryController = null;
+        
+        inputTextNodes?.Clear();
+        inputTextNodes = null;
+                
+        selectedTabs?.Clear();
+        selectedTabs = null;
     }
 
     public Action<string>? PreSearch { get; set; }
