@@ -120,6 +120,7 @@ public unsafe class HUDPresets : GameModification {
             System.NativeController.DisposeNode(ref overwriteButtonNode);
             System.NativeController.DisposeNode(ref deleteButtonNode);
             System.NativeController.DisposeNode(ref saveButtonNode);
+            System.NativeController.DisposeNode(ref labelNode);
         };
 
         hudLayoutController.OnUpdate += addon => {
