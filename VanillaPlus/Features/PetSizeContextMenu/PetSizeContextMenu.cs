@@ -31,10 +31,8 @@ public class PetSizeContextMenu : GameModification {
 
     private void OnMenuOpened(IMenuOpenedArgs args) {
         if (args is not { MenuType: ContextMenuType.Default }) return;
-
-        var isPetTarget = Services.TargetManager.Target?.IsPet() ?? false;
-        var isPetOwnerTarget = Services.ObjectTable.FirstOrDefault(obj => obj.IsPet() && obj.OwnerId == Services.TargetManager.Target?.EntityId) is not null;
-        if (!isPetTarget && !isPetOwnerTarget) return;
+        if (args.Target is not MenuTargetDefault targetInfo) return;
+        if (!targetInfo.TargetObject.IsPetOrOwner()) return;
 
         var currentPetSize = GetPetSize();
         
