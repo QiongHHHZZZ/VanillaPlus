@@ -23,6 +23,7 @@ public unsafe class BetterInterruptableCastBars : GameModification {
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),
         ],
+        CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@ImprovedInterruptableCastbars"),
     };
 
     public override string ImageName => "BetterInterruptableCastBars.png";
