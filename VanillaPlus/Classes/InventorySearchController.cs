@@ -116,6 +116,7 @@ public static unsafe class InventorySearchController {
             "InventoryCrystalGrid" => [],
             "InventoryGridCrystal" => [],
             "RetainerCrystalGrid" => [],
+            "RetainerGridCrystal" => [],
             "InventoryBuddy" => ((AddonInventoryBuddy*)addon)->Slots,
             _ => ((AddonInventoryGrid*)addon)->Slots,
         };
