@@ -175,6 +175,7 @@ public unsafe class CurrencyOverlay : GameModification {
             Size = new Vector2(164.0f, 36.0f),
             IsVisible = true,
             Currency = setting,
+            EnableMoving = enableMoving,
         };
 
         newCurrencyNode.OnEditComplete = () => {
