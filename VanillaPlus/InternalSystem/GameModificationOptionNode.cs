@@ -135,10 +135,10 @@ public class GameModificationOptionNode : SimpleComponentNode {
     
     private void ToggleModification(bool shouldEnableModification) {
         if (shouldEnableModification && Modification.State is LoadedState.Disabled) {
-            System.ModificationManager.TryEnableModification(Modification);
+            ModificationManager.TryEnableModification(Modification);
         }
         else if (!shouldEnableModification && Modification.State is LoadedState.Enabled) {
-            System.ModificationManager.TryDisableModification(Modification);
+            ModificationManager.TryDisableModification(Modification);
         }
 
         UpdateDisabledState();
