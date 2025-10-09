@@ -12,9 +12,9 @@ public class ModificationManager : IDisposable {
     public readonly List<LoadedModification> LoadedModifications = [];
 
     public ModificationManager() {
-        var gameModifications1 = GetGameModifications();
+        var allGameModifications = GetGameModifications();
 
-        foreach (var gameMod in gameModifications1) {
+        foreach (var gameMod in allGameModifications) {
             Services.PluginInterface.Inject(gameMod);
 
             var newLoadedModification = new LoadedModification(gameMod, LoadedState.Disabled);
