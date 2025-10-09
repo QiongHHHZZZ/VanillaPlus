@@ -376,7 +376,7 @@ public class AddonModificationBrowser : NativeAddon {
     }
 
     public void UpdateDisabledState() {
-        if (changelogBrowser?.IsOpen ?? false) {
+        if (IsOpen) {
             foreach (var modificationOptionNode in modificationOptionNodes) {
                 modificationOptionNode.UpdateDisabledState();
             }
