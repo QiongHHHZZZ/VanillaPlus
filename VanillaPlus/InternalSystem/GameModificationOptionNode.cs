@@ -18,6 +18,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
     private readonly TextNode modificationNameNode;
     private readonly IconImageNode experimentalImageNode;
     private readonly TextNode authorNamesNode;
+    private readonly CircleButtonNode reloadButtonNode;
     private readonly CircleButtonNode configButtonNode;
 
     public GameModificationOptionNode() {
@@ -89,6 +90,17 @@ public class GameModificationOptionNode : SimpleComponentNode {
         };
         System.NativeController.AttachNode(authorNamesNode, this);
 
+        reloadButtonNode = new CircleButtonNode {
+            NodeId = 10,
+            Icon = ButtonIcon.Refresh,
+            Tooltip = "Retry compatability check",
+            OnClick = () => {
+                System.ModificationManager.ReloadConflictedModules();
+                reloadButtonNode?.HideTooltip();
+            },
+        };
+        System.NativeController.AttachNode(reloadButtonNode, this);
+        
         configButtonNode = new CircleButtonNode {
             NodeId = 9,
             Icon = ButtonIcon.GearCog,
@@ -194,6 +206,9 @@ public class GameModificationOptionNode : SimpleComponentNode {
         configButtonNode.Size = new Vector2(Height * 2.0f / 3.0f, Height * 2.0f / 3.0f);
         configButtonNode.Position = new Vector2(Width - Height, Height / 2.0f - configButtonNode.Height / 2.0f);
         
+        reloadButtonNode.Size = new Vector2(Height * 2.0f / 3.0f, Height * 2.0f / 3.0f);
+        reloadButtonNode.Position = new Vector2(Width - Height * 1.75f - 2.0f, Height / 2.0f - configButtonNode.Height / 2.0f);
+
         erroringImageNode.Size = checkboxNode.Size - new Vector2(4.0f, 4.0f);
         erroringImageNode.Position = checkboxNode.Position + new Vector2(1.0f, 3.0f);
     }
@@ -205,16 +220,20 @@ public class GameModificationOptionNode : SimpleComponentNode {
             erroringImageNode.EnableEventFlags = true;
             erroringImageNode.Tooltip = Modification.ErrorMessage;
 
+            reloadButtonNode.IsVisible = Modification.State is LoadedState.CompatError;
         }
         else {
             checkboxNode.IsEnabled = true;
             erroringImageNode.IsVisible = false;
             erroringImageNode.EnableEventFlags = false;
+            reloadButtonNode.IsVisible = false;
         }
 
         Addon.UpdateCollisionForNode(this);
 
         checkboxNode.IsChecked = Modification.State is LoadedState.Enabled;
         configButtonNode.IsEnabled = Modification.State is LoadedState.Enabled;
+
+        RefreshConfigWindowButton();
     }
 }
