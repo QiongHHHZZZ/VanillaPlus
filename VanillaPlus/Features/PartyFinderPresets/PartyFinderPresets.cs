@@ -150,8 +150,6 @@ public unsafe class PartyFinderPresets : GameModification {
         
         renameWindow?.Dispose();
         renameWindow = null;
-        
-        Services.AddonLifecycle.UnLogAddon("LookingForGroup");
     }
 
     private void OnLookingForGroupConditionFinalize(AddonEvent type, AddonArgs args) {
