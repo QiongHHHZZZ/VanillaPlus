@@ -15,6 +15,9 @@ public static unsafe class AtkUnitBaseExtensions {
         return new Vector2(*width, *height);
     }
 
+    public static Vector2 GetPosition(this ref AtkUnitBase addon)
+        => new(addon.X, addon.Y);
+
     /// <summary>
     /// Resizes the target addon to the new size, making sure to adjust various WindowNode properties
     /// to make the window appear and behave normally.
