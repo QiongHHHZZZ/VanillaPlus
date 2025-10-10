@@ -2,7 +2,6 @@
 using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
 using KamiToolKit.Nodes;
@@ -82,13 +81,46 @@ public unsafe class PartyFinderPresets : GameModification {
 
         lookingForGroupController = new AddonController<AtkUnitBase>("LookingForGroup");
 
-        lookingForGroupController.OnAttach += BuildDropDownNode;
+        lookingForGroupController.OnAttach += addon => {
+            presetDropDown ??= new TextDropDownNode {
+                Position = new Vector2(185.0f, 636.0f),
+                Size = new Vector2(200.0f, 25.0f),
+                MaxListOptions = 10,
+                Options = PresetManager.GetPresetNames(),
+                IsVisible = true,
+            };
 
+            UpdateDropDownOptions();
+            System.NativeController.AttachNode(presetDropDown, addon->RootNode);
+        };
+        
         lookingForGroupController.OnDetach += _ => {
-            System.NativeController.DisposeNode(ref presetDropDown);
+            System.NativeController.DetachNode(presetDropDown);
         };
         
         lookingForGroupController.Enable();
+    }
+
+    public override void OnDisable() {
+        Services.AddonLifecycle.UnregisterListener(OnLookingForGroupEvent, OnLookingForGroupConditionFinalize);
+
+        recruitmentCriteriaController?.Dispose();
+        recruitmentCriteriaController = null;
+        
+        lookingForGroupController?.Dispose();
+        lookingForGroupController = null;
+        
+        savePresetWindow?.Dispose();
+        savePresetWindow = null;
+        
+        presetEditorAddon?.Dispose();
+        presetEditorAddon = null;
+        
+        renameWindow?.Dispose();
+        renameWindow = null;
+
+        System.NativeController.DisposeNode(ref presetDropDown);
+        presetDropDown = null;
     }
 
     private bool UpdateList(VerticalListNode listNode, bool isOpening) {
@@ -133,34 +165,8 @@ public unsafe class PartyFinderPresets : GameModification {
         return string.CompareOrdinal(left.PresetName, right.PresetName);
     }
 
-    public override void OnDisable() {
-        Services.AddonLifecycle.UnregisterListener(OnLookingForGroupEvent);
-        
-        recruitmentCriteriaController?.Dispose();
-        recruitmentCriteriaController = null;
-        
-        lookingForGroupController?.Dispose();
-        lookingForGroupController = null;
-        
-        savePresetWindow?.Dispose();
-        savePresetWindow = null;
-        
-        presetEditorAddon?.Dispose();
-        presetEditorAddon = null;
-        
-        renameWindow?.Dispose();
-        renameWindow = null;
-    }
-
-    private void OnLookingForGroupConditionFinalize(AddonEvent type, AddonArgs args) {
-        if (presetDropDown is null) return;
-
-        var parentAddon = RaptureAtkUnitManager.Instance()->GetAddonByNode(presetDropDown);
-        if (parentAddon is null) return;
-        
-        System.NativeController.DisposeNode(ref presetDropDown);
-        BuildDropDownNode(parentAddon);
-    }
+    private void OnLookingForGroupConditionFinalize(AddonEvent type, AddonArgs args)
+        => UpdateDropDownOptions();
 
     private void OnLookingForGroupEvent(AddonEvent type, AddonArgs args) {
         if (args is not AddonReceiveEventArgs eventArgs) return;
@@ -172,29 +178,23 @@ public unsafe class PartyFinderPresets : GameModification {
         
         PresetManager.LoadPreset(selectedOption);
     }
-    
-    private void SavePreset()
-        => savePresetWindow?.Open();
 
-    private void BuildDropDownNode(AtkUnitBase* addon) {
-        var presets = PresetManager.GetPresetNames();
-        var anyPresets = presets.All(presetName => presetName != PresetManager.DefaultString);
-        
-        presetDropDown = new TextDropDownNode {
-            Position = new Vector2(185.0f, 636.0f),
-            Size = new Vector2(200.0f, 25.0f),
-            MaxListOptions = 10,
-            Options = presets,
-            IsEnabled = anyPresets,
-            IsVisible = true,
-        };
+    private void SavePreset() => savePresetWindow?.Open();
 
-        if (anyPresets) {
-            presetDropDown.Tooltip = "[VanillaPlus]: Select a preset";
+    private void UpdateDropDownOptions() {
+        if (presetDropDown is not null) {
+            var presets = PresetManager.GetPresetNames();
+            var anyPresets = presets.All(presetName => presetName != PresetManager.DefaultString);
+            
+            presetDropDown.Options = presets;
+            presetDropDown.IsEnabled = anyPresets;
+
+            if (anyPresets) {
+                presetDropDown.Tooltip = "[VanillaPlus]: Select a preset";
+            }
+            else {
+                presetDropDown.Tooltip = "[VanillaPlus]: No presets saved";
+            }
         }
-        else {
-            presetDropDown.Tooltip = "[VanillaPlus]: No presets saved";
-        }
-        System.NativeController.AttachNode(presetDropDown, addon->RootNode);
     }
 }
