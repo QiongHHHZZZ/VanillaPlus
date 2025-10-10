@@ -1,0 +1,9 @@
+﻿using System.Numerics;
+using FFXIVClientStructs.FFXIV.Component.GUI;
+
+namespace VanillaPlus.Extensions;
+
+public static class AtkResNodeExtensions {
+    public static Vector2 Size(this ref AtkResNode node)
+        => new(node.Width, node.Height);
+}
