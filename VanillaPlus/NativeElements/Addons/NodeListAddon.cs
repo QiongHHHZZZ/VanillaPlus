@@ -21,7 +21,7 @@ public unsafe class NodeListAddon : NativeAddon {
 
     public void Initialize(HashSet<VirtualKey>? defaultOpenCombo = null) {
         config = AddonConfig.Load($"{InternalName}.addon.json", defaultOpenCombo ?? []);
-        
+
         keybindListener = new KeybindListener {
             AddonConfig = config,
             KeybindCallback = () => {
@@ -32,7 +32,7 @@ public unsafe class NodeListAddon : NativeAddon {
                 Toggle();
             },
         };
-        
+
         addonConfigWindow = new AddonConfigWindow(Title.ToString(), config);
     }
 
