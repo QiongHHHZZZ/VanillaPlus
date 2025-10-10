@@ -53,7 +53,7 @@ public unsafe class CurrencyOverlay : GameModification {
 
         configAddon = new CurrencyOverlayConfigAddon {
             NativeController = System.NativeController,
-            Size = new Vector2(275.0f, 75.0f),
+            Size = new Vector2(275.0f, 100.0f),
             InternalName = "CurrencyOverlayConfig",
             Title = "Currency Overlay Config",
             OnEnableMoving = toggleButtonNode => {
