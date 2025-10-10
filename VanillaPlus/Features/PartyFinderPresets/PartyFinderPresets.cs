@@ -33,8 +33,6 @@ public unsafe class PartyFinderPresets : GameModification {
 
     private NodeListAddon? presetEditorAddon;
 
-    public override bool IsExperimental => true;
-
     public override string ImageName => "PartyFinderPresets.png";
 
     public override void OnEnable() {
@@ -82,7 +80,11 @@ public unsafe class PartyFinderPresets : GameModification {
         lookingForGroupController = new AddonController<AtkUnitBase>("LookingForGroup");
 
         lookingForGroupController.OnAttach += addon => {
-            presetDropDown ??= new TextDropDownNode {
+            if (presetDropDown is not null) {
+                System.NativeController.DisposeNode(ref presetDropDown);
+            }
+
+            presetDropDown = new TextDropDownNode {
                 Position = new Vector2(185.0f, 636.0f),
                 Size = new Vector2(200.0f, 25.0f),
                 MaxListOptions = 10,
@@ -91,6 +93,7 @@ public unsafe class PartyFinderPresets : GameModification {
             };
 
             UpdateDropDownOptions();
+
             System.NativeController.AttachNode(presetDropDown, addon->RootNode);
         };
         
