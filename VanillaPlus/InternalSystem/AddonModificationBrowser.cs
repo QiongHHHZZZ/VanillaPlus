@@ -16,13 +16,13 @@ namespace VanillaPlus.InternalSystem;
 
 public class AddonModificationBrowser : NativeAddon {
 
-    private ResNode mainContainerNode = null!;
+    private SimpleComponentNode mainContainerNode = null!;
     
     private HorizontalFlexNode searchContainerNode = null!;
     private TextInputNode searchBoxNode = null!;
     private ScrollingAreaNode<TreeListNode> optionContainerNode = null!;
-    private ResNode descriptionContainerNode = null!;
-    private ResNode descriptionImageFrame = null!;
+    private SimpleComponentNode descriptionContainerNode = null!;
+    private SimpleComponentNode descriptionImageFrame = null!;
     private ImGuiImageNode descriptionImageNode = null!;
     private BorderNineGridNode borderNineGridNode = null!;
     private TextNode descriptionImageTextNode = null!;
@@ -53,7 +53,7 @@ public class AddonModificationBrowser : NativeAddon {
         modificationOptionNodes.Clear();
         headerNodes.Clear();
         
-        mainContainerNode = new ResNode {
+        mainContainerNode = new SimpleComponentNode {
             Position = ContentStartPosition,
             Size = ContentSize,
             IsVisible = true,
@@ -147,7 +147,7 @@ public class AddonModificationBrowser : NativeAddon {
     }
 
     private void BuildDescriptionContainer() {
-        descriptionContainerNode = new ResNode {
+        descriptionContainerNode = new SimpleComponentNode {
             IsVisible = true,
         };
         System.NativeController.AttachNode(descriptionContainerNode, mainContainerNode);
@@ -188,7 +188,7 @@ public class AddonModificationBrowser : NativeAddon {
         };
         System.NativeController.AttachNode(descriptionVersionTextNode, descriptionContainerNode);
 
-        descriptionImageFrame = new ResNode {
+        descriptionImageFrame = new SimpleComponentNode {
             IsVisible = true,
         };
         System.NativeController.AttachNode(descriptionImageFrame, descriptionContainerNode);

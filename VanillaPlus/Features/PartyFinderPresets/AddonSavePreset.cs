@@ -18,7 +18,7 @@ public class AddonSavePreset : NativeAddon {
     private TextDropDownNode textDropDownNode = null!;
     private TextNode noPresetsTextNode = null!;
 
-    private ResNode warningContainerNode = null!;
+    private SimpleComponentNode warningContainerNode = null!;
     private IconImageNode warningIconNode = null!;
     private TextNode warningTextNode = null!;
     
@@ -54,7 +54,7 @@ public class AddonSavePreset : NativeAddon {
         };
         AttachNode(textInputNode);
 
-        warningContainerNode = new ResNode {
+        warningContainerNode = new SimpleComponentNode {
             Position = extrasPosition + new Vector2(0.0f, extrasSize.Y),
             Size = extrasSize,
         };
