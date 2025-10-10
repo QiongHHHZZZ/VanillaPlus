@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
-using Dalamud.Game.Addon.Lifecycle;
-using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using System.Numerics;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using VanillaPlus.Classes;
@@ -20,124 +20,217 @@ public unsafe class WindowBackground : GameModification {
             new ChangeLogInfo(1, "Initial Implementation"),
             new ChangeLogInfo(2, "Added search bar to search 'All Windows' in config"),
             new ChangeLogInfo(3, "Fixed incorrectly cleaning up removed backgrounds"),
+            new ChangeLogInfo(4, "Rewrote module to be more stable"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@DutyListBackground"),
     };
 
-    private List<AddonBackground>? addonBackgrounds;
+    public override string ImageName => "WindowBackgrounds.png";
+
+    private OverlayAddonController? overlayAddonController;
+    private Dictionary<string, AddonController>? addonControllers;
+
+    private Dictionary<string, BackgroundImageNode>? backgroundImageNodes;
+    private Dictionary<string, BackgroundImageNode>? overlayImageNodes;
+    
     private WindowBackgroundConfig? config;
     private WindowBackgroundConfigWindow? configWindow;
 
-    public override string ImageName => "WindowBackgrounds.png";
-
-    public override bool IsExperimental => true;
+    private SimpleOverlayNode? nameplateOverlayNode;
 
     public override void OnEnable() {
-        addonBackgrounds = [];
-        
+        addonControllers = [];
+        backgroundImageNodes = [];
+        overlayImageNodes = [];
+
         config = WindowBackgroundConfig.Load();
-        configWindow = new WindowBackgroundConfigWindow(config, UpdateListeners, OnStyleChanged);
+        configWindow = new WindowBackgroundConfigWindow(config, OnStyleChanged, OnAddonRemoved, OnAddonAdded);
         configWindow.AddToWindowSystem();
         OpenConfigAction = configWindow.Toggle;
+
+        overlayAddonController = new OverlayAddonController();
+
+        overlayAddonController.OnAttach += addon => {
+            var viewportSize = new Vector2(AtkStage.Instance()->ScreenSize.Width, AtkStage.Instance()->ScreenSize.Height);
+            
+            nameplateOverlayNode = new SimpleOverlayNode {
+                Size = viewportSize,
+                IsVisible = true,
+            };
+            
+            System.NativeController.AttachNode(nameplateOverlayNode, addon->RootNode, NodePosition.AsFirstChild);
+        };
+
+        overlayAddonController.OnUpdate += UpdateOverlayBackgrounds;
+
+        overlayAddonController.OnDetach += _ => {
+            System.NativeController.DisposeNode(ref nameplateOverlayNode);
+        };
         
-        UpdateListeners();
+        overlayAddonController.Enable();
+
+        LoadAllBackgrounds();
     }
 
     public override void OnDisable() {
-        if (configWindow is null) return;
-        
-        configWindow.RemoveFromWindowSystem();
-        configWindow = null;
-        
-        Services.AddonLifecycle.UnregisterListener(OnAddonSetup, OnAddonFinalize, OnAddonUpdate);
+        UnloadAllBackgrounds();
 
-        foreach (var background in addonBackgrounds ?? []) {
-            System.NativeController.DetachNode(background.ImageNode, () => {
-                background.ImageNode.Dispose();
-            });
+        configWindow?.RemoveFromWindowSystem();
+        configWindow = null;
+
+        overlayAddonController?.Dispose();
+        overlayAddonController = null;
+
+        foreach (var (_, addonController) in addonControllers ?? []) {
+            addonController.Dispose();
         }
-        addonBackgrounds?.Clear();
-        addonBackgrounds = null;
+        addonControllers?.Clear();
+        addonControllers = null;
+
+        backgroundImageNodes?.Clear();
+        backgroundImageNodes = null;
+
+        overlayImageNodes?.Clear();
+        overlayImageNodes = null;
 
         config = null;
     }
-    
-    private void UpdateListeners() {
-        if (config is null) return;
-        
-        Services.AddonLifecycle.UnregisterListener(OnAddonSetup, OnAddonFinalize, OnAddonUpdate);
-        if (config.Addons.Count == 0) return;
 
-        Services.AddonLifecycle.RegisterListener(AddonEvent.PostSetup, config.Addons, OnAddonSetup);
-        Services.AddonLifecycle.RegisterListener(AddonEvent.PreFinalize, config.Addons, OnAddonFinalize);
-        Services.AddonLifecycle.RegisterListener(AddonEvent.PostRefresh, config.Addons, OnAddonUpdate);
-        Services.AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, config.Addons, OnAddonUpdate);
+    private void LoadAllBackgrounds() {
+        if (config is null) return;
 
         foreach (var addonName in config.Addons) {
-            var addonPointer = Services.GameGui.GetAddonByName<AtkUnitBase>(addonName);
-            if (addonPointer is not null) {
-                AttachNode(addonPointer);
-            }
-        }
-
-        var orphanedBackgrounds = addonBackgrounds?.Where(background => !config.Addons.Any(option => option == background.AddonName)).ToList() ?? [];
-        foreach (var background in orphanedBackgrounds) {
-            System.NativeController.DetachNode(background.ImageNode, () => {
-                background.ImageNode.Dispose();
-            });
-            addonBackgrounds?.Remove(background);
+            OnAddonAdded(addonName);
         }
     }
-    
-    private void OnAddonSetup(AddonEvent type, AddonArgs args)
-        => AttachNode(args.GetAddon<AtkUnitBase>());
-    
-    private void OnAddonUpdate(AddonEvent type, AddonArgs args) {
+
+    private void UnloadAllBackgrounds() {
         if (config is null) return;
-        
-        if (addonBackgrounds?.FirstOrDefault(background => background.AddonName == args.AddonName) is { } info) {
-            info.ImageNode.Size = args.GetAddon<AtkUnitBase>()->Size() + config.Padding;
+
+        foreach (var addonName in config.Addons) {
+            OnAddonRemoved(addonName);
         }
     }
-    
-    private void OnAddonFinalize(AddonEvent type, AddonArgs args) {
-        if (addonBackgrounds?.FirstOrDefault(background => background.AddonName == args.AddonName) is { } info) {
-            System.NativeController.DetachNode(info.ImageNode, () => {
-                info.ImageNode.Dispose();
-            });
 
-            addonBackgrounds.Remove(info);
+    private void OnAddonAdded(string addonName) {
+        if (addonControllers is null) return;
+
+        if (addonControllers.ContainsKey(addonName)) return;
+
+        var addonController = new AddonController(addonName);
+        addonController.OnAttach += AttachNode;
+        addonController.OnDetach += DetachNode;
+        addonController.Enable();
+
+        addonControllers.Add(addonName, addonController);
+    }
+
+    private void OnAddonRemoved(string addonName) {
+        if (addonControllers?.TryGetValue(addonName, out var addonController) ?? false) {
+            addonController.Disable();
+            addonControllers?.Remove(addonName);
         }
     }
 
     private void AttachNode(AtkUnitBase* addon) {
         if (config is null) return;
+        if (backgroundImageNodes is null) return;
+        if (overlayImageNodes is null) return;
+        if (nameplateOverlayNode is null) return;
         
-        if (!addonBackgrounds?.Any(background => background.AddonName == addon->NameString) ?? false) {
-            var newBackgroundNode = new BackgroundImageNode {
-                Size = addon->Size() + config.Padding,
-                Position = -config.Padding / 2.0f,
-                Color = config.Color,
-                IsVisible = true,
-                FitTexture = true,
-            };
+        // If we have a window node, attach before the first ninegrid node
+        if (addon->WindowNode is not null) {
+            if (!backgroundImageNodes.ContainsKey(addon->NameString)) {
+                foreach (var node in addon->WindowNode->Component->UldManager.Nodes) {
+                    if (node.Value is null) continue;
+                    if (node.Value->GetNodeType() is NodeType.NineGrid) {
+                    
+                        var newBackgroundNode = new BackgroundImageNode {
+                            Size = node.Value->Size() + config.Padding,
+                            Position = -config.Padding / 2.0f,
+                            Color = config.Color,
+                            IsVisible = true,
+                            FitTexture = true,
+                        };
 
-            if (addon->RootNode->ChildNode is not null) {
-                System.NativeController.AttachNode(newBackgroundNode, addon->RootNode->ChildNode, NodePosition.BeforeAllSiblings);
-                addonBackgrounds?.Add(new AddonBackground(addon->NameString, newBackgroundNode));
+                        System.NativeController.AttachNode(newBackgroundNode, node, NodePosition.BeforeTarget);
+                        backgroundImageNodes.Add(addon->NameString, newBackgroundNode);
+                        return;
+                    }
+                }
+            }
+        }
+
+        // We don't have a window node, attach to nameplate
+        else {
+            if (!overlayImageNodes.ContainsKey(addon->NameString)) {
+                var newBackgroundNode = new BackgroundImageNode {
+                    Size = (addon->Size() + config.Padding) * addon->Scale,
+                    Position = addon->Position() - config.Padding / 2.0f,
+                    Color = config.Color,
+                    FitTexture = true,
+                };
+
+                System.NativeController.AttachNode(newBackgroundNode, nameplateOverlayNode);
+                overlayImageNodes.Add(addon->NameString, newBackgroundNode);
             }
         }
     }
-    
+
+    private void DetachNode(AtkUnitBase* addon) {
+        if (backgroundImageNodes is null) return;
+        if (overlayImageNodes is null) return;
+        
+        if (addon->WindowNode is not null) {
+            if (backgroundImageNodes.TryGetValue(addon->NameString, out var node)) {
+                System.NativeController.DetachNode(node);
+                node.Dispose();
+                backgroundImageNodes.Remove(addon->NameString);
+            }
+        }
+        else {
+            if (overlayImageNodes.TryGetValue(addon->NameString, out var node)) {
+                System.NativeController.DetachNode(node);
+                node.Dispose();
+                overlayImageNodes.Remove(addon->NameString);
+            }
+        }
+    }
+
+    private void UpdateOverlayBackgrounds(AddonNamePlate* _) {
+        if (overlayImageNodes is null) return;
+        if (config is null) return;
+
+        foreach (var (name, imageNode) in overlayImageNodes) {
+            var addon = Services.GameGui.GetAddonByName<AtkUnitBase>(name);
+            imageNode.IsVisible = addon is not null && addon->IsVisible;
+            
+            if (addon is not null) {
+                imageNode.Position = addon->Position() - config.Padding / 2.0f;
+            }
+        }
+    }
+
     private void OnStyleChanged() {
         if (config is null) return;
-        
-        foreach (var background in addonBackgrounds ?? []) {
-            var addon = Services.GameGui.GetAddonByName<AtkUnitBase>(background.AddonName);
+        if (backgroundImageNodes is null) return;
+        if (overlayImageNodes is null) return;
+
+        foreach (var (addonName, imageNode) in backgroundImageNodes) {
+            var addon = Services.GameGui.GetAddonByName<AtkUnitBase>(addonName);
             if (addon is not null) {
-                background.ImageNode.Color = config.Color;
-                background.ImageNode.Position = -config.Padding / 2.0f;
-                background.ImageNode.Size = addon->Size() + config.Padding;
+                imageNode.Color = config.Color;
+                imageNode.Position = -config.Padding / 2.0f;
+                imageNode.Size = addon->Size() + config.Padding;
+            }
+        }
+
+        foreach (var (addonName, imageNode) in overlayImageNodes) {
+            var addon = Services.GameGui.GetAddonByName<AtkUnitBase>(addonName);
+            if (addon is not null) {
+                imageNode.Color = config.Color;
+                imageNode.Position = -config.Padding / 2.0f;
+                imageNode.Size = (addon->Size() + config.Padding) * addon->Scale;
             }
         }
     }

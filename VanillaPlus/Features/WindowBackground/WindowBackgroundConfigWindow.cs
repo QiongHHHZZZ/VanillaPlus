@@ -15,14 +15,16 @@ namespace VanillaPlus.Features.WindowBackground;
 
 public unsafe class WindowBackgroundConfigWindow : Window {
     private readonly WindowBackgroundConfig config;
-    private readonly Action configChangedCallback;
     private readonly Action styleChanged;
+    private readonly Action<string> addonRemoved;
+    private readonly Action<string> addonAdded;
     private string searchString = string.Empty;
 
-    public WindowBackgroundConfigWindow(WindowBackgroundConfig config, Action configChangedCallback, Action styleChanged) : base("Window Background Config") {
+    public WindowBackgroundConfigWindow(WindowBackgroundConfig config, Action styleChanged, Action<string> addonRemoved, Action<string> addonAdded) : base("Window Background Config") {
         this.config = config;
-        this.configChangedCallback = configChangedCallback;
         this.styleChanged = styleChanged;
+        this.addonRemoved = addonRemoved;
+        this.addonAdded = addonAdded;
 
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(350.0f, 500.0f),
@@ -107,14 +109,14 @@ public unsafe class WindowBackgroundConfigWindow : Window {
         if (isTracked) {
             if (Drawing.IconButton(FontAwesomeIcon.Trash)) {
                 config.Addons.Remove(name);
-                configChangedCallback();
+                addonRemoved(name);
                 config.Save();
             }
         }
         else {
             if (Drawing.IconButton(FontAwesomeIcon.Plus)) {
                 config.Addons.Add(name);
-                configChangedCallback();
+                addonAdded(name);
                 config.Save();
             }
         }
