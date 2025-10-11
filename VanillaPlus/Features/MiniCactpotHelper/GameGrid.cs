@@ -7,7 +7,7 @@ using KamiToolKit.Nodes;
 
 namespace VanillaPlus.Features.MiniCactpotHelper;
 
-public class GameGrid : ResNode {
+public class GameGrid : SimpleOverlayNode {
 
 	private readonly IconImageNode[] buttonImages;
 	private readonly ImageNode[] laneImages;
@@ -110,20 +110,6 @@ public class GameGrid : ResNode {
         System.NativeController.AttachNode(laneImages[7], this);
 
         UpdateButtonStyle(config);
-	}
-
-	protected override void Dispose(bool disposing) {
-		if (disposing) {
-			foreach (var node in buttonImages) {
-				node.Dispose();
-			}
-
-			foreach (var lane in laneImages) {
-				lane.Dispose();
-			}
-			
-			base.Dispose(disposing);
-		}
 	}
 
 	public void SetActiveButtons(params int[]? indexes) {
