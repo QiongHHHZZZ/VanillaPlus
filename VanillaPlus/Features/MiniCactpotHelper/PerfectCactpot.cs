@@ -120,7 +120,6 @@ internal sealed class PerfectCactpot {
         if (num_revealed == 4)
             num_options = 8;
 
-        double value;
         var which_to_flip = new bool[num_options];
 
         switch (num_revealed) {
@@ -134,16 +133,14 @@ internal sealed class PerfectCactpot {
 
                 // Using our pre-calculated library, this is much faster
                 var stateStr = string.Join("", state);
-                (value, which_to_flip) = PrecalculatedOpenings[stateStr];
+                (_, which_to_flip) = PrecalculatedOpenings[stateStr];
                 break;
             }
 
             default:
-                value = SolveAny(ref state, ref which_to_flip);
+                _ = SolveAny(ref state, ref which_to_flip);
                 break;
         }
-
-        Services.PluginLog.Verbose($"Expected value: {value} MGP");
 
         return which_to_flip;
     }
