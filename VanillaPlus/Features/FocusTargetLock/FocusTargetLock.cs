@@ -19,11 +19,13 @@ public class FocusTargetLock : GameModification {
     public override void OnEnable() {
         Services.DutyState.DutyWiped += OnDutyWiped;
         Services.DutyState.DutyRecommenced += OnDutyRecommenced;
+        Services.ClientState.TerritoryChanged += OnTerritoryChanged;
     }
 
     public override void OnDisable() {
         Services.DutyState.DutyWiped -= OnDutyWiped;
         Services.DutyState.DutyRecommenced -= OnDutyRecommenced;
+        Services.ClientState.TerritoryChanged -= OnTerritoryChanged;
     }
 
     private void OnDutyRecommenced(object? sender, ushort e)
@@ -31,4 +33,7 @@ public class FocusTargetLock : GameModification {
 
     private void OnDutyWiped(object? sender, ushort e)
         => focusTarget = Services.TargetManager.FocusTarget;
+
+    private void OnTerritoryChanged(ushort obj)
+        => focusTarget = null;
 }
