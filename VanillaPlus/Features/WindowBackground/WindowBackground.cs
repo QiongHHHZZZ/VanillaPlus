@@ -38,7 +38,11 @@ public unsafe class WindowBackground : GameModification {
 
     private SimpleOverlayNode? nameplateOverlayNode;
 
+    private bool namePlateAddonReady;
+
     public override void OnEnable() {
+        namePlateAddonReady = false;
+        
         addonControllers = [];
         backgroundImageNodes = [];
         overlayImageNodes = [];
@@ -59,12 +63,22 @@ public unsafe class WindowBackground : GameModification {
             };
             
             System.NativeController.AttachNode(nameplateOverlayNode, addon->RootNode, NodePosition.AsFirstChild);
+            namePlateAddonReady = true;
+
+            foreach (var (_, controller) in addonControllers) {
+                controller.Enable();
+            }
         };
 
         overlayAddonController.OnUpdate += UpdateOverlayBackgrounds;
 
         overlayAddonController.OnDetach += _ => {
+            foreach (var (_, controller) in addonControllers) {
+                controller.Disable();
+            }
+            
             System.NativeController.DisposeNode(ref nameplateOverlayNode);
+            namePlateAddonReady = false;
         };
         
         overlayAddonController.Enable();
@@ -120,7 +134,10 @@ public unsafe class WindowBackground : GameModification {
         var addonController = new AddonController(addonName);
         addonController.OnAttach += AttachNode;
         addonController.OnDetach += DetachNode;
-        addonController.Enable();
+
+        if (namePlateAddonReady) {
+            addonController.Enable();
+        }
 
         addonControllers.Add(addonName, addonController);
     }
@@ -136,7 +153,6 @@ public unsafe class WindowBackground : GameModification {
         if (config is null) return;
         if (backgroundImageNodes is null) return;
         if (overlayImageNodes is null) return;
-        if (nameplateOverlayNode is null) return;
         
         // If we have a window node, attach before the first ninegrid node
         if (addon->WindowNode is not null) {
@@ -163,7 +179,7 @@ public unsafe class WindowBackground : GameModification {
 
         // We don't have a window node, attach to nameplate
         else {
-            if (!overlayImageNodes.ContainsKey(addon->NameString)) {
+            if (!overlayImageNodes.ContainsKey(addon->NameString) && nameplateOverlayNode is not null) {
                 var newBackgroundNode = new BackgroundImageNode {
                     Size = (addon->Size() + config.Padding) * addon->Scale,
                     Position = addon->Position() - config.Padding / 2.0f,
@@ -207,6 +223,7 @@ public unsafe class WindowBackground : GameModification {
             
             if (addon is not null) {
                 imageNode.Position = addon->Position() - config.Padding / 2.0f;
+                imageNode.Size = (addon->Size() + config.Padding) * addon->Scale;
             }
         }
     }
