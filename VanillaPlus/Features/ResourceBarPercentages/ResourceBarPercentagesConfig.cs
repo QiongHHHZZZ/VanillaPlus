@@ -19,6 +19,8 @@ public class ResourceBarPercentagesConfig : GameModificationConfig<ResourceBarPe
     public bool ParameterGpEnabled = true;
     public bool ParameterCpEnabled = true;
 
+    public bool DeadOrAliveModeEnabled = false;
+
     public bool PercentageSignEnabled = true;
     public int DecimalPlaces = 0;
     public bool ShowDecimalsBelowHundredOnly = false;

@@ -37,7 +37,7 @@ public unsafe class ResourceBarPercentages : GameModification {
         
         configWindow = new ConfigAddon {
             NativeController = System.NativeController,
-            Size = new Vector2(400.0f, 550.0f),
+            Size = new Vector2(400.0f, 300.0f),
             InternalName = "ResourcePercentageConfig",
             Title = "Resource Bar Percentages Config",
             Config = config,
@@ -60,6 +60,9 @@ public unsafe class ResourceBarPercentages : GameModification {
             .AddCheckbox("Change MP", nameof(config.ParameterMpEnabled))
             .AddCheckbox("Change GP", nameof(config.ParameterGpEnabled))
             .AddCheckbox("Change CP", nameof(config.ParameterCpEnabled));
+
+        configWindow.AddCategory("Extra")
+            .AddCheckbox("Dead or Alive Mode", nameof(config.DeadOrAliveModeEnabled));
 
         configWindow.AddCategory("Percentage Sign")
             .AddCheckbox("Show Percentage Sign %", nameof(config.PercentageSignEnabled));
@@ -152,8 +155,13 @@ public unsafe class ResourceBarPercentages : GameModification {
         var hpGaugeTextNode = hudData.PartyListMember->HPGaugeComponent->GetTextNodeById(2);
         if (hpGaugeTextNode is null) return;
 
-        if ((hudData.IsSelf() && config.PartyListSelf || (!hudData.IsSelf() && !revertToDefault))) {
-            hpGaugeTextNode->SetText(GetCorrectText((uint)health.Current, (uint)health.Max, config.PartyListHpEnabled));
+        if (hudData.IsSelf() && config.PartyListSelf || !hudData.IsSelf() && !revertToDefault) {
+            if (config.DeadOrAliveModeEnabled) {
+                hpGaugeTextNode->SetText(health.Current > 0 ? "Alive" : "Dead");
+            }
+            else {
+                hpGaugeTextNode->SetText(GetCorrectText((uint)health.Current, (uint)health.Max, config.PartyListHpEnabled));
+            }
         }
         else {
             hpGaugeTextNode->SetText(health.Current.ToString());
