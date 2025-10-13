@@ -28,7 +28,7 @@ public unsafe class PartyFinderPresets : GameModification {
     private TextButtonNode? savePresetButton;
     private TextDropDownNode? presetDropDown;
     
-    private AddonSavePreset? savePresetWindow;
+    private PartyFinderSavePresetAddon? savePresetWindow;
     private RenameAddon? renameWindow;
 
     private NodeListAddon? presetEditorAddon;
@@ -36,7 +36,7 @@ public unsafe class PartyFinderPresets : GameModification {
     public override string ImageName => "PartyFinderPresets.png";
 
     public override void OnEnable() {
-        savePresetWindow = new AddonSavePreset {
+        savePresetWindow = new PartyFinderSavePresetAddon {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 215.0f),
             InternalName = "LookingForGroupPreset",

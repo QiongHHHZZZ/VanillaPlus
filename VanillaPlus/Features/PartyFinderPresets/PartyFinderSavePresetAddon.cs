@@ -10,7 +10,7 @@ using KamiToolKit.Nodes.TabBar;
 
 namespace VanillaPlus.Features.PartyFinderPresets;
 
-public class AddonSavePreset : NativeAddon {
+public class PartyFinderSavePresetAddon : NativeAddon {
 
     private TabBarNode tabBarNode = null!;
     
@@ -42,7 +42,7 @@ public class AddonSavePreset : NativeAddon {
         
         AttachNode(tabBarNode);
 
-        var extrasPosition = new Vector2(ContentPadding.X * 2.0f, tabBarNode.Y + tabBarNode.Height + ContentPadding.Y * 3.0f);
+        var extrasPosition = new Vector2(ContentPadding.X * 2.0f, tabBarNode.Y + tabBarNode.Height + 8.0f * 3.0f);
         var extrasSize = new Vector2(Size.X - ContentPadding.X * 4.0f, 28.0f);
 
         textInputNode = new TextInputNode {
@@ -102,7 +102,7 @@ public class AddonSavePreset : NativeAddon {
         var buttonSize = new Vector2(125.0f, 28.0f);
 
         confirmButtonNode = new TextButtonNode {
-            Position = new Vector2(ContentPadding.X, Size.Y - buttonSize.Y - ContentPadding.Y * 2.0f),
+            Position = new Vector2(ContentPadding.X, Size.Y - buttonSize.Y - 8.0f * 2.0f),
             Size = buttonSize,
             IsVisible = true,
             String = "Confirm",
@@ -111,7 +111,7 @@ public class AddonSavePreset : NativeAddon {
         AttachNode(confirmButtonNode);
 
         cancelButtonNode = new TextButtonNode {
-            Position = new Vector2(Size.X - ContentPadding.X - buttonSize.X, Size.Y - buttonSize.Y - ContentPadding.Y * 2.0f),
+            Position = new Vector2(Size.X - ContentPadding.X - buttonSize.X, Size.Y - buttonSize.Y -8.0f * 2.0f),
             Size = buttonSize,
             IsVisible = true,
             String = "Cancel",
