@@ -15,10 +15,10 @@ public unsafe class ConfigAddon : NativeAddon {
     
     public required ISavable Config { get; init; }
 
+    private const float MaximumHeight = 400.0f;
+
     protected override void OnSetup(AtkUnitBase* addon) {
         configurationListNode = new ScrollingAreaNode<VerticalListNode> {
-            Size = ContentSize + new Vector2(0.0f, ContentPadding.Y),
-            Position = ContentStartPosition - new Vector2(0.0f, ContentPadding.Y),
             IsVisible = true,
             ContentHeight = ContentSize.Y,
             AutoHideScrollBar = true,
@@ -32,8 +32,20 @@ public unsafe class ConfigAddon : NativeAddon {
             listNode.Width = configurationListNode.ContentNode.Width;
             listNode.RecalculateLayout();
         }
-        
+
         configurationListNode.ContentHeight = configurationListNode.ContentNode.Nodes.Sum(node => node.Height);
+
+        if (configurationListNode.ContentHeight < MaximumHeight) {
+            Size = new Vector2(Size.X, configurationListNode.ContentHeight + ContentStartPosition.Y + 16.0f);
+        }
+        else {
+            Size = new Vector2(Size.X, MaximumHeight + ContentStartPosition.Y + 16.0f);
+        }
+
+        addon->SetSize((ushort)Size.X, (ushort)Size.Y);
+        WindowNode.Size = Size;
+        configurationListNode.Size = ContentSize + new Vector2(0.0f, ContentPadding.Y);
+        configurationListNode.Position = ContentStartPosition - new Vector2(0.0f, ContentPadding.Y);
     }
 
     public ConfigCategory AddCategory(string label) {
