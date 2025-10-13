@@ -219,7 +219,7 @@ public unsafe class WindowBackground : GameModification {
 
         foreach (var (name, imageNode) in overlayImageNodes) {
             var addon = Services.GameGui.GetAddonByName<AtkUnitBase>(name);
-            imageNode.IsVisible = addon is not null && addon->IsVisible && addon->RootNode is not null && addon->RootNode->IsVisible();
+            imageNode.IsVisible = addon is not null && addon->IsActuallyVisible();
             
             if (addon is not null) {
                 imageNode.Position = addon->Position() - config.Padding / 2.0f;
