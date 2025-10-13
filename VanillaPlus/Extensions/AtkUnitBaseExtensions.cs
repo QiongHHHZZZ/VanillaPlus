@@ -18,6 +18,15 @@ public static unsafe class AtkUnitBaseExtensions {
     public static Vector2 GetPosition(this ref AtkUnitBase addon)
         => new(addon.X, addon.Y);
 
+    public static bool IsActuallyVisible(this ref AtkUnitBase addon) {
+        if (!addon.IsVisible) return false;
+        if (addon.RootNode is null) return false;
+        if (!addon.RootNode->IsVisible()) return false;
+        if ((addon.VisibilityFlags & 5) is not 0) return false;
+
+        return true;
+    }
+
     /// <summary>
     /// Resizes the target addon to the new size, making sure to adjust various WindowNode properties
     /// to make the window appear and behave normally.
