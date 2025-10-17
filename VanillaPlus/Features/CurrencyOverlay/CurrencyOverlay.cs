@@ -67,7 +67,6 @@ public unsafe class CurrencyOverlay : GameModification {
             OnItemRemoved = item => removedCurrencySettings.Add(item),
         };
 
-        configAddon.Open();
         OpenConfigAction = configAddon.Toggle;
 
         overlayAddonController = new OverlayAddonController();
