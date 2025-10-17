@@ -33,7 +33,7 @@ public class FastMouseClick : GameModification {
     public override void OnDisable() {
         memoryPatch?.Dispose();
         memoryPatch = null;
-        
-        memoryAddress = nint.Zero;
+
+        memoryAddress = null;
     }
 }
