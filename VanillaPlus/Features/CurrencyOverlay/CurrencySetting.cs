@@ -2,7 +2,7 @@
 
 namespace VanillaPlus.Features.CurrencyOverlay;
 
-public class CurrencySettings {
+public class CurrencySetting : IInfoNodeData {
     public uint ItemId;
     public Vector2 Position = Vector2.Zero;
     public bool EnableLowLimit;
