@@ -63,8 +63,15 @@ public unsafe class CurrencyOverlay : GameModification {
                 config.Save();
             },
 
-            OnItemAdded = item => addedCurrencySettings.Add(item),
-            OnItemRemoved = item => removedCurrencySettings.Add(item),
+            OnItemAdded = item => {
+                addedCurrencySettings.Add(item);
+                config.Save();
+            },
+            
+            OnItemRemoved = item => {
+                removedCurrencySettings.Add(item);
+                config.Save();
+            },
         };
 
         OpenConfigAction = configAddon.Toggle;
