@@ -1,6 +1,5 @@
 ﻿using System;
 using Dalamud.Hooking;
-using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -22,15 +21,12 @@ public unsafe class MacroTooltips : GameModification {
         ],
     };
 
-    private delegate void ShowMacroTooltipDelegate(AddonActionBarBase* a1, AtkResNode* a2, NumberArrayData* a3, StringArrayData* a4, int a5, int a6);
-    
-    [Signature("E8 ?? ?? ?? ?? 4C 8B 64 24 ?? 48 8B 7C 24 ?? 48 8B 74 24 ?? 4C 8B 6C 24 ??", DetourName = nameof(OnShowMacroTooltip))]
-    private Hook<ShowMacroTooltipDelegate>? showTooltipHook;
+    private Hook<AddonActionBarBase.Delegates.ShowTooltip>? showTooltipHook;
     
     public override string ImageName => "MacroTooltips.png";
 
     public override void OnEnable() {
-        Services.Hooker.InitializeFromAttributes(this);
+        showTooltipHook = Services.Hooker.HookFromAddress<AddonActionBarBase.Delegates.ShowTooltip>(AddonActionBarBase.MemberFunctionPointers.ShowTooltip, OnShowMacroTooltip);
         showTooltipHook?.Enable();
     }
 
