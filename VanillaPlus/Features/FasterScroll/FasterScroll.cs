@@ -8,7 +8,7 @@ using VanillaPlus.NativeElements.Config;
 
 namespace VanillaPlus.Features.FasterScroll;
 
-public class FasterScroll : GameModification {
+public unsafe class FasterScroll : GameModification {
     public override ModificationInfo ModificationInfo => new() {
         DisplayName = "Faster Scrollbars",
         Description = "Increases the speed of all scrollbars.",
@@ -19,7 +19,6 @@ public class FasterScroll : GameModification {
         ],
     };
 
-    [Signature("40 55 53 56 41 54 41 55 41 56 41 57 48 8B EC 48 81 EC ?? ?? ?? ??", DetourName = nameof(AtkComponentScrollBarReceiveEvent))]
     private Hook<AtkComponentScrollBar.Delegates.ReceiveEvent>? scrollBarReceiveEventHook;
 
     private FasterScrollConfig? config;
@@ -40,7 +39,7 @@ public class FasterScroll : GameModification {
         
         OpenConfigAction = configWindow.Toggle;
 
-        Services.GameInteropProvider.InitializeFromAttributes(this);
+        scrollBarReceiveEventHook = Services.Hooker.HookFromAddress<AtkComponentScrollBar.Delegates.ReceiveEvent>(AtkComponentScrollBar.StaticVirtualTablePointer->ReceiveEvent, AtkComponentScrollBarReceiveEvent);
         scrollBarReceiveEventHook?.Enable();
     }
 
@@ -54,7 +53,7 @@ public class FasterScroll : GameModification {
         config = null;
     }
 
-    private unsafe void AtkComponentScrollBarReceiveEvent(AtkComponentScrollBar* thisPtr, AtkEventType type, int param, AtkEvent* eventPointer, AtkEventData* dataPointer) {
+    private void AtkComponentScrollBarReceiveEvent(AtkComponentScrollBar* thisPtr, AtkEventType type, int param, AtkEvent* eventPointer, AtkEventData* dataPointer) {
         try {
             if (config is null) {
                 scrollBarReceiveEventHook!.Original(thisPtr, type, param, eventPointer, dataPointer);
