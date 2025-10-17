@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dalamud.Utility;
-using FFXIVClientStructs.FFXIV.Common.Math;
+using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
 using KamiToolKit.Addons;
-using KamiToolKit.Addons.Parts;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
-using Lumina.Excel.Sheets;
 using VanillaPlus.Classes;
-using Vector2 = System.Numerics.Vector2;
 
 namespace VanillaPlus.Features.CurrencyOverlay;
 
@@ -23,6 +19,7 @@ public unsafe class CurrencyOverlay : GameModification {
         Authors = [ "MidoriKami" ],
         ChangeLog = [
             new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(2, "Reimplemented configuration system, now allows for changing scale"),
         ],
     };
 
@@ -33,17 +30,13 @@ public unsafe class CurrencyOverlay : GameModification {
     private SimpleOverlayNode? overlayRootNode;
     private CurrencyOverlayConfig? config;
 
-    private ModifyListAddon<CurrencySettings>? addRemoveAddon;
-    private EditCurrencyAddon? editAddon;
-    private CurrencyOverlayConfigAddon? configAddon;
+    private ListConfigAddon<CurrencySetting, CurrencyOverlayConfigNode>? configAddon;
 
     private List<CurrencyNode>? currencyNodes;
 
-    private List<CurrencySettings>? addedCurrencySettings;
-    private List<CurrencySettings>? removedCurrencySettings;
+    private List<CurrencySetting>? addedCurrencySettings;
+    private List<CurrencySetting>? removedCurrencySettings;
 
-    private bool enableMoving;
-    
     public override void OnEnable() {
         currencyNodes = [];
         addedCurrencySettings = [];
@@ -51,47 +44,30 @@ public unsafe class CurrencyOverlay : GameModification {
         
         config = CurrencyOverlayConfig.Load();
 
-        configAddon = new CurrencyOverlayConfigAddon {
+        configAddon = new ListConfigAddon<CurrencySetting, CurrencyOverlayConfigNode> {
             NativeController = System.NativeController,
-            Size = new Vector2(275.0f, 100.0f),
+            Size = new Vector2(700.0f, 500.0f),
             InternalName = "CurrencyOverlayConfig",
             Title = "Currency Overlay Config",
-            OnEnableMoving = toggleButtonNode => {
-                enableMoving = !enableMoving;
+            SortOptions = [ "Alphabetical" ],
 
-                if (toggleButtonNode is not null) {
-                    toggleButtonNode.String = enableMoving ? "Disable Moving" : "Enable Moving";
-                }
-                
-                foreach (var node in currencyNodes) {
-                    node.EnableMoving = enableMoving;
-                }
-            },
-            OnEditEntriesClicked = () => {
-                addRemoveAddon?.Open();
-            },
-        };
-
-        editAddon = new EditCurrencyAddon {
-            NativeController = System.NativeController,
-            Size = new Vector2(300.0f, 315.0f),
-            InternalName = "EditCurrency",
-            Title = "Edit Currency",
-            EditComplete = OnEditComplete,
-            EditCancelled = OnEditCancelled,
-        };
-        
-        addRemoveAddon = new ModifyListAddon<CurrencySettings> {
-            NativeController = System.NativeController,
-            Size = new Vector2(300.0f, 450.0f),
-            InternalName = "CurrencySelect",
-            Title = "Currency Configuration",
             Options = config.Currencies,
-            AddNewEntry = OnAddClicked,
-            RemoveEntry = OnRemoveClicked,
-            GetOptionInfo = BuildOptionInfo,
+
+            OnConfigChanged = changedSetting => {
+                var nodes = currencyNodes.Where(node => node.Currency == changedSetting);
+
+                foreach (var node in nodes) {
+                    node.Currency = changedSetting;
+                    node.OnMoveComplete = changedSetting.IsNodeMoveable ? () => config.Save() : null;
+                }
+                config.Save();
+            },
+
+            OnItemAdded = item => addedCurrencySettings.Add(item),
+            OnItemRemoved = item => removedCurrencySettings.Add(item),
         };
 
+        configAddon.Open();
         OpenConfigAction = configAddon.Toggle;
 
         overlayAddonController = new OverlayAddonController();
@@ -102,7 +78,7 @@ public unsafe class CurrencyOverlay : GameModification {
             };
             System.NativeController.AttachNode(overlayRootNode, addon->RootNode, NodePosition.AsFirstChild);
 
-            var screenSize = AtkStage.Instance()->ScreenSize;
+            var screenSize = new Vector2(AtkStage.Instance()->ScreenSize.Width, AtkStage.Instance()->ScreenSize.Height);
 
             foreach (var setting in config.Currencies) {
                 var newCurrencyNode = BuildCurrencyNode(setting, screenSize);
@@ -115,7 +91,7 @@ public unsafe class CurrencyOverlay : GameModification {
         overlayAddonController.OnUpdate += _ => {
             if (overlayRootNode is null) return;
             
-            var screenSize = AtkStage.Instance()->ScreenSize;
+            var screenSize = new Vector2(AtkStage.Instance()->ScreenSize.Width, AtkStage.Instance()->ScreenSize.Height);
             
             foreach (var toAdd in addedCurrencySettings) {
                 var newCurrencyNode = BuildCurrencyNode(toAdd, screenSize);
@@ -158,24 +134,20 @@ public unsafe class CurrencyOverlay : GameModification {
         overlayAddonController?.Dispose();
         overlayAddonController = null;
         
-        addRemoveAddon?.Dispose();
-        addRemoveAddon = null;
-        
-        editAddon?.Dispose();
-        editAddon = null;
-        
+        configAddon?.Dispose();
+        configAddon = null;
+
         config = null;
         
         currencyNodes?.Clear();
         currencyNodes = null;
     }
 
-    private CurrencyNode BuildCurrencyNode(CurrencySettings setting, Size screenSize) {
+    private CurrencyNode BuildCurrencyNode(CurrencySetting setting, Vector2 screenSize) {
         var newCurrencyNode = new CurrencyNode {
             Size = new Vector2(164.0f, 36.0f),
             IsVisible = true,
             Currency = setting,
-            EnableMoving = enableMoving,
         };
 
         newCurrencyNode.OnEditComplete = () => {
@@ -184,7 +156,7 @@ public unsafe class CurrencyOverlay : GameModification {
         };
 
         if (setting.Position == Vector2.Zero) {
-            newCurrencyNode.Position = new Vector2(screenSize.Width, screenSize.Height) / 2.0f - new Vector2(164.0f, 36.0f) / 2.0f;
+            newCurrencyNode.Position = new Vector2(screenSize.X, screenSize.Y) / 2.0f - new Vector2(164.0f, 36.0f) / 2.0f;
         }
         else {
             newCurrencyNode.Position = setting.Position;
@@ -192,49 +164,4 @@ public unsafe class CurrencyOverlay : GameModification {
 
         return newCurrencyNode;
     }
-
-    private void OnAddClicked() {
-        if (editAddon is null) return;
-
-        editAddon.SelectedCurrency = new CurrencySettings();
-        editAddon.Open();
-    }
-
-    private void OnRemoveClicked(CurrencySettings entry) {
-        if (config is null) return;
-        if (removedCurrencySettings is null) return;
-        
-        config.Currencies.Remove(entry);
-        addRemoveAddon?.ResyncOptions(config.Currencies);
-        config.Save();
-        
-        removedCurrencySettings.Add(entry);
-    }
-
-    private void OnEditComplete(CurrencySettings newOption) {
-        if (config is null) return;
-        if (addedCurrencySettings is null) return;
-        
-        config.Currencies.Add(newOption);
-        config.Save();
-        
-        addedCurrencySettings.Add(newOption);
-
-        addRemoveAddon?.ResyncOptions(config.Currencies);
-    }
-
-    private void OnEditCancelled(CurrencySettings result) {
-        if (config is null) return;
-
-        config.Save();
-        addRemoveAddon?.ResyncOptions(config.Currencies);
-    }
-
-    private static OptionInfo<CurrencySettings> BuildOptionInfo(CurrencySettings option) => new() {
-        Label = Services.DataManager.GetExcelSheet<Item>().GetRow(option.ItemId).Name.ToString(),
-        SubLabel = Services.DataManager.GetExcelSheet<Item>().GetRow(option.ItemId).ItemSearchCategory.Value.Name.ToString().FirstCharToUpper(),
-        IconId = Services.DataManager.GetExcelSheet<Item>().GetRow(option.ItemId).Icon,
-        Id = option.ItemId,
-        Option = option, 
-    };
 }

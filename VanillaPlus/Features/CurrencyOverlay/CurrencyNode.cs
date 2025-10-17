@@ -55,11 +55,12 @@ public unsafe class CurrencyNode : SimpleComponentNode {
             .Build());
     }
 
-    public required CurrencySettings Currency {
+    public required CurrencySetting Currency {
         get;
         set {
             field = value;
 
+            EnableMoving = value.IsNodeMoveable;
             iconImageNode.IconId = Services.DataManager.GetExcelSheet<Item>().GetRow(value.ItemId).Icon;
 
             if (value.IconReversed) {
@@ -80,11 +81,13 @@ public unsafe class CurrencyNode : SimpleComponentNode {
             }
 
             countNode.Origin = countNode.Size / 2.0f;
+            Scale = new Vector2(value.Scale, value.Scale);
         }
     }
 
     public void UpdateValues() {
         if (!Services.ClientState.IsLoggedIn) return;
+
 
         var inventoryCount = InventoryManager.Instance()->GetInventoryItemCount(Currency.ItemId);
 
