@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Hooking;
-using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -26,10 +25,7 @@ public unsafe class FadeUnavailableActions : GameModification {
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@FadeUnavailableActions"),
     };
 
-    private delegate void UpdateHotBarSlotDelegate(AddonActionBarBase* addon, ActionBarSlot* uiData, NumberArrayData* numberArray, StringArrayData* stringArray, int numberArrayIndex, int stringArrayIndex);
-
-    [Signature("E8 ?? ?? ?? ?? 48 81 C6 ?? ?? ?? ?? 83 C7 11", DetourName = nameof(OnHotBarSlotUpdate))]
-    private Hook<UpdateHotBarSlotDelegate>? onHotBarSlotUpdateHook;
+    private Hook<AddonActionBarBase.Delegates.UpdateHotbarSlot>? onHotBarSlotUpdateHook;
 
     private Dictionary<uint, Action?>? actionCache;
 
@@ -60,8 +56,8 @@ public unsafe class FadeUnavailableActions : GameModification {
             .AddCheckbox("Redden Skills out of Range", nameof(config.ReddenOutOfRange));
         
         OpenConfigAction = configWindow.Toggle;
-        
-        Services.Hooker.InitializeFromAttributes(this);
+
+        onHotBarSlotUpdateHook = Services.Hooker.HookFromAddress<AddonActionBarBase.Delegates.UpdateHotbarSlot>(AddonActionBarBase.MemberFunctionPointers.UpdateHotbarSlot, OnHotBarSlotUpdate);
         onHotBarSlotUpdateHook?.Enable();
     }
 
@@ -154,7 +150,7 @@ public unsafe class FadeUnavailableActions : GameModification {
         frame->Color.A = fade ? config.ApplyToFrame ? (byte)(0xFF * ((100 - config.FadePercentage) / 100.0f)) : (byte) 0xFF : (byte)0xFF;
     }
 
-    private void ResetAllHotbars() {
+    private static void ResetAllHotbars() {
         foreach (var addon in RaptureAtkUnitManager.Instance()->AllLoadedUnitsList.Entries) {
             if (addon.Value is null) continue;
             if (addon.Value->NameString.Contains("_Action") && !addon.Value->NameString.Contains("Contents")) {
