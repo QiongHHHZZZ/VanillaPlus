@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Dalamud.Hooking;
-using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using FFXIVClientStructs.Interop;
 using KamiToolKit.Classes;
@@ -20,14 +19,8 @@ public unsafe class ClearTextInputs : GameModification {
             new ChangeLogInfo(1, "InitialChangelog"),
         ],
     };
-    
-    [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 60 48 8B D9", DetourName = nameof(OnTextComponentSetup))]
+
     private Hook<AtkComponentTextInput.Delegates.Setup>? onTextComponentSetupHook;
-
-    private delegate bool SetFocusDelegate(AtkInputManager* inputManager, AtkResNode* resNode, AtkUnitBase* addon, int focusParam);
-
-    [Signature("E8 ?? ?? ?? ?? 49 8B 84 FF ?? ?? ?? ??")]
-    private readonly SetFocusDelegate? setFocus = null;
 
     private CustomEventListener? customEventListener;
 
@@ -39,8 +32,8 @@ public unsafe class ClearTextInputs : GameModification {
         registeredEventNodes = [];
         
         customEventListener = new CustomEventListener(HandleEvents);
-        
-        Services.Hooker.InitializeFromAttributes(this);
+
+        onTextComponentSetupHook = Services.Hooker.HookFromAddress<AtkComponentTextInput.Delegates.Setup>(AtkComponentTextInput.StaticVirtualTablePointer->Setup, OnTextComponentSetup);
         onTextComponentSetupHook?.Enable();
     }
 
@@ -91,7 +84,7 @@ public unsafe class ClearTextInputs : GameModification {
         }
     }
     
-    private void HandleEvents(AtkEventListener* thisPtr, AtkEventType eventType, int eventParam, AtkEvent* atkEvent, AtkEventData* atkEventData) {
+    private static void HandleEvents(AtkEventListener* thisPtr, AtkEventType eventType, int eventParam, AtkEvent* atkEvent, AtkEventData* atkEventData) {
         if (eventParam is not 0x80000) return;
         if (eventType is not AtkEventType.MouseClick) return;
         if (atkEventData->MouseData.ButtonId is not 1) return;
@@ -111,8 +104,8 @@ public unsafe class ClearTextInputs : GameModification {
         if (addon is null) return;
 
         // Little hacky, have to unfocus else it will remember its last input string when you press another key
-        setFocus?.Invoke(AtkStage.Instance()->AtkInputManager, null, addon, 0);
+        AtkStage.Instance()->AtkInputManager->SetFocus(null, addon, 0);
         component->SetText(string.Empty);
-        setFocus?.Invoke(AtkStage.Instance()->AtkInputManager, (AtkResNode*)collisionNode, addon, 0);
+        AtkStage.Instance()->AtkInputManager->SetFocus((AtkResNode*)collisionNode, addon, 0);
     }
 }
