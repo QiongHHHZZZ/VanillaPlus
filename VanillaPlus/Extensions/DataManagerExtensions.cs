@@ -22,6 +22,9 @@ public static class DataManagerExtensions {
     public static ClassJob GetClassJobById(this IDataManager dataManager, uint id)
         => dataManager.GetExcelSheet<ClassJob>().GetRow(id);
 
+    public static Item GetItem(this IDataManager dataManager, uint id)
+        => dataManager.GetExcelSheet<Item>().GetRow(id);
+
     public static IEnumerable<Item> GetCurrencyItems(this IDataManager dataManager)
         => dataManager.GetExcelSheet<Item>()
             .Where(item => item is { Name.IsEmpty: false, ItemUICategory.RowId: 100 } or { RowId: >= 1 and < 100, Name.IsEmpty: false });
