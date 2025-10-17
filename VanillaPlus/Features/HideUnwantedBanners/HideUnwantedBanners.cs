@@ -1,6 +1,6 @@
 ﻿using System;
 using Dalamud.Hooking;
-using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using VanillaPlus.Classes;
 
@@ -18,10 +18,7 @@ public unsafe class HideUnwantedBanners : GameModification {
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@HideUnwantedBanner"),
     };
 
-    private delegate void ImageSetImageTextureDelegate(AtkUnitBase* addon, int bannerId, IconSubFolder language, int sfxId);
-
-    [Signature("48 89 5C 24 ?? 57 48 83 EC 30 48 8B D9 89 91", DetourName = nameof(OnSetImageTexture))]
-    private Hook<ImageSetImageTextureDelegate>? setImageTextureHook;
+    private Hook<AddonImage3.Delegates.SetImage>? setImageTextureHook;
 
     private HideUnwantedBannersConfig? config;
     private HideUnwantedBannersConfigWindow? configWindow;
@@ -31,8 +28,8 @@ public unsafe class HideUnwantedBanners : GameModification {
         configWindow = new HideUnwantedBannersConfigWindow(config);
         configWindow.AddToWindowSystem();
         OpenConfigAction = configWindow.Toggle;
-        
-        Services.Hooker.InitializeFromAttributes(this);
+
+        setImageTextureHook = Services.Hooker.HookFromAddress<AddonImage3.Delegates.SetImage>(AddonImage3.Addresses.SetImage.Value, OnSetImageTexture);
         setImageTextureHook?.Enable();
     }
 
@@ -42,11 +39,11 @@ public unsafe class HideUnwantedBanners : GameModification {
         
         setImageTextureHook?.Dispose();
         setImageTextureHook = null;
-        
+
         config = null;
     }
 
-    private void OnSetImageTexture(AtkUnitBase* addon, int bannerId, IconSubFolder language, int soundEffectId) {
+    private void OnSetImageTexture(AddonImage3* addon, int bannerId, IconSubFolder language, int soundEffectId) {
         var skipOriginal = false;
 
         try {
