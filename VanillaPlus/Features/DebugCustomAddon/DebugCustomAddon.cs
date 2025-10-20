@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.DebugCustomAddon;
@@ -8,13 +8,13 @@ namespace VanillaPlus.Features.DebugCustomAddon;
 /// Debug Game Modification with a Custom Addon for use with playing around with ideas, DO NOT commit changes to this file
 /// </summary>
 public class DebugCustomAddon : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Debug CustomAddon",
-        Description = "A module for playing around and testing VanillaPlus features",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "调试自定义界面",
+        Description = "用于测试与尝试 VanillaPlus 功能的调试模块",
         Type = ModificationType.Debug,
-        Authors = [ "YourNameHere" ],
+        Authors = [ "开发者" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
     };
 
@@ -24,7 +24,7 @@ public class DebugCustomAddon : GameModification {
         debugAddon = new DebugAddon {
             NativeController = System.NativeController,
             InternalName = "DebugAddon",
-            Title = "Debug Addon Window",
+            Title = "调试插件窗口",
             Size = new Vector2(500.0f, 500.0f),
         };
 
@@ -39,3 +39,5 @@ public class DebugCustomAddon : GameModification {
     }
 }
 #endif
+
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -36,7 +36,7 @@ public class AddonModificationBrowser : NativeAddon {
     
     private readonly AddonChangelogBrowser? changelogBrowser = new() {
         InternalName = "VPChangelog",
-        Title = "Vanilla Plus Changelog Browser",
+        Title = "Vanilla Plus 更新日志浏览器",
         NativeController = System.NativeController,
         Size = new Vector2(450.0f, 400.0f),
     };
@@ -140,7 +140,7 @@ public class AddonModificationBrowser : NativeAddon {
         searchBoxNode = new TextInputNode {
             IsVisible = true,
             OnInputReceived = OnSearchBoxInputReceived,
-            PlaceholderString = "Search . . .",
+            PlaceholderString = "搜索……",
             AutoSelectAll = true,
         };
         searchContainerNode.AddNode(searchBoxNode);
@@ -159,7 +159,7 @@ public class AddonModificationBrowser : NativeAddon {
             LineSpacing = 22,
             FontType = FontType.Axis,
             IsVisible = true,
-            String = "Please select an option on the left",
+            String = "请在左侧选择一个项目",
             TextColor = ColorHelper.GetColor(1),
         };
         System.NativeController.AttachNode(descriptionTextNode, descriptionContainerNode);
@@ -176,7 +176,7 @@ public class AddonModificationBrowser : NativeAddon {
         System.NativeController.AttachNode(descriptionImageTextNode, descriptionContainerNode);
 
         changelogButtonNode = new TextButtonNode {
-            SeString = "Changelog",
+            SeString = "更新日志",
             OnClick = OnChangelogButtonClicked,
         };
         System.NativeController.AttachNode(changelogButtonNode, descriptionContainerNode);
@@ -301,7 +301,7 @@ public class AddonModificationBrowser : NativeAddon {
 
         changelogButtonNode.IsVisible = true;
         descriptionVersionTextNode.IsVisible = true;
-        descriptionVersionTextNode.String = $"Version {selectedOption.Modification.Modification.ModificationInfo.Version}";
+        descriptionVersionTextNode.String = $"版本 {selectedOption.Modification.Modification.ModificationInfo.Version}";
     }
 
     private async void LoadModuleImage(string assetName) {
@@ -337,7 +337,7 @@ public class AddonModificationBrowser : NativeAddon {
             borderNineGridNode.Size = descriptionImageNode.Size + new Vector2(32.0f, 32.0f);
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception while loading Module Image");
+            Services.PluginLog.Error(e, "加载模块图像时出现异常");
         }
     }
 
@@ -349,7 +349,7 @@ public class AddonModificationBrowser : NativeAddon {
         }
 
         descriptionTextNode.IsVisible = true;
-        descriptionTextNode.String = "Please select an option on the left";
+        descriptionTextNode.String = "请在左侧选择一个项目";
 
         descriptionImageFrame.Scale = Vector2.One;
         
@@ -366,7 +366,7 @@ public class AddonModificationBrowser : NativeAddon {
             }
 
             changelogBrowser.Modification = selectedOption.Modification.Modification;
-            changelogBrowser.Title = $"{selectedOption.ModificationInfo.DisplayName} Changelog";
+            changelogBrowser.Title = $"{selectedOption.ModificationInfo.DisplayName} 更新日志";
             changelogBrowser.Open();
         }
     }

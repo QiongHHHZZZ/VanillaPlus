@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Addon.Lifecycle;
+using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel.Sheets;
@@ -7,14 +7,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.HideGuildhestObjectivePopup;
 
 public class HideGuildhestObjectivePopup : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Hide Guildhest Objective Popup",
-        Description = "When starting a guildhest this modification will prevent the popup window that contains the instructions on how to do the Guildhest.\n\n" +
-                      "This feature is not recommended if this is your first time doing Guildhests.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "隐藏行会令提示窗口",
+        Description = "进入行会令时阻止弹出的教学提示窗口。\n\n首次参与行会令时，建议暂时禁用该功能。",
         Authors = ["MidoriKami"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@HideGuildhestObjectivePopup"),
     };
@@ -33,3 +32,5 @@ public class HideGuildhestObjectivePopup : GameModification {
         args.GetAddon<AtkUnitBase>()->Hide(false, false, 1);
     }
 }
+
+

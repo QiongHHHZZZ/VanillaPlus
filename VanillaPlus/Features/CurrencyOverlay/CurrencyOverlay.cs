@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -11,15 +11,14 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.CurrencyOverlay;
 
 public unsafe class CurrencyOverlay : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Currency Overlay",
-        Description = "Allows you to add additional currencies to your UI Overlay.\n\n" +
-                      "Additionally allows you to set minimum and maximum values to trigger a warning.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "货币覆盖层",
+        Description = "允许你在界面覆盖层中添加额外的货币显示。\n\n同时可以设置最小值与最大值，超出范围时触发警示。",
         Type = ModificationType.NewOverlay,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
-            new ChangeLogInfo(2, "Reimplemented configuration system, now allows for changing scale"),
+            new ChangeLogInfo(1, "初始版本"),
+            new ChangeLogInfo(2, "重写配置系统，并支持调整缩放比例"),
         ],
     };
 
@@ -48,8 +47,8 @@ public unsafe class CurrencyOverlay : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(700.0f, 500.0f),
             InternalName = "CurrencyOverlayConfig",
-            Title = "Currency Overlay Config",
-            SortOptions = [ "Alphabetical" ],
+            Title = "货币覆盖层设置",
+            SortOptions = [ "按名称排序" ],
 
             Options = config.Currencies,
 
@@ -171,3 +170,5 @@ public unsafe class CurrencyOverlay : GameModification {
         return newCurrencyNode;
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
@@ -8,14 +8,14 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.HUDCoordinates;
 
 public unsafe class HUDCoordinates : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "HUD Coordinates",
-        Description = "Display coordinate positions in HUD Layout nodes, allows you get get things exactly right.\n\n" +
-                      "Displays coordinates for the center of the HUD element.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "HUD 坐标显示",
+        Description = "在 HUD 布局中显示节点坐标，帮助更精确地摆放界面元素。\n\n" +
+                      "会显示元素中心点的坐标。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -85,3 +85,5 @@ public unsafe class HUDCoordinates : GameModification {
         textNodes = null;
     }
 }
+
+

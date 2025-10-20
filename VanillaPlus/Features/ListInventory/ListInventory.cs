@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Keys;
@@ -11,17 +11,17 @@ using VanillaPlus.Utilities;
 namespace VanillaPlus.Features.ListInventory;
 
 public class ListInventory : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Inventory List Window",
-        Description = "Adds a window that displays your inventory as a list, with toggleable filters.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "背包列表窗口",
+        Description = "以列表形式展示背包内容，并提供可切换的筛选与排序。",
         Type = ModificationType.NewWindow,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
-            new ChangeLogInfo(2, "Added Sort by Quantity"),
-            new ChangeLogInfo(3, "Added '/listinventory' command to open window"),
-            new ChangeLogInfo(4, "Sort Dropdown is now on another line, added reverse sort direction button"),
-            new ChangeLogInfo(5, "Renamed to be consistent with other features"),
+            new ChangeLogInfo(1, "初始版本"),
+            new ChangeLogInfo(2, "新增按数量排序"),
+            new ChangeLogInfo(3, "新增 `/listinventory` 指令用于打开窗口"),
+            new ChangeLogInfo(4, "排序下拉框移动至单独一行，并新增排序方向按钮"),
+            new ChangeLogInfo(5, "名称调整，与其它功能保持一致"),
         ],
     };
     
@@ -38,16 +38,18 @@ public class ListInventory : GameModification {
         addonListInventory = new SearchableNodeListAddon {
             NativeController = System.NativeController,
             InternalName = "ListInventory",
-            Title = "Inventory List",
+            Title = "背包列表",
             Size = new Vector2(450.0f, 700.0f),
             OnFilterUpdated = OnFilterUpdated,
             OnSearchUpdated = OnSearchUpdated,
             UpdateListFunction = OnListUpdated,
-            DropDownOptions = ["Alphabetically", "Quantity", "Level", "Item Level", "Rarity", "Item Id", "Item Category"],
+            DropDownOptions = ["按名称", "按数量", "按等级", "按物品品级", "按稀有度", "按物品 ID", "按类别"],
             OpenCommand = "/listinventory",
         };
 
         addonListInventory.Initialize([VirtualKey.SHIFT, VirtualKey.CONTROL, VirtualKey.I]);
+
+        OnFilterUpdated("按名称", false);
 
         OpenConfigAction = addonListInventory.OpenAddonConfig;
 
@@ -108,13 +110,13 @@ public class ListInventory : GameModification {
         // Note: Compares in opposite direction to be descending instead of ascending, except for alphabetically
 
         var result = filterString switch {
-            "Alphabetically" => string.CompareOrdinal(leftItem.Name, rightItem.Name),
-            "Level" => rightItem.Level.CompareTo(leftItem.Level),
-            "Item Level" => rightItem.ItemLevel.CompareTo(leftItem.ItemLevel),
-            "Rarity" => rightItem.Rarity.CompareTo(leftItem.Rarity),
-            "Item Id" => rightItem.Item.ItemId.CompareTo(leftItem.Item.ItemId),
-            "Item Category" => rightItem.UiCategory.CompareTo(leftItem.UiCategory),
-            "Quantity" => rightItem.ItemCount.CompareTo(leftItem.ItemCount),
+            "按名称" => string.CompareOrdinal(leftItem.Name, rightItem.Name),
+            "按等级" => rightItem.Level.CompareTo(leftItem.Level),
+            "按物品品级" => rightItem.ItemLevel.CompareTo(leftItem.ItemLevel),
+            "按稀有度" => rightItem.Rarity.CompareTo(leftItem.Rarity),
+            "按物品 ID" => rightItem.Item.ItemId.CompareTo(leftItem.Item.ItemId),
+            "按类别" => rightItem.UiCategory.CompareTo(leftItem.UiCategory),
+            "按数量" => rightItem.ItemCount.CompareTo(leftItem.ItemCount),
             _ => string.CompareOrdinal(leftItem.Name, rightItem.Name),
         };
 
@@ -123,3 +125,5 @@ public class ListInventory : GameModification {
         return ( result is 0 ? string.CompareOrdinal(leftItem.Name, rightItem.Name) : result ) * reverseModifier;
     }
 }
+
+

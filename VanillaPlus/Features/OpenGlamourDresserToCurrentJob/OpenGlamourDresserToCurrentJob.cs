@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using VanillaPlus.Classes;
@@ -6,13 +6,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.OpenGlamourDresserToCurrentJob;
 
 public class OpenGlamourDresserToCurrentJob : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Open Glamour Dresser to Current Job",
-        Description = "When opening the glamour dresser, the tab for your current job will be automatically selected.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "衣柜定位当前职业",
+        Description = "打开幻化衣柜时自动切换到当前职业的分页。",
         Type = ModificationType.GameBehavior,
         Authors = ["MidoriKami"],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@OpenGlamourDresserToCurrentJob"),
     };
@@ -29,3 +29,5 @@ public class OpenGlamourDresserToCurrentJob : GameModification {
         }
     }
 }
+
+

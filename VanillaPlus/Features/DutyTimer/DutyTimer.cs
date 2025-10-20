@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.DutyTimer;
 
 public class DutyTimer : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Duty Timer",
-        Description = "When completing a duty, prints the time the duty took to chat.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "副本计时器",
+        Description = "完成副本时，将耗时输出到聊天栏，便于记录。",
         Authors = [ "MidoriKami" ],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("DutyTimer"),
     };
@@ -33,8 +33,10 @@ public class DutyTimer : GameModification {
         => startTimestamp = DateTime.UtcNow;
 
     private void OnDutyCompleted(object? sender, ushort e)
-        => Services.ChatGui.Print($@"Duty Completed in: {DateTime.UtcNow - startTimestamp:hh\:mm\:ss\.ffff}");
+        => Services.ChatGui.Print($@"副本完成耗时：{DateTime.UtcNow - startTimestamp:hh\:mm\:ss\.ffff}");
 
     private void OnTerritoryChanged(ushort obj)
         => startTimestamp = DateTime.UtcNow;
 }
+
+

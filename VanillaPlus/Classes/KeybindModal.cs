@@ -23,7 +23,7 @@ public unsafe class KeybindModal : Window, IDisposable {
 
     private readonly List<InputId> conflicts = [];
     
-    public KeybindModal(string windowName) : base($"{windowName} Set Keybind Modal") {
+    public KeybindModal(string windowName) : base($"{windowName} 快捷键设置") {
         WindowName += $"##{new StackTrace().GetFrame(1)?.GetMethod()?.ReflectedType?.Name}";
         
         this.AddToWindowSystem();
@@ -78,7 +78,7 @@ public unsafe class KeybindModal : Window, IDisposable {
         ImGui.Spacing();
         ImGui.Spacing();
         
-        ImGui.Text("Input Desired Key Combo");
+        ImGui.Text("请按下想要的快捷键组合");
         ImGui.Separator();
 
         ImGui.SetCursorPosY(50.0f);
@@ -92,7 +92,7 @@ public unsafe class KeybindModal : Window, IDisposable {
         if (!child) return;
         
         if (conflicts.Count is not 0) {
-            ImGui.Text("Conflict(s) Detected:");
+            ImGui.Text("检测到冲突：");
             ImGui.Separator();
 
             using var conflictList = ImRaii.Child("conflict_list", new Vector2(ImGui.GetContentRegionMax().X, 85.0f * ImGuiHelpers.GlobalScale));
@@ -107,12 +107,12 @@ public unsafe class KeybindModal : Window, IDisposable {
         if (!completion) return;
         
         ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
-        if (ImGui.Button("Cancel", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
+        if (ImGui.Button("取消", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
             this.Close();
         }
         
         ImGui.SameLine(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale * 2.0f - 5.0f);
-        if (ImGui.Button("Accept", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
+        if (ImGui.Button("确认", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
             if (!combo.Contains(VirtualKey.NO_KEY)) {
                 KeybindSetCallback.Invoke(combo);
             }

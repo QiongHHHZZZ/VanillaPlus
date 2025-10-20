@@ -1,4 +1,4 @@
-﻿using VanillaPlus.Classes;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.DebugGameModification;
 
@@ -7,13 +7,13 @@ namespace VanillaPlus.Features.DebugGameModification;
 /// Debug Game Modification for use with playing around with ideas, DO NOT commit changes to this file
 /// </summary>
 public class DebugGameModification : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Debug GameModification",
-        Description = "A module for playing around and testing VanillaPlus features",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "调试功能模块",
+        Description = "用于测试和尝试 VanillaPlus 功能的调试模块",
         Type = ModificationType.Debug,
-        Authors = [ "YourNameHere" ],
+        Authors = [ "开发者" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
     };
 
@@ -24,3 +24,5 @@ public class DebugGameModification : GameModification {
     }
 }
 #endif
+
+

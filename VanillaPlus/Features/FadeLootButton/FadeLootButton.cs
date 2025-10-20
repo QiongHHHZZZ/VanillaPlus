@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
@@ -8,13 +8,13 @@ using VanillaPlus.NativeElements.Config;
 namespace VanillaPlus.Features.FadeLootButton;
 
 public unsafe class FadeLootButton : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Fade Loot Button",
-        Description = "Fades the Loot button if you've already rolled on everything available.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "拾取按钮淡化",
+        Description = "当该窗口内所有物品都已选择掷骰时，自动淡化“拾取”按钮。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -31,12 +31,12 @@ public unsafe class FadeLootButton : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(400.0f, 125.0f),
             InternalName = "FadeLootConfig",
-            Title = "Fade Loot Button Config",
+            Title = "拾取按钮淡化设置",
             Config = config,
         };
 
-        configWindow.AddCategory("Style Settings")
-            .AddFloatSlider("Fade Percentage", 0.0f, 1.0f, 2, 0.05f, nameof(config.FadePercent));
+        configWindow.AddCategory("样式设置")
+            .AddFloatSlider("淡化强度", 0.0f, 1.0f, 2, 0.05f, nameof(config.FadePercent));
 
         OpenConfigAction = configWindow.Toggle;
         
@@ -84,3 +84,5 @@ public unsafe class FadeLootButton : GameModification {
         return true;
     }
 }
+
+

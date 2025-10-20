@@ -1,16 +1,16 @@
-﻿using VanillaPlus.Classes;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.InventorySearchBar;
 
 public class InventorySearchBar : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Inventory Search Bar",
-        Description = "Adds a search bar to the inventory window.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "背包搜索栏",
+        Description = "为背包窗口添加搜索栏，快速定位物品。",
         Type = ModificationType.UserInterface,
         SubType = ModificationSubType.Inventory,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -27,3 +27,5 @@ public class InventorySearchBar : GameModification {
         inventoryController = null;
     }
 }
+
+

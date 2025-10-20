@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
@@ -10,13 +10,13 @@ using VanillaPlus.NativeElements.Config;
 namespace VanillaPlus.Features.ClearSelectedDuties;
 
 public class ClearSelectedDuties : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Clear Selected Duties",
-        Description = "When opening the Duty Finder, deselects any selected duties.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "清除已选任务",
+        Description = "打开职责查找器时，自动取消所有已选中的任务。",
         Authors = [ "MidoriKami" ],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
     };
 
@@ -29,12 +29,12 @@ public class ClearSelectedDuties : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 135.0f),
             InternalName = "ClearSelectedConfig",
-            Title = "Clear Selected Duties Config",
+            Title = "清除已选任务设置",
             Config = config,
         };
 
-        configWindow.AddCategory("Settings")
-            .AddCheckbox("Disable when Unrestricted", nameof(config.DisableWhenUnrestricted));
+        configWindow.AddCategory("设置")
+            .AddCheckbox("解除人数限制时禁用", nameof(config.DisableWhenUnrestricted));
         
         OpenConfigAction = configWindow.Toggle;
         
@@ -68,3 +68,4 @@ public class ClearSelectedDuties : GameModification {
     private static unsafe bool IsRouletteTab(AddonContentsFinder* addon)
         => addon->SelectedRadioButton is 0;
 }
+

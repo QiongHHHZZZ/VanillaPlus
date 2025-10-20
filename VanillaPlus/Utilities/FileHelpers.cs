@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Dalamud.Utility;
@@ -28,7 +28,7 @@ public static class FileHelpers {
             }
             catch (Exception e) {
                 // If there is any kind of error loading the file, generate a new one instead and save it.
-                Services.PluginLog.Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
+                Services.PluginLog.Error(e, $"加载文件时出错，已改为新建文件： {filePath}");
             
                 SaveFile(new T(), filePath);
             }
@@ -43,7 +43,7 @@ public static class FileHelpers {
     public static void SaveFile<T>(T? file, string filePath) {
         try {
             if (file is null) {
-                Services.PluginLog.Error("Null file provided.");
+                Services.PluginLog.Error("提供的文件路径为空。");
                 return;
             }
             
@@ -51,7 +51,7 @@ public static class FileHelpers {
             FilesystemUtil.WriteAllTextSafe(filePath, fileText);
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, $"Error trying to save file {filePath}");
+            Services.PluginLog.Error(e, $"保存文件时出错： {filePath}");
         }
     }
 
@@ -71,7 +71,7 @@ public static class FileHelpers {
             }
             catch (Exception e) {
                 // If there is any kind of error loading the file, generate a new one instead and save it.
-                Services.PluginLog.Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
+                Services.PluginLog.Error(e, $"加载文件时出错，已改为新建文件： {filePath}");
             
                 SaveFile(new byte[length], filePath);
             }
@@ -88,7 +88,7 @@ public static class FileHelpers {
             FilesystemUtil.WriteAllBytesSafe(filePath, data);
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, $"Error trying to save binary data {filePath}");
+            Services.PluginLog.Error(e, $"保存二进制数据时出错： {filePath}");
         }
     }
 
@@ -107,7 +107,7 @@ public static class FileHelpers {
 
     public static string GetCharacterPath() {
         if (!Services.ClientState.IsLoggedIn) {
-            throw new Exception("Character is not logged in.");
+            throw new Exception("角色尚未登录。");
         }
         
         return Services.ClientState.LocalContentId.ToString("X");

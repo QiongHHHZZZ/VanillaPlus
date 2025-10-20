@@ -20,7 +20,7 @@ public unsafe class WindowBackgroundConfigWindow : Window {
     private readonly Action<string> addonAdded;
     private string searchString = string.Empty;
 
-    public WindowBackgroundConfigWindow(WindowBackgroundConfig config, Action styleChanged, Action<string> addonRemoved, Action<string> addonAdded) : base("Window Background Config") {
+    public WindowBackgroundConfigWindow(WindowBackgroundConfig config, Action styleChanged, Action<string> addonRemoved, Action<string> addonAdded) : base("窗口背景设置") {
         this.config = config;
         this.styleChanged = styleChanged;
         this.addonRemoved = addonRemoved;
@@ -32,14 +32,14 @@ public unsafe class WindowBackgroundConfigWindow : Window {
     }
 
     public override void Draw() {
-        ImGui.Text("Color");
+        ImGui.Text("颜色");
         
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
         if (ImGui.ColorEdit4("##Color", ref config.Color, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar)) styleChanged();
         if (ImGui.IsItemDeactivatedAfterEdit()) config.Save();
 
         ImGui.Spacing();
-        ImGui.Text("Padding");
+        ImGui.Text("边距");
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
         if (ImGui.DragFloat2("##Padding", ref config.Padding, 0.1f, -50.0f, 50.0f)) styleChanged();
         if (ImGui.IsItemDeactivatedAfterEdit()) config.Save();
@@ -52,7 +52,7 @@ public unsafe class WindowBackgroundConfigWindow : Window {
     }
 
     private void DrawEnabledAddons() {
-        ImGui.Text("Enabled Windows");
+        ImGui.Text("已启用的窗口");
         using var child = ImRaii.Child("Enabled_Addons", new Vector2(ImGui.GetContentRegionAvail().X, 100.0f * ImGuiHelpers.GlobalScale));
         if (!child) return;
         ImGui.Spacing();
@@ -61,10 +61,10 @@ public unsafe class WindowBackgroundConfigWindow : Window {
     }
     
     private void DrawAllAddons() {
-        ImGui.Text("All Windows");
+        ImGui.Text("所有窗口");
 
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-        ImGui.InputTextWithHint("##Search", "Search...", ref searchString);
+        ImGui.InputTextWithHint("##Search", "搜索...", ref searchString);
         ImGui.Spacing();
         
         using var child = ImRaii.Child("All_Addons_Select", ImGui.GetContentRegionAvail());

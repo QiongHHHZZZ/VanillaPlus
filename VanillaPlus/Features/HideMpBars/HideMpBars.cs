@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
@@ -10,15 +10,15 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.HideMpBars;
 
 public unsafe class HideMpBars : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Hide MP Bars",
-        Description = "Hides MP Bars in party list for jobs that don't use MP.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "隐藏 MP 条",
+        Description = "在队伍列表中隐藏不使用 MP 的职业的 MP 条。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
-        Tags = [ "Party List" ],
+        Tags = [ "队伍列表" ],
     };
 
     private List<uint>? manaUsingClassJobs;
@@ -63,3 +63,5 @@ public unsafe class HideMpBars : GameModification {
         }
     }
 }
+
+

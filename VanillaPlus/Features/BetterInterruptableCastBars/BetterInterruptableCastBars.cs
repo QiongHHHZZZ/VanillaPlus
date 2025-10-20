@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -15,13 +15,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.BetterInterruptableCastBars;
 
 public unsafe class BetterInterruptableCastBars : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Better Interruptable Castbars",
-        Description = "Makes enemy interruptable castbars much more noticeable.\n\nAdditionally skills that can interrupt the cast are indicated on your hotbar.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "强化打断读条",
+        Description = "让敌对可打断的读条条更加醒目。\n\n同时在热键栏上标记可以打断当前读条的技能。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@ImprovedInterruptableCastbars"),
     };
@@ -89,7 +89,7 @@ public unsafe class BetterInterruptableCastBars : GameModification {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception in BetterInterruptableCastBars.OnAntsCheck");
+            Services.PluginLog.Error(e, "BetterInterruptableCastBars.OnAntsCheck 中出现异常");
         }
 
         return antsHook!.Original(thisPtr, actionType, actionId);
@@ -115,3 +115,4 @@ public unsafe class BetterInterruptableCastBars : GameModification {
         );
     }
 }
+

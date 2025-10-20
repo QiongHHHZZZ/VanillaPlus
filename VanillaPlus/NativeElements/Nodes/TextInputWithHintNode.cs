@@ -13,7 +13,7 @@ public class TextInputWithHintNode : SimpleComponentNode {
 
     public TextInputWithHintNode() {
         textInputNode = new TextInputNode {
-            PlaceholderString = "Search . . .",
+            PlaceholderString = "搜索……",
             IsVisible = true,
         };
         System.NativeController.AttachNode(textInputNode, this);
@@ -23,9 +23,9 @@ public class TextInputWithHintNode : SimpleComponentNode {
             TextureCoordinates = new Vector2(112.0f, 84.0f),
             TextureSize = new Vector2(28.0f, 28.0f),
             Tooltip = new SeStringBuilder()
-                .Append("[VanillaPlus]: Supports Regex Search")
+                .Append("[VanillaPlus]: 支持正则表达式搜索")
                 .AppendNewLine()
-                .Append("Start input with '$' to search by description")
+                .Append("在开头输入 '$' 可按描述内容进行搜索")
                 .ToReadOnlySeString()
                 .ToDalamudString(),
             EventFlagsSet = true,

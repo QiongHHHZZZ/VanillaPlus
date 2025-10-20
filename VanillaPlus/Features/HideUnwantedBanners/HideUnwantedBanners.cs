@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -7,13 +7,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.HideUnwantedBanners;
 
 public unsafe class HideUnwantedBanners : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Hide Unwanted Banners",
-        Description = "Prevents large text banners from appearing and playing their sound effect.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "隐藏不需要的横幅",
+        Description = "阻止特定大型横幅及其音效弹出，减少画面干扰。",
         Authors = ["MidoriKami"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@HideUnwantedBanner"),
     };
@@ -54,9 +54,11 @@ public unsafe class HideUnwantedBanners : GameModification {
             
             skipOriginal = config.HiddenBanners.Contains(bannerId);
         } catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception in OnSetImageTexture");
+            Services.PluginLog.Error(e, "设置横幅图像时出现异常");
         }
 
         setImageTextureHook!.Original(addon, skipOriginal ? 0 : bannerId, language, skipOriginal ? 0 : soundEffectId);
     }
 }
+
+

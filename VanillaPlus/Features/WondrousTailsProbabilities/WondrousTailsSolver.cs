@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Game.Text.SeStringHandling;
@@ -164,16 +164,16 @@ public sealed unsafe partial class PerfectTails {
 
         if (values == Error) {
             return new SeStringBuilder()
-                .AddText("Line Chances: ")
-                .AddUiForeground("error ", 704)
-                .AddUiForeground("error ", 704)
-                .AddUiForeground("error ", 704)
+                .AddText("连线概率：")
+                .AddUiForeground("异常 ", 704)
+                .AddUiForeground("异常 ", 704)
+                .AddUiForeground("异常 ", 704)
                 .Build();
         }
 
         var valuePayloads = StringFormatDoubles(values);
         var seString = new SeStringBuilder()
-            .AddText("Line Chances: ");
+            .AddText("连线概率：");
 
         if (samples != null) {
             foreach (var (value, sample, valuePayload) in Enumerable.Range(0, values.Length).Select(i => (values[i], samples[i], valuePayloads[i]))) {
@@ -197,7 +197,7 @@ public sealed unsafe partial class PerfectTails {
                 seString.AddText("  ");
             }
 
-            seString.AddText("\rShuffle Average: ");
+            seString.AddText("\r平均重抽：");
             seString.AddText(string.Join(" ", StringFormatDoubles(samples)));
         }
         else {

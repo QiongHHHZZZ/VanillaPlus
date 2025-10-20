@@ -42,7 +42,7 @@ public static class AddonLifecycleExtensions {
                 break;
             
             default:
-                Services.PluginLog.Debug($"{args.AddonName} called {type.ToString().Replace("Post", string.Empty)}");
+                Services.PluginLog.Debug($"{args.AddonName} 触发事件 {type.ToString().Replace("Post", string.Empty)}");
                 break;
         }
     }

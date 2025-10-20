@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,14 +17,14 @@ using VanillaPlus.Utilities;
 namespace VanillaPlus.Features.TargetCastBarCountdown;
 
 public unsafe class TargetCastBarCountdown : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Target Cast Bar Countdown",
-        Description = "Adds the time remaining for your targets current cast to the cast bar.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "目标读条倒计时",
+        Description = "在目标、焦点以及敌方名牌的读条上显示剩余时间。",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Added support for 10 'CastBarEnemy' nodes"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "新增支持最多 10 个敌对名牌读条节点"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@TargetCastbarCountdown"),
     };
@@ -79,30 +79,30 @@ public unsafe class TargetCastBarCountdown : GameModification {
         using var toolbar = ImRaii.TabBar("");
         if (!toolbar) return;
 
-        using (var primaryTarget = ImRaii.TabItem("Target Cast Bar")) {
+        using (var primaryTarget = ImRaii.TabItem("主目标读条")) {
             if (primaryTarget) {
-                ImGui.TextColored(KnownColor.Gray.Vector(), "This is only shown when 'Display Target Info Independently' is enabled in HUD Settings");
+                ImGui.TextColored(KnownColor.Gray.Vector(), "仅在 HUD 设置勾选“独立显示目标信息”时生效");
                 primaryTargetTextNode?.DrawConfig();
             }
         }
 
-        using (var primaryTarget = ImRaii.TabItem("Target Info")) {
+        using (var primaryTarget = ImRaii.TabItem("目标信息")) {
             if (primaryTarget) {
-                ImGui.TextColored(KnownColor.Gray.Vector(), "This is only shown when 'Display Target Info Independently' is disabled in HUD Settings");
+                ImGui.TextColored(KnownColor.Gray.Vector(), "仅在 HUD 设置取消勾选“独立显示目标信息”时生效");
                 primaryTargetAltTextNode?.DrawConfig();
             }
         }
         
-        using (var primaryTarget = ImRaii.TabItem("Focus Target")) {
+        using (var primaryTarget = ImRaii.TabItem("焦点目标")) {
             if (primaryTarget) {
-                ImGui.TextColored(KnownColor.Gray.Vector(), "This line is just so that all four tabs line up nicely :)");
+                ImGui.TextColored(KnownColor.Gray.Vector(), "用于调整焦点目标读条的样式");
                 focusTargetTextNode?.DrawConfig();
             }
         }
         
-        using (var primaryTarget = ImRaii.TabItem("CastBarEnemy Target")) {
+        using (var primaryTarget = ImRaii.TabItem("敌对名牌读条")) {
             if (primaryTarget) {
-                ImGui.TextColored(KnownColor.Gray.Vector(), "This is for the cast bars under enemy names");
+                ImGui.TextColored(KnownColor.Gray.Vector(), "用于控制敌对名牌下方的读条显示");
                 var firstNode = castBarEnemyTextNode?.First();
                 if (firstNode is not null) {
                     firstNode.DrawConfig();
@@ -269,3 +269,6 @@ public unsafe class TargetCastBarCountdown : GameModification {
     private static IBattleChara? GetEntity(uint entityId)
         => Services.ObjectTable.FirstOrDefault(obj => obj.EntityId == entityId) as IBattleChara;
 }
+
+
+

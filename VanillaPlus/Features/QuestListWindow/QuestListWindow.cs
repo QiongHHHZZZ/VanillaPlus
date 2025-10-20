@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Game.ClientState.Keys;
@@ -12,13 +12,13 @@ using Map = FFXIVClientStructs.FFXIV.Client.Game.UI.Map;
 namespace VanillaPlus.Features.QuestListWindow;
 
 public unsafe class QuestListWindow : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Quest List Window",
-        Description = "Displays a list of all available quests for the currently occupied zone.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "任务列表窗口",
+        Description = "列出当前区域可接的所有任务，方便快速定位目标。",
         Type = ModificationType.NewWindow,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -35,16 +35,16 @@ public unsafe class QuestListWindow : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 400.0f),
             InternalName = "QuestList",
-            Title = "Quest List",
+            Title = "任务列表",
             UpdateListFunction = UpdateList,
-            DropDownOptions = [ "Type", "Alphabetically", "Level", "Distance", "Issuer Name", ],
+            DropDownOptions = [ "按类型", "按名称", "按等级", "按距离", "按发布者" ],
             OnFilterUpdated = OnFilterUpdated,
             OnSearchUpdated = OnSearchUpdated,
             OpenCommand = "/questlist",
         };
         
         addonQuestList.Initialize([VirtualKey.MENU, VirtualKey.CONTROL, VirtualKey.J]);
-        OnFilterUpdated("Type", false);
+        OnFilterUpdated("按类型", false);
 
         OpenConfigAction = addonQuestList.OpenAddonConfig;
     }
@@ -97,11 +97,11 @@ public unsafe class QuestListWindow : GameModification {
         var rightQuest = right.QuestInfo;
 
         var result = filterString switch {
-            "Alphabetically" => string.CompareOrdinal(leftQuest.Name.ToString(), rightQuest.Name.ToString()),
-            "Type" => rightQuest.IconId.CompareTo(leftQuest.IconId),
-            "Level" => rightQuest.Level.CompareTo(leftQuest.Level),
-            "Distance" => leftQuest.Distance.CompareTo(rightQuest.Distance),
-            "Issuer Name" => string.CompareOrdinal(leftQuest.IssuerName.ToString(), rightQuest.IssuerName.ToString()),
+            "按名称" => string.CompareOrdinal(leftQuest.Name.ToString(), rightQuest.Name.ToString()),
+            "按类型" => rightQuest.IconId.CompareTo(leftQuest.IconId),
+            "按等级" => rightQuest.Level.CompareTo(leftQuest.Level),
+            "按距离" => leftQuest.Distance.CompareTo(rightQuest.Distance),
+            "按发布者" => string.CompareOrdinal(leftQuest.IssuerName.ToString(), rightQuest.IssuerName.ToString()),
             _ => string.CompareOrdinal(leftQuest.Name.ToString(), rightQuest.Name.ToString()),
         };
 
@@ -133,3 +133,5 @@ public unsafe class QuestListWindow : GameModification {
         return quests;
     }
 }
+
+

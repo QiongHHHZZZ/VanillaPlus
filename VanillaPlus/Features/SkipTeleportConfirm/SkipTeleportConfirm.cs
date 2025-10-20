@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -8,13 +8,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.SkipTeleportConfirm;
 
 public unsafe class SkipTeleportConfirm : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Skip Teleport Confirm",
-        Description = "Skips the 'Teleport to [Location] for [amount] gil?' popup when using the map to teleport.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "跳过传送确认",
+        Description = "使用地图传送时自动跳过“是否花费××金币传送？”的确认弹窗。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -45,9 +45,11 @@ public unsafe class SkipTeleportConfirm : GameModification {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception in OnAgentMapReceiveEvent");
+            Services.PluginLog.Error(e, "处理 OnAgentMapReceiveEvent 时出现异常");
         }
 
         return result;
     }
 }
+
+

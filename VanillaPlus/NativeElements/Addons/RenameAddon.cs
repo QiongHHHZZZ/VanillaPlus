@@ -31,7 +31,7 @@ public class RenameAddon : NativeAddon {
             Position = new Vector2(ContentStartPosition.X, targetYPos),
             Size = buttonSize,
             IsVisible = true,
-            String = "Confirm",
+            String = "确定",
             OnClick = () => {
                 ResultCallback?.Invoke(inputNode.String);
                 Close();
@@ -43,7 +43,7 @@ public class RenameAddon : NativeAddon {
             Position = new Vector2(ContentSize.X - buttonSize.X + ContentPadding.X, targetYPos),
             Size = buttonSize,
             IsVisible = true,
-            String = "Cancel",
+            String = "取消",
             OnClick = Close,
         };
         AttachNode(cancelButton);

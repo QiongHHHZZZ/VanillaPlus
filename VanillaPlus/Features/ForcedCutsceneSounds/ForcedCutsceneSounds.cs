@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Hooking;
@@ -11,14 +11,14 @@ using VanillaPlus.NativeElements.Config;
 namespace VanillaPlus.Features.ForcedCutsceneSounds;
 
 public unsafe class ForcedCutsceneSounds : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Forced Cutscene Sounds",
-        Description = "Automatically unmutes selected sound channels in cutscenes.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "过场音效强制开启",
+        Description = "在过场动画中自动开启指定的声音频道。",
         Authors = ["Haselnussbomber"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Added option to disable in MSQ Roulette"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "新增主线随机副本中禁用的选项"),
         ],
         CompatibilityModule = new HaselTweaksCompatibilityModule("ForcedCutsceneMusic"),
     };
@@ -51,24 +51,24 @@ public unsafe class ForcedCutsceneSounds : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(330.0f, 385.0f),
             InternalName = "ForcedCutsceneConfig",
-            Title = "Forced Cutscene Sounds Config",
+            Title = "过场音效设置",
             Config = config,
         };
 
-        configWindow.AddCategory("General")
-            .AddCheckbox("Restore Mute State After Cutscene", nameof(config.Restore));
+        configWindow.AddCategory("通用")
+            .AddCheckbox("过场结束后恢复原静音状态", nameof(config.Restore));
 
-        configWindow.AddCategory("Toggles")
-            .AddCheckbox("Unmute Master Volume", nameof(config.HandleMaster))
-            .AddCheckbox("Unmute BGM", nameof(config.HandleBgm))
-            .AddCheckbox("Unmute Sound Effects", nameof(config.HandleSe))
-            .AddCheckbox("Unmute Voice", nameof(config.HandleVoice))
-            .AddCheckbox("Unmute Ambient Sounds", nameof(config.HandleEnv))
-            .AddCheckbox("Unmute System Sounds", nameof(config.HandleSystem))
-            .AddCheckbox("Unmute Performance", nameof(config.HandlePerform));
+        configWindow.AddCategory("音量渠道")
+            .AddCheckbox("取消静音：总音量", nameof(config.HandleMaster))
+            .AddCheckbox("取消静音：背景音乐", nameof(config.HandleBgm))
+            .AddCheckbox("取消静音：音效", nameof(config.HandleSe))
+            .AddCheckbox("取消静音：语音", nameof(config.HandleVoice))
+            .AddCheckbox("取消静音：环境音", nameof(config.HandleEnv))
+            .AddCheckbox("取消静音：系统音", nameof(config.HandleSystem))
+            .AddCheckbox("取消静音：演奏音", nameof(config.HandlePerform));
 
-        configWindow.AddCategory("Special")
-            .AddCheckbox("Disable in MSQ Roulette", nameof(config.DisableInMsqRoulette));
+        configWindow.AddCategory("特殊选项")
+            .AddCheckbox("主线随机任务中禁用该功能", nameof(config.DisableInMsqRoulette));
 
         OpenConfigAction = configWindow.Toggle;
         
@@ -118,7 +118,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
             
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Error in CreateCutSceneControllerDetour");
+            Services.PluginLog.Error(e, "创建过场控制器时出错");
         }
         
         return result;
@@ -141,7 +141,7 @@ public unsafe class ForcedCutsceneSounds : GameModification {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Error in CutSceneControllerDtorDetour");
+            Services.PluginLog.Error(e, "过场控制器析构处理时出错");
         }
         
         return cutSceneControllerDtorHook!.Original(self, freeFlags);
@@ -162,3 +162,5 @@ public unsafe class ForcedCutsceneSounds : GameModification {
         };
     }
 }
+
+

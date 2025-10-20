@@ -13,7 +13,7 @@ public static unsafe class AddonArgsExtensions {
         var atkValues = args switch {
             AddonRefreshArgs refreshArgs => refreshArgs.AtkValueSpan,
             AddonSetupArgs setupArgs => setupArgs.AtkValueSpan,
-            _ => throw new Exception("Invalid Args Type"),
+            _ => throw new Exception("参数类型无效。"),
         };
 
         foreach (var index in Enumerable.Range(0, atkValues.Length)) {

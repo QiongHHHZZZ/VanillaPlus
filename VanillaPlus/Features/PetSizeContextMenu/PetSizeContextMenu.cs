@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Dalamud.Game.Config;
 using Dalamud.Game.Gui.ContextMenu;
 using VanillaPlus.Classes;
@@ -6,13 +6,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.PetSizeContextMenu;
 
 public class PetSizeContextMenu : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Pet Size Context Menu",
-        Description = "When right clicking on a pet, or a player with a pet, show a context menu entry for changing the pet size",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "宠物体型菜单",
+        Description = "在右键点击召唤兽或拥有召唤兽的玩家时，增加调整宠物体型的选项",
         Authors = [ "MidoriKami" ],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
     };
 
@@ -39,25 +39,25 @@ public class PetSizeContextMenu : GameModification {
         args.AddMenuItem(new MenuItem {
             IsSubmenu = true,
             UseDefaultPrefix = true,
-            Name = "Pet Size",
+            Name = "召唤兽体型",
             OnClicked = clickedArgs => {
                 clickedArgs.OpenSubmenu([
                     new MenuItem {
                         IsEnabled = currentPetSize is not 0,
                         UseDefaultPrefix = true, 
-                        Name = "Small", 
+                        Name = "小型", 
                         OnClicked = _ => SetPetSize(0),
                     },
                     new MenuItem {
                         IsEnabled = currentPetSize is not 1,
                         UseDefaultPrefix = true, 
-                        Name = "Medium", 
+                        Name = "中型", 
                         OnClicked = _ => SetPetSize(1),
                     },
                     new MenuItem {
                         IsEnabled = currentPetSize is not 2,
                         UseDefaultPrefix = true, 
-                        Name = "Large", 
+                        Name = "大型", 
                         OnClicked = _ => SetPetSize(2),
                     },
                 ]);
@@ -78,3 +78,5 @@ public class PetSizeContextMenu : GameModification {
            .MaxBy(group => group.Count())?
            .Key;
 }
+
+

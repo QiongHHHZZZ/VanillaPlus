@@ -16,5 +16,5 @@ public class PluginCompatibilityModule(params string[] pluginNames) : Compatibil
     }
 
     public override string GetErrorMessage()
-        => $"The original version of this feature is from a plugin that is currently active: {erroringPluginName}.";
+        => $"已有插件提供了该功能的原版实现：{erroringPluginName}（目前处于启用状态）。";
 }

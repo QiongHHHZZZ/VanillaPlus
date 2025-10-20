@@ -10,17 +10,17 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.WindowBackground;
 
 public unsafe class WindowBackground : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Window Backgrounds",
-        Description = "Allows you to add a background to any native window.\n\n" +
-                      "Examples: Cast Bar, Target Health Bar, Inventory Widget, Todo List.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "原生窗口背景",
+        Description = "为任意原生窗口添加自定义背景。\n\n" +
+                      "示例：读条、目标血条、背包小组件、待办列表等。",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Added search bar to search 'All Windows' in config"),
-            new ChangeLogInfo(3, "Fixed incorrectly cleaning up removed backgrounds"),
-            new ChangeLogInfo(4, "Rewrote module to be more stable"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "设置界面新增搜索栏，可在“所有窗口”中搜索"),
+            new ChangeLogInfo(3, "修复移除背景后未正确清理的问题"),
+            new ChangeLogInfo(4, "重写模块以提高稳定性"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@DutyListBackground"),
     };
@@ -252,3 +252,5 @@ public unsafe class WindowBackground : GameModification {
         }
     }
 }
+
+

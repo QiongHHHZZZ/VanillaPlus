@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
@@ -7,13 +7,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.GearsetRedirect;
 
 public unsafe class GearsetRedirect : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Gearset Redirect",
-        Description = "When equipping gearsets, set alternative sets to load depending on what zone you are in.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "套装重定向",
+        Description = "根据所在区域选择要装备的替代套装。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -56,9 +56,11 @@ public unsafe class GearsetRedirect : GameModification {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception while handling Gearset Redirect.");
+            Services.PluginLog.Error(e, "处理套装重定向时出现异常");
         }
 
         return gearsetChangedHook!.Original(thisPtr, gearsetId, glamourPlateId);
     }
 }
+
+

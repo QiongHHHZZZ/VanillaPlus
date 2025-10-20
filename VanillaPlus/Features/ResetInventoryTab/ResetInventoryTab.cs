@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -9,13 +9,13 @@ using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 namespace VanillaPlus.Features.ResetInventoryTab;
 
 public unsafe class ResetInventoryTab : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Reset Inventory Tab",
-        Description = "Automatically resets the inventory to the first tab when opened.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "重置背包分页",
+        Description = "打开背包时自动切换到第一页。",
         Type = ModificationType.GameBehavior,
         Authors = ["Haselnussbomber"],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new HaselTweaksCompatibilityModule("FixInventoryOpenTab"),
     };
@@ -63,3 +63,5 @@ public unsafe class ResetInventoryTab : GameModification {
         }
     }
 }
+
+

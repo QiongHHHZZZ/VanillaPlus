@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -11,13 +11,13 @@ using OperationCanceledException = System.OperationCanceledException;
 namespace VanillaPlus.Features.MiniCactpotHelper;
 
 public unsafe class MiniCactpotHelper : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Mini Cactpot Helper",
-        Description = "Indicates which Mini Cactpot spots you should reveal next.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "仙人微彩助手",
+        Description = "为仙人微彩推荐下一步翻开的格子。",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new PluginCompatibilityModule("MiniCactpotSolver"),
     };
@@ -89,7 +89,7 @@ public unsafe class MiniCactpotHelper : GameModification {
 			Position = new Vector2(8.0f, 8.0f),
 			Size = new Vector2(32.0f, 32.0f),
 			Icon = ButtonIcon.GearCog,
-			Tooltip = "Configure EzMiniCactpot Plugin",
+			Tooltip = "打开仙人微彩助手设置",
 			OnClick = () => configWindow.Toggle(),
 			IsVisible = true,
 		};
@@ -132,7 +132,7 @@ public unsafe class MiniCactpotHelper : GameModification {
 			}
 			catch (OperationCanceledException) { }
 			catch (Exception ex) {
-				Services.PluginLog.Error(ex, "Updater has crashed");
+				Services.PluginLog.Error(ex, "更新逻辑发生异常");
 			}
 		}
 		
@@ -144,3 +144,5 @@ public unsafe class MiniCactpotHelper : GameModification {
 		System.NativeController.DisposeNode(ref configButton);
 	}
 }
+
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -13,7 +13,7 @@ namespace VanillaPlus.NativeElements.Addons;
 
 public unsafe class NodeListAddon : NativeAddon {
     protected ScrollingAreaNode<VerticalListNode>? ScrollingAreaNode;
-    private VerticalListNode ListNode => ScrollingAreaNode?.ContentNode ?? throw new Exception("Invalid List Node");
+    private VerticalListNode ListNode => ScrollingAreaNode?.ContentNode ?? throw new Exception("列表节点无效。");
 
     private AddonConfig? config;
     private KeybindListener? keybindListener;
@@ -58,7 +58,7 @@ public unsafe class NodeListAddon : NativeAddon {
             if (field is null && value is not null) {
                 Services.CommandManager.AddHandler(value, new CommandInfo(OnOpenCommand) {
                     DisplayOrder = 3,
-                    HelpMessage = $"Opens the {Title} Window",
+                    HelpMessage = $"打开 {Title} 窗口",
                 });
                 
                 field = value;

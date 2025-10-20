@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using VanillaPlus.Classes;
@@ -6,13 +6,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.BetterQuestMapLink;
 
 public unsafe class BetterQuestMapLink : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Better Quest Map Link",
-        Description = "When clicking on quest links, open the actual map the quest is for instead of the generic world map.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "改进任务地图链接",
+        Description = "点击任务链接时，直接打开对应区域的实际地图，而非默认的世界地图。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
         CompatibilityModule = new PluginCompatibilityModule("Mappy"),
     };
@@ -40,7 +40,8 @@ public unsafe class BetterQuestMapLink : GameModification {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception while opening map");
+            Services.PluginLog.Error(e, "打开地图时出现异常");
         }
     }
 }
+

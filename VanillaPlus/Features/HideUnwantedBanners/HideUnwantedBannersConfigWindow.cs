@@ -17,7 +17,7 @@ public class HideUnwantedBannersConfigWindow : Window {
 
     private readonly HideUnwantedBannersConfig config;
 
-    public HideUnwantedBannersConfigWindow(HideUnwantedBannersConfig config) : base("Hide Unwanted Banners Config") {
+    public HideUnwantedBannersConfigWindow(HideUnwantedBannersConfig config) : base("横幅隐藏设置") {
         this.config = config;
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(600.0f, 700.0f),
@@ -44,12 +44,12 @@ public class HideUnwantedBannersConfigWindow : Window {
 
         ImGui.Separator();
         
-        if (ImGui.Button("Clear All", ImGuiHelpers.ScaledVector2(100.0f, 30.0f))) {
+        if (ImGui.Button("全部清除", ImGuiHelpers.ScaledVector2(100.0f, 30.0f))) {
             config.HiddenBanners.Clear();
         }
         
         ImGui.SameLine(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
-        if (ImGui.Button("Select All", ImGuiHelpers.ScaledVector2(100.0f, 30.0f))) {
+        if (ImGui.Button("全部选择", ImGuiHelpers.ScaledVector2(100.0f, 30.0f))) {
             foreach (var banner in banners) {
                 config.HiddenBanners.Add(banner);
             }

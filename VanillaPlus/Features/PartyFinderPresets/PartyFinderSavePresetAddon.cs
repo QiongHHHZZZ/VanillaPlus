@@ -37,8 +37,8 @@ public class PartyFinderSavePresetAddon : NativeAddon {
             IsVisible = true,
         };
         
-        tabBarNode.AddTab("Add New", OnShowCreateNew);
-        tabBarNode.AddTab("Overwrite", OnShowOverwrite);
+        tabBarNode.AddTab("新建预设", OnShowCreateNew);
+        tabBarNode.AddTab("覆盖预设", OnShowOverwrite);
         
         AttachNode(tabBarNode);
 
@@ -49,7 +49,7 @@ public class PartyFinderSavePresetAddon : NativeAddon {
             Position = extrasPosition,
             Size = extrasSize,
             IsVisible = true,
-            PlaceholderString = "New preset name",
+            PlaceholderString = "请输入预设名称",
             OnInputReceived = OnTextInput,
         };
         AttachNode(textInputNode);
@@ -73,7 +73,7 @@ public class PartyFinderSavePresetAddon : NativeAddon {
             Position = new Vector2(50.0f, 0.0f),
             Size = new Vector2(200.0f, 16.0f),
             IsVisible = true,
-            String = "Invalid characters in name",
+            String = "名称中包含非法字符",
             AlignmentType = AlignmentType.Left,
         };
         System.NativeController.AttachNode(warningTextNode, warningContainerNode);
@@ -105,7 +105,7 @@ public class PartyFinderSavePresetAddon : NativeAddon {
             Position = new Vector2(ContentPadding.X, Size.Y - buttonSize.Y - 8.0f * 2.0f),
             Size = buttonSize,
             IsVisible = true,
-            String = "Confirm",
+            String = "确定",
             OnClick = OnConfirm,
         };
         AttachNode(confirmButtonNode);
@@ -114,7 +114,7 @@ public class PartyFinderSavePresetAddon : NativeAddon {
             Position = new Vector2(Size.X - ContentPadding.X - buttonSize.X, Size.Y - buttonSize.Y -8.0f * 2.0f),
             Size = buttonSize,
             IsVisible = true,
-            String = "Cancel",
+            String = "取消",
             OnClick = OnCancel,
         };
         AttachNode(cancelButtonNode);
@@ -134,7 +134,7 @@ public class PartyFinderSavePresetAddon : NativeAddon {
         var fileName = selectedTab switch {
             0 => textInputNode.String,
             1 => textDropDownNode.SelectedOption,
-            _ => throw new Exception("Invalid Tab Selected"),
+            _ => throw new Exception("无效的标签页"),
         };
 
         if (fileName is null) return;

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -16,13 +16,13 @@ using VanillaPlus.NativeElements.Config;
 namespace VanillaPlus.Features.EnhancedLootWindow;
 
 public unsafe class EnhancedLootWindow : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Enhanced Loot Window",
-        Description = "Adds indicators to loot window items to indicate if you have unlocked that item before, or if the item is obtainable.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "强化拾取窗口",
+        Description = "在拾取窗口中为物品添加指示符，以便查看是否已解锁或可获得。",
         Type = ModificationType.UserInterface,
         Authors = ["MidoriKami"],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@LootWindowDuplicateUniqueItemIndicator"),
     };
@@ -42,13 +42,13 @@ public unsafe class EnhancedLootWindow : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 150.0f),
             InternalName = "EnhancedLootWindowConfig",
-            Title = "Enhanced Loot Window Config",
+            Title = "强化拾取窗口设置",
             Config = config,
         };
 
-        configWindow.AddCategory("Settings")
-            .AddCheckbox("Mark Unobtainable Items", nameof(config.MarkUnobtainableItems))
-            .AddCheckbox("Mark Already Unlocked Items", nameof(config.MarkAlreadyObtainedItems));
+        configWindow.AddCategory("显示设置")
+            .AddCheckbox("标记无法获得的物品", nameof(config.MarkUnobtainableItems))
+            .AddCheckbox("标记已解锁的物品", nameof(config.MarkAlreadyObtainedItems));
 
         OpenConfigAction = configWindow.Toggle;
 
@@ -179,3 +179,5 @@ public unsafe class EnhancedLootWindow : GameModification {
         return exdItem is null || UIState.Instance()->IsItemActionUnlocked(exdItem) is 1;
     }
 }
+
+

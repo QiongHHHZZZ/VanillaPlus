@@ -10,7 +10,7 @@ using VanillaPlus.Utilities;
 namespace VanillaPlus.Features.HUDPresets;
 
 public static unsafe class HUDPresetManager {
-    public const string DefaultOption = "No Option Selected";
+    public const string DefaultOption = "未选择预设";
 
     public static List<string> GetPresetNames() {
         var directory = GetPresetDirectory();

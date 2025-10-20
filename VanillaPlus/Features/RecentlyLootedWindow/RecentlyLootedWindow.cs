@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Inventory.InventoryEventArgTypes;
@@ -12,16 +12,16 @@ using VanillaPlus.Utilities;
 namespace VanillaPlus.Features.RecentlyLootedWindow;
 
 public unsafe class RecentlyLootedWindow : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Recently Looted Items Window",
-        Description = "Adds a window that shows a scrollable list of all items that you have looted this session.\n\n" +
-                      "Can only show items looted after this feature is enabled.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "最近拾取物品窗口",
+        Description = "显示本次游戏过程中获得的物品记录，可滚动查看。\n\n" +
+                      "仅会记录启用功能后的新增物品。",
         Type = ModificationType.NewWindow,
         Authors = ["MidoriKami"],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Limit tracking to standard inventories, and armory"),
-            new ChangeLogInfo(3, "Displays item quantity as text over icon instead of appended to the end of name"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "仅追踪常规背包与军械库"),
+            new ChangeLogInfo(3, "物品数量改为显示在图标上方"),
         ],
     };
 
@@ -40,7 +40,7 @@ public unsafe class RecentlyLootedWindow : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(250.0f, 350.0f),
             InternalName = "RecentlyLooted",
-            Title = "Recently Looted Items",
+            Title = "最近拾取物品",
             OpenCommand = "/recentloot",
             UpdateListFunction = UpdateList,
         };
@@ -125,3 +125,5 @@ public unsafe class RecentlyLootedWindow : GameModification {
         return left.Item.Index > right.Item.Index ? -1 : 1;
     }
 }
+
+

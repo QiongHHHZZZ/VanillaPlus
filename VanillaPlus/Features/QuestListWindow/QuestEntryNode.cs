@@ -99,7 +99,7 @@ public unsafe class QuestEntryNode : SimpleComponentNode {
             field = value;
 
             if (value.Level > 0) {
-                questLevelTextNode.String = $"Lv. {value.Level}";
+            questLevelTextNode.String = $"等级 {value.Level}";
             }
             else {
                 questNameTextNode.Width = Width - questIconNode.Width - 4.0f;

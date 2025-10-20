@@ -5,14 +5,14 @@ using Dalamud.Interface.Windowing;
 
 namespace VanillaPlus.Features.BetterCursor;
 
-public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfigChanged) : Window("Better Cursor Config", ImGuiWindowFlags.AlwaysAutoResize) {
+public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfigChanged) : Window("光标强化设置", ImGuiWindowFlags.AlwaysAutoResize) {
     public override void Draw() {
-        if (ImGui.ColorEdit4("Color", ref config.Color)) {
+        if (ImGui.ColorEdit4("颜色", ref config.Color)) {
             onConfigChanged();
             config.Save();
         }
 
-        if (ImGui.DragFloat("Size", ref config.Size)) {
+        if (ImGui.DragFloat("尺寸", ref config.Size)) {
             config.Size = Math.Max(0, config.Size);
             
             onConfigChanged();
@@ -23,12 +23,12 @@ public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfig
         ImGui.Separator();
         ImGui.Spacing();
 
-        if (ImGui.Checkbox("Enable Animation", ref config.Animations)) {
+        if (ImGui.Checkbox("启用动画", ref config.Animations)) {
             onConfigChanged();
             config.Save();
         }
 
-        if (ImGui.Checkbox("Hide on Left-Hold or Right-Hold", ref config.HideOnCameraMove)) {
+        if (ImGui.Checkbox("按住左右键时隐藏", ref config.HideOnCameraMove)) {
             config.Save();
         }
         
@@ -36,11 +36,11 @@ public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfig
         ImGui.Separator();
         ImGui.Spacing();
 
-        if (ImGui.Checkbox("Only Show in Combat", ref config.OnlyShowInCombat)) {
+        if (ImGui.Checkbox("仅在战斗中显示", ref config.OnlyShowInCombat)) {
             config.Save();
         }
 
-        if (ImGui.Checkbox("Only Show in Duties", ref config.OnlyShowInDuties)) {
+        if (ImGui.Checkbox("仅在副本中显示", ref config.OnlyShowInDuties)) {
             config.Save();
         }
         
@@ -48,7 +48,7 @@ public class BetterCursorConfigWindow(BetterCursorConfig config, Action onConfig
         ImGui.Separator();
         ImGui.Spacing();
 
-        if (ImGui.InputUInt("IconId", ref config.IconId, 1)) {
+        if (ImGui.InputUInt("图标 ID", ref config.IconId, 1)) {
             onConfigChanged();
             config.Save();
         }

@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -10,15 +10,15 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.BetterCursor;
 
 public unsafe class BetterCursor : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Better Cursor",
-        Description = "Draws a ring around the cursor to make it easier to see",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "光标强化",
+        Description = "在光标周围绘制一个环形效果，让你更容易找到鼠标位置。",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Reduced Animation Speed to 1Hz"),
-            new ChangeLogInfo(3, "Added options to only show in duties and/or combat"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "将动画速度降低至 1Hz"),
+            new ChangeLogInfo(3, "新增仅在副本或战斗中显示的选项"),
         ],
     };
 
@@ -135,3 +135,4 @@ public unsafe class BetterCursor : GameModification {
         System.NativeController.DisposeNode(ref imageNode);
     }
 }
+

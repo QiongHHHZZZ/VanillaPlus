@@ -13,7 +13,7 @@ public static class WondrousTails {
         switch (orderData.Type) {
             // Data is InstanceContent directly
             case 0:
-                return [orderData.Data.GetValueOrDefault<InstanceContent>() ?? throw new Exception("Tried to parse non-instance content data.")];
+                return [orderData.Data.GetValueOrDefault<InstanceContent>() ?? throw new Exception("尝试解析非副本类内容数据。")];
 
             // Data is specific duty level
             case 1:

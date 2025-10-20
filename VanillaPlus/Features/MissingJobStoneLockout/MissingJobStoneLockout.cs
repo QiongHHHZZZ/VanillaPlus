@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -14,15 +14,15 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.MissingJobStoneLockout;
 
 public unsafe class MissingJobStoneLockout : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Missing Job Stone Lockout",
-        Description = "Prevents queuing for a duty while you are missing a jobstone.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "缺失魂晶排本限制",
+        Description = "在缺少职业魂晶时阻止进入排本，提醒先装备完整套装。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami", "KazWolfe" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
-        Tags = [ "Duty Finder" ],
+        Tags = [ "职责搜索" ],
     };
 
     private AddonController<AddonContentsFinder>? contentsFinderController;
@@ -68,8 +68,8 @@ public unsafe class MissingJobStoneLockout : GameModification {
             Origin = newNodeSize / 2.0f,
             AlignmentType = AlignmentType.Center,
             FontSize = 14,
-            String = "Missing Job Stone!",
-            TooltipString =$"[VanillaPlus]: Click to disable lock",
+            String = "缺少魂晶！",
+            TooltipString = "[VanillaPlus]: 点击以暂时禁用此限制",
             EventFlagsSet = true,
         };
         System.NativeController.AttachNode(warningTextNode, animationContainer);
@@ -97,7 +97,7 @@ public unsafe class MissingJobStoneLockout : GameModification {
                 animationContainer.IsVisible = false;
             }
 
-            warningTextNode.TooltipString = $"[VanillaPlus]: Click to disable lock\n{6 - clickCount} Clicks remaining";
+            warningTextNode.TooltipString = $"[VanillaPlus]: 点击以暂时禁用此限制\n剩余 {6 - clickCount} 次点击";
             warningTextNode.ShowTooltip();
         });
     }
@@ -135,3 +135,5 @@ public unsafe class MissingJobStoneLockout : GameModification {
         return QuestManager.IsQuestComplete(job.UnlockQuest.RowId);
     }
 }
+
+

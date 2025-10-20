@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
 using KamiToolKit.Classes;
@@ -9,13 +9,13 @@ using VanillaPlus.NativeElements.Addons;
 namespace VanillaPlus.Features.HUDPresets;
 
 public unsafe class HUDPresets : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "HUD Presets",
-        Description = "Allows you to save and load an unlimited number of HUD Layouts.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "HUD 预设管理",
+        Description = "允许保存并加载任意数量的 HUD 布局方案。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -37,7 +37,7 @@ public unsafe class HUDPresets : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(250.0f, 150.0f),
             InternalName = "PresetNameWindow",
-            Title = "HUD Preset Name",
+            Title = "HUD 预设名称",
             DepthLayer = 6,
         };
 
@@ -53,7 +53,7 @@ public unsafe class HUDPresets : GameModification {
                 FontType = FontType.Axis,
                 TextFlags = TextFlags.Emboss | TextFlags.AutoAdjustNodeSize,
                 TextColor = ColorHelper.GetColor(8),
-                String = "[VanillaPlus] HUD Presets",
+                String = "[VanillaPlus] HUD 预设",
             };
             System.NativeController.AttachNode(labelNode, addon->RootNode);
             
@@ -63,7 +63,7 @@ public unsafe class HUDPresets : GameModification {
                 MaxListOptions = 10,
                 Options = HUDPresetManager.GetPresetNames(),
                 IsVisible = true,
-                TooltipString = "Select a HUD Layout Preset",
+                TooltipString = "请选择一个 HUD 布局预设",
                 OnOptionSelected = UpdateButtonLocks,
             };
             System.NativeController.AttachNode(presetDropdownNode, addon->RootNode);
@@ -72,8 +72,8 @@ public unsafe class HUDPresets : GameModification {
                 Position = new Vector2(32.0f, 269.0f),
                 Size = new Vector2(100.0f, 28.0f),
                 IsVisible = true,
-                String = "Load",
-                TooltipString = "Load selected preset",
+                String = "载入",
+                TooltipString = "载入所选预设",
                 OnClick = LoadPreset,
                 IsEnabled = false,
             };
@@ -83,8 +83,8 @@ public unsafe class HUDPresets : GameModification {
                 Position = new Vector2(144.0f, 269.0f),
                 Size = new Vector2(100.0f, 28.0f),
                 IsVisible = true,
-                String = "Overwrite",
-                TooltipString = "Overwrite selected preset",
+                String = "覆盖",
+                TooltipString = "将当前布局覆盖到所选预设",
                 IsEnabled = false,
                 OnClick = OverwriteSelectedPreset,
             };
@@ -94,19 +94,19 @@ public unsafe class HUDPresets : GameModification {
                 Position = new Vector2(256.0f, 269.0f),
                 Size = new Vector2(100.0f, 28.0f),
                 IsVisible = true,
-                String = "Delete",
+                String = "删除",
                 // TooltipString = "Delete selected preset",
                 IsEnabled = false,
                 // OnClick = DeleteSelectedPreset,
             };
-            deleteButtonNode.CollisionNode.TooltipString = "Work in Progress\nManually delete preset files for now";
+            deleteButtonNode.CollisionNode.TooltipString = "开发中功能\n暂时需要手动删除预设文件";
             System.NativeController.AttachNode(deleteButtonNode, addon->RootNode);
             
             saveButtonNode = new TextButtonNode {
                 Position = new Vector2(368.0f, 269.0f),
                 Size = new Vector2(100.0f, 28.0f),
                 IsVisible = true,
-                String = "Save",
+                String = "保存",
                 OnClick = SaveCurrentLayout,
             };
             System.NativeController.AttachNode(saveButtonNode, addon->RootNode);
@@ -131,10 +131,10 @@ public unsafe class HUDPresets : GameModification {
                         saveButtonNode.IsEnabled = !mainSaveButton->IsEnabled;
 
                         if (mainSaveButton->IsEnabled) {
-                            saveButtonNode.CollisionNode.TooltipString = "Click save above before saving a new preset";
+                            saveButtonNode.CollisionNode.TooltipString = "请先使用原生保存功能，然后再保存新预设";
                         }
                         else {
-                            saveButtonNode.CollisionNode.TooltipString = "Save Current UI as a new preset";
+                            saveButtonNode.CollisionNode.TooltipString = "将当前 HUD 布局保存为新的预设";
                         }
                     }
                 }
@@ -168,7 +168,7 @@ public unsafe class HUDPresets : GameModification {
     private void SaveCurrentLayout() {
         if (renameAddon is null) return;
 
-        renameAddon.PlaceholderString = "New Preset Name";
+        renameAddon.PlaceholderString = "请输入预设名称";
         renameAddon.DefaultString = string.Empty;
         renameAddon.ResultCallback = newName => {
             HUDPresetManager.SavePreset(newName);
@@ -217,3 +217,5 @@ public unsafe class HUDPresets : GameModification {
         // deleteButtonNode.IsEnabled = selection != HUDPresetManager.DefaultOption;
     }
 }
+
+

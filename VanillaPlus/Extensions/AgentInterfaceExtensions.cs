@@ -63,7 +63,7 @@ public static unsafe class AgentInterfaceExtensions {
     private static AtkValue* AgentReceiveEvent(AgentInterface* thisPtr, AtkValue* returnValue, AtkValue* values, uint valueCount, ulong eventKind) {
         var agentInfo = HookedAgents[(nint)thisPtr];
         if (agentInfo.ReceiveEventHook is null) {
-            Services.PluginLog.Fatal("Fatal Exception, hook called for an agent that is not tracked.");
+            Services.PluginLog.Fatal("严重异常：尝试调用未追踪的代理。");
             return null;
         }
         
@@ -75,7 +75,7 @@ public static unsafe class AgentInterfaceExtensions {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception in AgentReceiveEvent Logging Method");
+            Services.PluginLog.Error(e, "AgentReceiveEvent 日志方法中发生异常");
         }
 
         return agentInfo.ReceiveEventHook.Original(thisPtr, returnValue, values, valueCount, eventKind);

@@ -45,8 +45,8 @@ public class IconWithCountNode : ResNode {
         set {
             if (ShowCountWhenOne || value > 1) {
                 countTextNode.String = value switch {
-                    >= 1_000_000 => $"{value / 1_000_000}m",
-                    >= 10_000 => $"{value / 1_000}k",
+                    >= 100_000_000 => $"{value / 100_000_000}亿",
+                    >= 10_000 => $"{value / 10_000}万",
                     _ => $"{value}",
                 };
             }

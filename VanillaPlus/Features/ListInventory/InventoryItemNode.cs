@@ -93,14 +93,14 @@ public unsafe class InventoryItemNode : SimpleComponentNode {
             iconNode.Count = value.ItemCount;
 
             if (value.Level > 1) {
-                levelTextNode.String = $"Lv. {value.Level, 3}";
+                levelTextNode.String = $"等级 {value.Level, 3}";
             }
             else {
                 levelTextNode.String = string.Empty;
             }
             
             if (value.ItemLevel > 1) {
-                itemLevelTextNode.String = $"iLvl. {value.ItemLevel, 3}";
+                itemLevelTextNode.String = $"装等 {value.ItemLevel, 3}";
             }
             else {
                 itemLevelTextNode.String = string.Empty;

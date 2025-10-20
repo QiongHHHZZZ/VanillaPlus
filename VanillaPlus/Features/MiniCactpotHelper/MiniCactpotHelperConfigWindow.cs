@@ -6,7 +6,7 @@ using Dalamud.Interface.Windowing;
 
 namespace VanillaPlus.Features.MiniCactpotHelper;
 
-public class MiniCactpotHelperConfigWindow(MiniCactpotHelperConfig config, Action onConfigChanged) : Window("Mini Cactpot Helper Config", ImGuiWindowFlags.AlwaysAutoResize) {
+public class MiniCactpotHelperConfigWindow(MiniCactpotHelperConfig config, Action onConfigChanged) : Window("仙人微彩助手设置", ImGuiWindowFlags.AlwaysAutoResize) {
     public override void Draw() {
         DrawAnimationConfig();
         DrawIconConfig();
@@ -14,16 +14,16 @@ public class MiniCactpotHelperConfigWindow(MiniCactpotHelperConfig config, Actio
     }
     
     private void DrawAnimationConfig() {
-        DrawHeader("Animations");
+        DrawHeader("动画");
         
-        if (ImGui.Checkbox("Enable Animations", ref config.EnableAnimations)) {
+        if (ImGui.Checkbox("启用动画", ref config.EnableAnimations)) {
             onConfigChanged();
             config.Save();
         }
     }
 	
     private void DrawIconConfig() {
-        DrawHeader("Icon");
+        DrawHeader("图标");
         
         if (GameIconButton(61332)) {
             config.IconId = 61332;
@@ -50,7 +50,7 @@ public class MiniCactpotHelperConfigWindow(MiniCactpotHelperConfig config, Actio
         ImGui.Spacing();
 		
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("IconId:");
+        ImGui.Text("图标 ID：");
 		
         ImGui.SameLine();
 		
@@ -63,14 +63,14 @@ public class MiniCactpotHelperConfigWindow(MiniCactpotHelperConfig config, Actio
     }
 	
     private void DrawColorConfig() {
-        DrawHeader("Colors");
+        DrawHeader("颜色");
 
-        if (ImGui.ColorEdit4("Button Colors", ref config.ButtonColor, ImGuiColorEditFlags.AlphaPreviewHalf)) {
+        if (ImGui.ColorEdit4("按钮颜色", ref config.ButtonColor, ImGuiColorEditFlags.AlphaPreviewHalf)) {
             onConfigChanged();
             config.Save();
         }
 
-        if (ImGui.ColorEdit4("Lane Colors", ref config.LaneColor, ImGuiColorEditFlags.AlphaPreviewHalf)) {
+        if (ImGui.ColorEdit4("路线颜色", ref config.LaneColor, ImGuiColorEditFlags.AlphaPreviewHalf)) {
             onConfigChanged();
             config.Save();
         }

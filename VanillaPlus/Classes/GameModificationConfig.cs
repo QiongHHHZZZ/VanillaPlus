@@ -9,12 +9,12 @@ public abstract class GameModificationConfig<T> : ISavable where T : GameModific
     public static T Load() {
         var configFileName = new T().FileName;
         
-        Services.PluginLog.Debug($"Loading Config {configFileName}");
+        Services.PluginLog.Debug($"正在加载配置 {configFileName}");
         return Config.LoadConfig<T>(configFileName);
     } 
     
     public void Save() {
-        Services.PluginLog.Debug($"Saving Config {FileName}");
+        Services.PluginLog.Debug($"正在保存配置 {FileName}");
         Config.SaveConfig(this, FileName);
         OnSave?.Invoke();
     }

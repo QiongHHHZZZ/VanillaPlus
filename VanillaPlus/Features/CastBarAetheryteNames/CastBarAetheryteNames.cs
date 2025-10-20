@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Hooking;
@@ -10,13 +10,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.CastBarAetheryteNames;
 
 public unsafe class CastBarAetheryteNames : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Cast Bar Aetheryte Names",
-        Description = "Replaces the name of the action 'Teleport' with the Aetheryte name of your destination.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "传送读条显示目的地",
+        Description = "将“传送”读条上的技能名称替换为目的地的以太之地名。",
         Authors = ["Haselnussbomber"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new HaselTweaksCompatibilityModule("CastBarAetheryteNames"),
     };
@@ -89,9 +89,11 @@ public unsafe class CastBarAetheryteNames : GameModification {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception in OnTeleport");
+            Services.PluginLog.Error(e, "处理传送时出现异常");
         }
         
         return teleportHook!.Original(thisPtr, aetheryteId, subIndex);
     }
 }
+
+

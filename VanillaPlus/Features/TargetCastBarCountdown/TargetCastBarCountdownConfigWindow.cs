@@ -10,7 +10,7 @@ public class TargetCastBarCountdownConfigWindow : Window {
     private readonly Action drawNodeConfigs;
     private readonly Action saveNodeStyle;
 
-    public TargetCastBarCountdownConfigWindow(TargetCastBarCountdownConfig config, Action drawNodeConfigs, Action saveNodeStyle) : base("Target Cast Bar Countdown") {
+    public TargetCastBarCountdownConfigWindow(TargetCastBarCountdownConfig config, Action drawNodeConfigs, Action saveNodeStyle) : base("目标读条倒计时设置") {
         this.config = config;
         this.drawNodeConfigs = drawNodeConfigs;
         this.saveNodeStyle = saveNodeStyle;
@@ -21,9 +21,9 @@ public class TargetCastBarCountdownConfigWindow : Window {
     }
 
     public override void Draw() {
-        if (ImGui.Checkbox("Show on Primary Target Cast Bar", ref config.PrimaryTarget)) config.Save();
-        if (ImGui.Checkbox("Show on Focus Target Cast Bar", ref config.FocusTarget)) config.Save();
-        if (ImGui.Checkbox("Show on Nameplate Target Cast Bar", ref config.NamePlateTargets)) config.Save();
+        if (ImGui.Checkbox("显示在主目标读条", ref config.PrimaryTarget)) config.Save();
+        if (ImGui.Checkbox("显示在焦点目标读条", ref config.FocusTarget)) config.Save();
+        if (ImGui.Checkbox("显示在敌对名牌读条", ref config.NamePlateTargets)) config.Save();
         
         ImGui.Spacing();
         ImGui.Separator();

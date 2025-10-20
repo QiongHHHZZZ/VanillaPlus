@@ -12,7 +12,7 @@ public class AddonConfigWindow : Window, IDisposable {
     private readonly AddonConfig config;
     private KeybindModal? keybindModal;
 
-    public AddonConfigWindow(string windowName, AddonConfig config) : base($"{windowName} Window Configuration", ImGuiWindowFlags.AlwaysAutoResize) {
+    public AddonConfigWindow(string windowName, AddonConfig config) : base($"{windowName} 窗口设置", ImGuiWindowFlags.AlwaysAutoResize) {
         this.config = config;
         
         keybindModal = new KeybindModal(windowName) {
@@ -26,10 +26,10 @@ public class AddonConfigWindow : Window, IDisposable {
     }
 
     public override void Draw() {
-        ImGui.TextColored(KnownColor.Gray.Vector(), "Changes won't take effect until the window is reopened");
+        ImGui.TextColored(KnownColor.Gray.Vector(), "变更将在重新打开窗口后生效");
         
         ImGui.Spacing();
-        if (ImGui.DragFloat2("Window Size", ref config.WindowSize)) {
+        if (ImGui.DragFloat2("窗口大小", ref config.WindowSize)) {
             var xPos = Math.Max(50.0f, config.WindowSize.X);
             var yPos = Math.Max(50.0f, config.WindowSize.Y);
             
@@ -39,7 +39,7 @@ public class AddonConfigWindow : Window, IDisposable {
         
         ImGui.Spacing();
         ImGui.Spacing();
-        ImGui.Text("Keybind");
+        ImGui.Text("快捷键");
         ImGui.Separator();
         
         ImGuiHelpers.CenteredText(string.Join(" + ", config.OpenKeyCombo));
@@ -48,13 +48,13 @@ public class AddonConfigWindow : Window, IDisposable {
         ImGui.Spacing();
         ImGui.Spacing();
 
-        if (ImGui.Checkbox("Enable Keybind", ref config.KeybindEnabled)) {
+        if (ImGui.Checkbox("启用快捷键", ref config.KeybindEnabled)) {
             config.Save();
         }
         
         ImGui.SameLine(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
 
-        if (ImGui.Button("Edit Keybind", ImGuiHelpers.ScaledVector2(100.0f, 24.0f))) {
+        if (ImGui.Button("编辑快捷键", ImGuiHelpers.ScaledVector2(100.0f, 24.0f))) {
             keybindModal?.Open();
         }
     }

@@ -36,14 +36,14 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         itemSearchAddon = new LuminaSearchAddon<Item> {
             NativeController = System.NativeController,
             InternalName = "LuminaItemSearch",
-            Title = "Item Search",
+            Title = "物品搜索",
             Size = new Vector2(350.0f, 500.0f),
 
             GetLabelFunc = item => item.Name.ToString(),
             GetSubLabelFunc = item => item.ItemSearchCategory.Value.Name.ToString(),
             GetIconIdFunc = item => item.Icon,
 
-            SortingOptions = [ "Alphabetical", "Id" ],
+            SortingOptions = [ "按名称排序", "按 ID 排序" ],
             SearchOptions = Services.DataManager.GetCurrencyItems().ToList(),
             SelectionResult = option => {
                 if (ConfigurationOption is not null) {
@@ -58,7 +58,7 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         noOptionSelectedTextNode = new TextNode {
             AlignmentType = AlignmentType.Center,
             FontSize = 16,
-            String = "Select an option on the left",
+            String = "请在左侧选择一个条目",
         };
         System.NativeController.AttachNode(noOptionSelectedTextNode, this);
         
@@ -75,7 +75,7 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         System.NativeController.AttachNode(itemNameTextNode, this);
 
         changeCurrencyButtonNode = new TextButtonNode {
-            String = "Change Currency",
+            String = "更换货币",
             OnClick = () => {
                 itemSearchAddon.Toggle();
             },
@@ -83,7 +83,7 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         System.NativeController.AttachNode(changeCurrencyButtonNode, this);
 
         enableLowLimitCheckbox = new CheckboxNode {
-            String = "Warn when below limit",
+            String = "低于阈值时提醒",
             OnClick = enabled => {
                 if (ConfigurationOption is not null) {
                     ConfigurationOption.EnableLowLimit = enabled;
@@ -104,7 +104,7 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         System.NativeController.AttachNode(lowLimitInputNode, this);
         
         enableHighLimitCheckbox = new CheckboxNode {
-            String = "Warn when above limit",
+            String = "高于阈值时提醒",
             OnClick = enabled => {
                 if (ConfigurationOption is not null) {
                     ConfigurationOption.EnableHighLimit = enabled;
@@ -125,7 +125,7 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         System.NativeController.AttachNode(highLimitInputNode, this);
         
         reverseIconCheckbox = new CheckboxNode {
-            String = "Reverse icon position",
+            String = "交换图标位置",
             OnClick = enabled => {
                 if (ConfigurationOption is not null) {
                     ConfigurationOption.IconReversed = enabled;
@@ -136,7 +136,7 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         System.NativeController.AttachNode(reverseIconCheckbox, this);
         
         allowMovingCheckbox = new CheckboxNode {
-            String = "Enable moving overlay element",
+            String = "允许拖动覆盖元素",
             OnClick = enabled => {
                 if (ConfigurationOption is not null) {
                     ConfigurationOption.IsNodeMoveable = enabled;
@@ -147,7 +147,7 @@ public class CurrencyOverlayConfigNode : ConfigNode<CurrencySetting> {
         System.NativeController.AttachNode(allowMovingCheckbox, this);
 
         scaleTextNode = new SimpleLabelNode {
-            String = "Scale",
+            String = "缩放",
             IsVisible = false,
         };
         System.NativeController.AttachNode(scaleTextNode, this);

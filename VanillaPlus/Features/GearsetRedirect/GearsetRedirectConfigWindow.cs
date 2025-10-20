@@ -22,7 +22,7 @@ public unsafe class GearsetRedirectConfigWindow : Window {
 
     private readonly List<TerritoryType> zoneList;
     
-    public GearsetRedirectConfigWindow(GearsetRedirectConfig config) : base("Gearset Redirect Config Window") {
+    public GearsetRedirectConfigWindow(GearsetRedirectConfig config) : base("套装重定向设置窗口") {
         this.config = config;
 
         SizeConstraints = new WindowSizeConstraints {
@@ -37,7 +37,7 @@ public unsafe class GearsetRedirectConfigWindow : Window {
 
     public override void Draw() {
         if (!Services.ClientState.IsLoggedIn) {
-            ImGui.TextColored(KnownColor.OrangeRed.Vector(), "Not logged in");
+            ImGui.TextColored(KnownColor.OrangeRed.Vector(), "未登录，无法配置套装重定向");
             return;
         }
 
@@ -67,7 +67,7 @@ public unsafe class GearsetRedirectConfigWindow : Window {
                     
                     ImGui.SameLine();
                     
-                    ImGui.Text($"redirect to {redirectionEntry.AlternateGearsetId} when in {territoryInfo.PlaceName.Value.Name.ToString()}");
+                    ImGui.Text($"当位于 {territoryInfo.PlaceName.Value.Name} 时，切换到套装 {redirectionEntry.AlternateGearsetId}");
                     
                     ImGui.Spacing();
                 }
@@ -85,14 +85,14 @@ public unsafe class GearsetRedirectConfigWindow : Window {
             
             ImGui.SetNextWindowSizeConstraints(new Vector2(300.0f, 225.0f), Vector2.PositiveInfinity);
             if (ImGui.BeginPopupModal("RedirectionModal")) {
-                ImGui.Text("Redirect this gearset:");
+                ImGui.Text("当前套装：");
 
                 using (ImRaii.PushIndent()) {
                     DrawGearsetLabel(gearset);
                 }
 
                 ImGui.Spacing();
-                ImGui.Text("To this gearset:");
+                ImGui.Text("切换至套装：");
 
                 using (ImRaii.PushIndent()) {
                     ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
@@ -115,7 +115,7 @@ public unsafe class GearsetRedirectConfigWindow : Window {
                 }
                 
                 ImGui.Spacing();
-                ImGui.Text("When in this Zone:");
+                ImGui.Text("触发区域：");
                 
                 using (ImRaii.PushIndent()) {
                     ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
@@ -132,12 +132,12 @@ public unsafe class GearsetRedirectConfigWindow : Window {
                 ImGui.Spacing();
 
                 var currentZone = Services.DataManager.GetExcelSheet<TerritoryType>().GetRow(Services.ClientState.TerritoryType);
-                ImGui.Text($"You are currently in: {GetTerritoryNameString(currentZone)}");
+                ImGui.Text($"当前所在区域：{GetTerritoryNameString(currentZone)}");
                 
 
                 ImGui.SetCursorPosY(ImGui.GetContentRegionMax().Y - 28.0f * ImGuiHelpers.GlobalScale);
                 
-                if (ImGui.Button("Add", ImGuiHelpers.ScaledVector2(100.0f, 24.0f))) {
+                if (ImGui.Button("添加", ImGuiHelpers.ScaledVector2(100.0f, 24.0f))) {
                     if (selectedTerritory is not null && selectedTargetEntry is not null) {
                         config.Redirections.TryAdd(gearset->Id, []);
 
@@ -156,7 +156,7 @@ public unsafe class GearsetRedirectConfigWindow : Window {
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
-                if (ImGui.Button("Cancel", ImGuiHelpers.ScaledVector2(100.0f, 24.0f))) {
+                if (ImGui.Button("取消", ImGuiHelpers.ScaledVector2(100.0f, 24.0f))) {
                     selectedTerritory = null;
                     selectedTargetEntry = null;
                     ImGui.CloseCurrentPopup();
@@ -185,10 +185,10 @@ public unsafe class GearsetRedirectConfigWindow : Window {
     }
 
     private static string GetGearsetNameString(RaptureGearsetModule.GearsetEntry* gearset)
-        => gearset is null ? "Nothing Selected" : $"{gearset->Id + 1}. {gearset->NameString} {SeIconChar.ItemLevel.ToIconString()}{gearset->ItemLevel}";
+        => gearset is null ? "未选择" : $"{gearset->Id + 1}. {gearset->NameString} {SeIconChar.ItemLevel.ToIconString()}{gearset->ItemLevel}";
 
     private static string GetTerritoryNameString(TerritoryType? territory) {
-        if (territory is null) return "Nothing Selected";
+        if (territory is null) return "未选择";
 
         return $"{territory.Value.PlaceName.Value.Name.ToString()} ({territory.Value.RowId})";
     }

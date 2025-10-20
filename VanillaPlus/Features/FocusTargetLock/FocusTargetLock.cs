@@ -1,16 +1,16 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.FocusTargetLock;
 
 public class FocusTargetLock : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Focus Target Lock",
-        Description = "When a duty recommences, restores your previous focus target.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "焦点目标恢复",
+        Description = "副本重新开始时自动恢复之前设置的焦点目标。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -37,3 +37,5 @@ public class FocusTargetLock : GameModification {
     private void OnTerritoryChanged(ushort obj)
         => focusTarget = null;
 }
+
+

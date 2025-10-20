@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -8,13 +8,13 @@ using VanillaPlus.NativeElements.Config;
 namespace VanillaPlus.Features.FasterScroll;
 
 public unsafe class FasterScroll : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Faster Scrollbars",
-        Description = "Increases the speed of all scrollbars.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "滚动条加速",
+        Description = "提高所有滚动条的滚动速度。",
         Authors = ["MidoriKami"],
         Type = ModificationType.GameBehavior,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
     };
 
@@ -29,12 +29,12 @@ public unsafe class FasterScroll : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(400.0f, 125.0f),
             InternalName = "FasterScrollConfig",
-            Title = "Faster Scrollbars Config",
+            Title = "滚动条加速设置",
             Config = config,
         };
 
-        configWindow.AddCategory("Settings")
-            .AddFloatSlider("Speed Multiplier", 0.5f, 4.0f, 2, 0.05f, nameof(config.SpeedMultiplier));
+        configWindow.AddCategory("设置")
+            .AddFloatSlider("速度倍率", 0.5f, 4.0f, 2, 0.05f, nameof(config.SpeedMultiplier));
         
         OpenConfigAction = configWindow.Toggle;
 
@@ -64,7 +64,8 @@ public unsafe class FasterScroll : GameModification {
             thisPtr->MouseWheelSpeed = (short) ( thisPtr->MouseWheelSpeed / config.SpeedMultiplier );
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Error in AtkComponentScrollBarReceiveEvent");
+            Services.PluginLog.Error(e, "处理 AtkComponentScrollBarReceiveEvent 时出错");
         }
     }
 }
+

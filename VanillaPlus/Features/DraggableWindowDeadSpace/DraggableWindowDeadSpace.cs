@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Addon.Events.EventDataTypes;
@@ -13,13 +13,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.DraggableWindowDeadSpace;
 
 public unsafe class DraggableWindowDeadSpace : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Draggable Window Dead Space",
-        Description = "Allows clicking and dragging on window dead space to move the window.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "拖拽窗口空白区域",
+        Description = "允许通过拖拽窗口的空白部分来移动窗口位置。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -140,3 +140,5 @@ public unsafe class DraggableWindowDeadSpace : GameModification {
         }
     }
 }
+
+

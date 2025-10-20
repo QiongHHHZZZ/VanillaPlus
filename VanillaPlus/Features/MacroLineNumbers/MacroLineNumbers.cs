@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -9,13 +9,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.MacroLineNumbers;
 
 public unsafe class MacroLineNumbers : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Macro Line Numbers",
-        Description = "Adds line numbers to the User Macros window.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "宏命令行号",
+        Description = "在用户宏窗口中显示行号，便于编辑和排错。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -112,3 +112,5 @@ public unsafe class MacroLineNumbers : GameModification {
         remainingLineNode->SetWidth((ushort)(remainingLineNode->GetWidth() - offset.X));
     }
 }
+
+

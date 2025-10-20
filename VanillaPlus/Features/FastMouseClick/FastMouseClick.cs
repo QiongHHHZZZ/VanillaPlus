@@ -1,17 +1,17 @@
-﻿using Dalamud.Utility.Signatures;
+using Dalamud.Utility.Signatures;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.FastMouseClick;
 
 public class FastMouseClick : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Fast Mouse Click",
-        Description = "The game does not fire UI events for single mouse clicks whenever a double click is detected.\n\n" +
-                      "This game modification fixes it by always triggering the normal mouse click in addition to the double click.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "快速单击修复",
+        Description = "游戏在检测到双击时不会触发单击事件。\n\n" +
+                      "该功能会在触发双击的同时强制触发一次普通单击事件。",
         Type = ModificationType.GameBehavior,
         Authors = ["Haselnussbomber"],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialVersion"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
         CompatibilityModule = new HaselTweaksCompatibilityModule("FastMouseClickFix"),
     };
@@ -37,3 +37,4 @@ public class FastMouseClick : GameModification {
         memoryAddress = null;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -21,13 +21,13 @@ using VanillaPlus.Utilities;
 namespace VanillaPlus.Features.InstancedWaymarks;
 
 public unsafe class InstancedWaymarks : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Instanced Waymarks",
-        Description = "Enables the use of all saved Waymark Slots per duty, instead of sharing them across all duties, with the option to name each slot.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "副本独立场景标记",
+        Description = "为每个副本使用独立的场景标记存档，并支持自定义名称。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
         CompatibilityModule = new PluginCompatibilityModule("WaymarkPresetPlugin", "MemoryMarker"),
     };
@@ -46,7 +46,7 @@ public unsafe class InstancedWaymarks : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(250.0f, 150.0f),
             InternalName = "WaymarkRename",
-            Title = "Waymark Rename Window",
+            Title = "标记重命名窗口",
             AutoSelectAll = true,
         };
         
@@ -92,7 +92,7 @@ public unsafe class InstancedWaymarks : GameModification {
         ref var slotMarkerData = ref FieldMarkerModule.Instance()->Presets[slotClicked];
 
         args.AddMenuItem(new MenuItem {
-            Name = "Rename",
+            Name = "重命名",
             OnClicked = RenameContextMenuAction,
             UseDefaultPrefix = true,
             IsEnabled =
@@ -151,7 +151,7 @@ public unsafe class InstancedWaymarks : GameModification {
     }
     
     private static void SaveWaymarks(uint contentFinderCondition) {
-        Services.PluginLog.Debug($"Saving Waymarks for Duty: {contentFinderCondition}");
+        Services.PluginLog.Debug($"正在保存场景标记，目标副本： {contentFinderCondition}");
 
         var address = Unsafe.AsPointer(ref FieldMarkerModule.Instance()->Presets[0]);
         var size = sizeof(FieldMarkerPreset) * FieldMarkerModule.Instance()->Presets.Length;
@@ -163,7 +163,7 @@ public unsafe class InstancedWaymarks : GameModification {
     }
 
     private static void LoadWaymarks(uint contentFinderCondition) {
-        Services.PluginLog.Debug($"Loading Waymarks for Duty: {contentFinderCondition}");
+        Services.PluginLog.Debug($"正在加载场景标记，目标副本： {contentFinderCondition}");
 
         var address = Unsafe.AsPointer(ref FieldMarkerModule.Instance()->Presets[0]);
         var size = sizeof(FieldMarkerPreset) * FieldMarkerModule.Instance()->Presets.Length;
@@ -172,7 +172,7 @@ public unsafe class InstancedWaymarks : GameModification {
         var result = File.ReadAllBytes(dataFilePath);
 
         if (result.Length < size) {
-            Services.PluginLog.Debug("No data to load, creating new file.");
+            Services.PluginLog.Debug("没有可加载的数据，正在创建新文件。");
             result = new byte[size];
             FilesystemUtil.WriteAllBytesSafe(dataFilePath, result);
         }
@@ -194,3 +194,5 @@ public unsafe class InstancedWaymarks : GameModification {
         return fileInfo;
     }
 }
+
+

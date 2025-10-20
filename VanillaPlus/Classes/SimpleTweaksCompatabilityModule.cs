@@ -16,7 +16,7 @@ public class SimpleTweaksCompatibilityModule(string targetModuleName) : Compatib
     }
 
     public override string GetErrorMessage()
-        => $"The original version of this feature is already active in Simple Tweaks Plugin.\n\nID: {targetModuleName}";
+        => $"Simple Tweaks 插件中已启用了该功能的原版实现。\n\n模块 ID：{targetModuleName}";
 
     private static bool IsSimpleTweaksLoaded()
         => IsPluginLoaded("SimpleTweaksPlugin");

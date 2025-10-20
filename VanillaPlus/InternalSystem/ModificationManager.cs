@@ -32,17 +32,17 @@ public class ModificationManager : IDisposable {
     public void Dispose() {
         Services.PluginInterface.ActivePluginsChanged -= OnPluginsChanged;
 
-        Services.PluginLog.Debug("Disposing Modification Manager, now disabling all GameModifications");
+        Services.PluginLog.Debug("正在释放修改管理器，当前将禁用所有功能模块");
         
         foreach (var loadedMod in LoadedModifications) {
             if (loadedMod.State is LoadedState.Enabled) {
                 try {
-                    Services.PluginLog.Debug($"Disabling {loadedMod.Name}");
+                    Services.PluginLog.Debug($"正在禁用 {loadedMod.Name}");
                     loadedMod.Modification.OnDisable();
-                    Services.PluginLog.Debug($"{loadedMod.Name} has been disabled");
+                    Services.PluginLog.Debug($"{loadedMod.Name} 已禁用");
                 }
                 catch (Exception e) {
-                    Services.PluginLog.Error(e, $"Error while unloading modification {loadedMod.Name}");
+                    Services.PluginLog.Error(e, $"卸载功能 {loadedMod.Name} 时出错");
                 }
             }
         }
@@ -86,7 +86,7 @@ public class ModificationManager : IDisposable {
 
     public static void TryEnableModification(LoadedModification modification) {
         if (modification.State is LoadedState.Errored) {
-            Services.PluginLog.Error("Attempted to enable errored modification");
+            Services.PluginLog.Error("尝试启用已出错的功能模块");
             return;
         }
 
@@ -101,46 +101,46 @@ public class ModificationManager : IDisposable {
                 }
             }
             
-            Services.PluginLog.Info($"Enabling {modification.Name}");
+            Services.PluginLog.Info($"正在启用 {modification.Name}");
             modification.Modification.OnEnable();
             modification.State = LoadedState.Enabled;
-            Services.PluginLog.Info($"{modification.Name} has been enabled");
+            Services.PluginLog.Info($"{modification.Name} 已启用");
             System.SystemConfig.EnabledModifications.Add(modification.Name);
             System.SystemConfig.Save();
         }
         catch (Exception e) {
             modification.State = LoadedState.Errored;
-            modification.ErrorMessage = "Failed to load, this module has been disabled.";
-            Services.PluginLog.Error(e, $"Error while enabling {modification.Name}, attempting to disable");
+            modification.ErrorMessage = "加载失败，该模块已被禁用。";
+            Services.PluginLog.Error(e, $"启用 {modification.Name} 时出错，正在尝试禁用");
             
             try {
                 modification.Modification.OnDisable();
-                Services.PluginLog.Information($"Successfully disabled erroring modification {modification.Name}");
+                Services.PluginLog.Information($"已成功禁用出错的功能模块 {modification.Name}");
             }
             catch (Exception fatal) {
-                modification.ErrorMessage = "Critical Error: Module failed to load, and errored again while unloading.";
-                Services.PluginLog.Error(fatal, $"Critical Error while trying to unload erroring modification: {modification.Name}");
+                modification.ErrorMessage = "严重错误：模块加载失败，并在卸载时再次出错。";
+                Services.PluginLog.Error(fatal, $"卸载出错模块 {modification.Name} 时发生严重错误");
             }
         }
     }
 
     public static void TryDisableModification(LoadedModification modification, bool removeFromList = true) {
         if (modification.State is LoadedState.Errored) {
-            Services.PluginLog.Error("Attempted to disable errored modification");
+            Services.PluginLog.Error("尝试禁用已出错的功能模块");
             return;
         }
 
         try {
-            Services.PluginLog.Info($"Disabling {modification.Name}");
+            Services.PluginLog.Info($"正在禁用 {modification.Name}");
             modification.Modification.OnDisable();
             modification.Modification.OpenConfigAction = null;
         }
         catch (Exception e) {
             modification.State = LoadedState.Errored;
-            Services.PluginLog.Error(e, $"Failed to disable modification: {modification.Name}");
+            Services.PluginLog.Error(e, $"无法禁用功能：{modification.Name}");
         } finally {
             modification.State = LoadedState.Disabled;
-            Services.PluginLog.Info($"{modification.Name} has been disabled");
+            Services.PluginLog.Info($"{modification.Name} 已禁用");
 
             if (removeFromList) {
                 System.SystemConfig.EnabledModifications.Remove(modification.Name);

@@ -10,13 +10,13 @@ public abstract class GameModificationCharacterConfig<T> where T : GameModificat
     protected abstract string FileName { get; }
     public static T Load() {
         var fileName = new T().FileName;
-        Services.PluginLog.Debug($"Loading Character Config {fileName}");
+        Services.PluginLog.Debug($"正在加载角色配置 {fileName}");
         
         return Config.LoadCharacterConfig<T>(fileName);
     }
 
     public void Save() {
-        Services.PluginLog.Debug($"Saving Character Config {FileName}");
+        Services.PluginLog.Debug($"正在保存角色配置 {FileName}");
         Config.SaveCharacterConfig(this, FileName);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Addon.Lifecycle;
+using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -7,13 +7,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.SuppressDialogAdvance;
 
 public unsafe class SuppressDialogueAdvance : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Suppress Dialogue Advance",
-        Description = "Prevents advancing a cutscene dialogue, unless you click on the dialogue box itself.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "防止对话误跳过",
+        Description = "禁止过场对白被误跳过，只有点击对话框本体才会推进。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -37,3 +37,5 @@ public unsafe class SuppressDialogueAdvance : GameModification {
         }
     }
 }
+
+

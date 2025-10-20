@@ -1,16 +1,16 @@
-﻿using VanillaPlus.Classes;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.SampleGameModification;
 
 // Template GameModification for more easily creating your own, can copy this entire folder and rename it.
 public class SampleGameModification : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "SampleDisplayName",
-        Description = "SampleDescription",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "示例功能模块",
+        Description = "用于演示如何创建自定义 GameModification 的模板。",
         Type = ModificationType.Hidden,
-        Authors = [ "YourNameHere" ],
+        Authors = [ "你的名字" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -24,3 +24,5 @@ public class SampleGameModification : GameModification {
     public override void OnDisable() {
     }
 }
+
+

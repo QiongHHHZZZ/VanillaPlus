@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Game.Text.SeStringHandling;
@@ -16,14 +16,14 @@ using VanillaPlus.Utilities;
 namespace VanillaPlus.Features.WondrousTailsProbabilities;
 
 public unsafe class WondrousTailsProbabilities : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Wondrous Tails Probabilities",
-        Description = "Displays current line probabilities and average reroll probabilities in the Wondrous Tails Book.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "天书奇谈助手",
+        Description = "在天书奇谈手册中显示当前连线概率以及平均重抽概率。",
         Authors = [ "MidoriKami" ],
         Type = ModificationType.UserInterface,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Add Current Duty Indicator"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "新增当前副本指示"),
         ],
         CompatibilityModule = new PluginCompatibilityModule("WondrousTailsSolver"),
     };
@@ -194,3 +194,5 @@ public unsafe class WondrousTailsProbabilities : GameModification {
         return null;
     }
 }
+
+

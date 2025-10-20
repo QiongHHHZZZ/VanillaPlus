@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
@@ -11,13 +11,13 @@ namespace VanillaPlus.Features.MacroTooltips;
 /// Debug Game Modification for use with playing around with ideas, DO NOT commit changes to this file
 /// </summary>
 public unsafe class MacroTooltips : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Macro Tooltips",
-        Description = "Displays action tooltips when hovering over a macro with '/macroicon' set with an 'action'",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "宏命令技能提示",
+        Description = "当宏使用“/macroicon”指定了某个技能时，鼠标悬停即可显示对应技能的提示。",
         Type = ModificationType.UserInterface,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
     };
 
@@ -63,7 +63,9 @@ public unsafe class MacroTooltips : GameModification {
             }
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Exception in OnShowMacroTooltip");
+            Services.PluginLog.Error(e, "显示宏提示时出现异常");
         }
     }
 }
+
+

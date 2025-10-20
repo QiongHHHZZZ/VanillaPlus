@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -8,14 +8,14 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.SelectNextLootItem;
 
 public unsafe class SelectNextLootItem : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Automatically Select Next Loot Item",
-        Description = "Automatically advance to the next loot item after clicking Need, Greed, or Pass.\n\n" +
-                      "Note: this modification does not automatically roll on loot.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "自动选中下一个掉落",
+        Description = "在选择需求、贪婪或放弃后自动跳转至下一件掉落物品。\n\n" +
+                      "注意：此功能不会自动掷骰。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@LootWindowSelectNext"),
     };
@@ -78,3 +78,5 @@ public unsafe class SelectNextLootItem : GameModification {
         Pass = 2,
     }
 }
+
+

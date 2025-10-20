@@ -59,7 +59,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
             NodeId = 5,
             IconId = 61502,
             FitTexture = true,
-            Tooltip = "Failed to load, this module has been disabled",
+            Tooltip = "加载失败，该模块已被禁用",
         };
         System.NativeController.AttachNode(erroringImageNode, this);
 
@@ -76,7 +76,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
             NodeId = 7,
             IconId = 60073,
             FitTexture = true,
-            Tooltip = "Caution, this feature is experimental.\nMay contain bugs or crash your game.",
+            Tooltip = "注意：该功能为实验性质。\n可能存在错误或导致游戏崩溃。",
         };
         System.NativeController.AttachNode(experimentalImageNode, this);
         
@@ -93,7 +93,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         reloadButtonNode = new CircleButtonNode {
             NodeId = 10,
             Icon = ButtonIcon.Refresh,
-            Tooltip = "Retry compatability check",
+            Tooltip = "重新尝试兼容性检测",
             OnClick = () => {
                 System.ModificationManager.ReloadConflictedModules();
                 reloadButtonNode?.HideTooltip();
@@ -104,7 +104,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         configButtonNode = new CircleButtonNode {
             NodeId = 9,
             Icon = ButtonIcon.GearCog,
-            Tooltip = "Open configuration window",
+            Tooltip = "打开配置窗口",
         };
         System.NativeController.AttachNode(configButtonNode, this);
 
@@ -132,7 +132,7 @@ public class GameModificationOptionNode : SimpleComponentNode {
         set {
             field = value;
             modificationNameNode.String = value.Modification.ModificationInfo.DisplayName;
-            authorNamesNode.String = $"By {string.Join(", ", value.Modification.ModificationInfo.Authors)}";
+            authorNamesNode.String = $"作者：{string.Join("、", value.Modification.ModificationInfo.Authors)}";
 
             RefreshConfigWindowButton();
 

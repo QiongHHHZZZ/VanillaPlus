@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Addon.Events;
+using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Addon.Events.EventDataTypes;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -9,13 +9,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.ClearFlag;
 
 public unsafe class ClearFlag : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Clear Flag",
-        Description = "Allows you to right click the minimap to clear the currently set flag marker.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "清除旗标",
+        Description = "允许你在小地图上点击右键，快速移除当前设置的旗标。",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -58,3 +58,5 @@ public unsafe class ClearFlag : GameModification {
         }
     }
 }
+
+

@@ -1,18 +1,18 @@
-﻿using Dalamud.Game.Config;
+using Dalamud.Game.Config;
 using Dalamud.Utility;
 using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.ArmourySearchBar;
 
 public class ArmourySearchBar : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Armoury Search Bar",
-        Description = "Adds a search bar to the armoury window.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "武器库搜索栏",
+        Description = "为军械库窗口新增一个搜索栏。",
         Type = ModificationType.UserInterface,
         SubType = ModificationSubType.Inventory,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -49,3 +49,4 @@ public class ArmourySearchBar : GameModification {
         armouryInventoryController = null;
     }
 }
+

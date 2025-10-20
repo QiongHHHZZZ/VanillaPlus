@@ -11,16 +11,16 @@ using VanillaPlus.NativeElements.Config;
 namespace VanillaPlus.Features.ResourceBarPercentages;
 
 public unsafe class ResourceBarPercentages : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Show Resource Bars as Percentages",
-        Description = "Displays HP, MP, GP and CP bars as percentages instead of raw values.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "资源条百分比显示",
+        Description = "将 HP、MP、GP 和 CP 的显示从数值改为百分比。",
         Type = ModificationType.UserInterface,
         Authors = [ "Zeffuro" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Changelog"),
-            new ChangeLogInfo(2, "Added option to change resource on Party Members and added Trust support"),
+            new ChangeLogInfo(1, "初始更新"),
+            new ChangeLogInfo(2, "新增队伍成员资源覆盖与信赖支援支持"),
         ],
-        Tags = [ "Party List", "Parameter Bars" ],
+        Tags = [ "队伍列表", "参数条" ],
     };
 
     private ResourceBarPercentagesConfig? config;
@@ -39,37 +39,37 @@ public unsafe class ResourceBarPercentages : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(400.0f, 300.0f),
             InternalName = "ResourcePercentageConfig",
-            Title = "Resource Bar Percentages Config",
+            Title = "资源条百分比设置",
             Config = config,
         };
 
-        configWindow.AddCategory("Party List")
-            .AddCheckbox("Show on Party List", nameof(config.PartyListEnabled))
+        configWindow.AddCategory("队伍列表")
+            .AddCheckbox("在队伍列表显示", nameof(config.PartyListEnabled))
             .AddIndent()
-            .AddCheckbox("Apply to Player", nameof(config.PartyListSelf))
-            .AddCheckbox("Apply to Party Members", nameof(config.PartyListMembers))
-            .AddCheckbox("Change HP", nameof(config.PartyListHpEnabled))
-            .AddCheckbox("Change MP", nameof(config.PartyListMpEnabled))
-            .AddCheckbox("Change GP", nameof(config.PartyListGpEnabled))
-            .AddCheckbox("Change CP", nameof(config.PartyListCpEnabled));
+            .AddCheckbox("应用于自身", nameof(config.PartyListSelf))
+            .AddCheckbox("应用于队友", nameof(config.PartyListMembers))
+            .AddCheckbox("显示 HP 百分比", nameof(config.PartyListHpEnabled))
+            .AddCheckbox("显示 MP 百分比", nameof(config.PartyListMpEnabled))
+            .AddCheckbox("显示 GP 百分比", nameof(config.PartyListGpEnabled))
+            .AddCheckbox("显示 CP 百分比", nameof(config.PartyListCpEnabled));
 
-        configWindow.AddCategory("Parameter Widget")
-            .AddCheckbox("Show on Parameter Widget", nameof(config.ParameterWidgetEnabled))
+        configWindow.AddCategory("角色状态栏")
+            .AddCheckbox("在参数栏显示", nameof(config.ParameterWidgetEnabled))
             .AddIndent()
-            .AddCheckbox("Change HP", nameof(config.ParameterHpEnabled))
-            .AddCheckbox("Change MP", nameof(config.ParameterMpEnabled))
-            .AddCheckbox("Change GP", nameof(config.ParameterGpEnabled))
-            .AddCheckbox("Change CP", nameof(config.ParameterCpEnabled));
+            .AddCheckbox("显示 HP 百分比", nameof(config.ParameterHpEnabled))
+            .AddCheckbox("显示 MP 百分比", nameof(config.ParameterMpEnabled))
+            .AddCheckbox("显示 GP 百分比", nameof(config.ParameterGpEnabled))
+            .AddCheckbox("显示 CP 百分比", nameof(config.ParameterCpEnabled));
 
-        configWindow.AddCategory("Extra")
-            .AddCheckbox("Dead or Alive Mode", nameof(config.DeadOrAliveModeEnabled));
+        configWindow.AddCategory("额外功能")
+            .AddCheckbox("简化生死模式（显示存活/阵亡）", nameof(config.DeadOrAliveModeEnabled));
 
-        configWindow.AddCategory("Percentage Sign")
-            .AddCheckbox("Show Percentage Sign %", nameof(config.PercentageSignEnabled));
+        configWindow.AddCategory("百分号")
+            .AddCheckbox("显示百分号 %", nameof(config.PercentageSignEnabled));
 
-        configWindow.AddCategory("Percentage Format")
-            .AddIntSlider("Decimal Places", 0, 2, nameof(config.DecimalPlaces))
-            .AddCheckbox("Show Decimals Only While Below 100%", nameof(config.ShowDecimalsBelowHundredOnly));
+        configWindow.AddCategory("数值格式")
+            .AddIntSlider("小数位数", 0, 2, nameof(config.DecimalPlaces))
+            .AddCheckbox("仅在低于 100% 时显示小数", nameof(config.ShowDecimalsBelowHundredOnly));
         
         OpenConfigAction = configWindow.Toggle;
 
@@ -266,3 +266,4 @@ public unsafe class ResourceBarPercentages : GameModification {
 
     private record ActiveResource(uint Current, uint Max, bool Enabled);
 }
+

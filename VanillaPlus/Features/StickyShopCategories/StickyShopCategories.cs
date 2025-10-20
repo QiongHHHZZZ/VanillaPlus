@@ -7,13 +7,13 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.StickyShopCategories;
 
 public unsafe class StickyShopCategories : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Sticky Shop Categories",
-        Description = "Remembers the selected category and subcategories for certain vendors.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "记住商店分类",
+        Description = "记住特定商店的分类与子分类选择，下次打开时自动恢复。",
         Type = ModificationType.GameBehavior,
         Authors = ["Era"],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
     };
 
@@ -66,7 +66,7 @@ public unsafe class StickyShopCategories : GameModification {
             });
         }
 
-        Services.PluginLog.Debug($"Saving Values: {dropDownCategoryIndex}, {dropDownSubCategoryIndex}");
+        Services.PluginLog.Debug($"正在保存选择: {dropDownCategoryIndex}, {dropDownSubCategoryIndex}");
         
         config.Save();
     }
@@ -77,3 +77,5 @@ public unsafe class StickyShopCategories : GameModification {
     private static AtkComponentDropDownList* GetSubCategoryDropDown(AddonArgs args) 
         => (AtkComponentDropDownList*) args.GetAddon<AtkUnitBase>()->GetComponentByNodeId(9);
 }
+
+

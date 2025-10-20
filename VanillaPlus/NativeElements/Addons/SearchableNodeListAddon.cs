@@ -64,12 +64,12 @@ public unsafe class SearchableNodeListAddon : NodeListAddon {
                 reverseSort = !reverseSort;
                 OnFilterUpdated(filterOption, reverseSort);
             },
-            Tooltip = "Reverse Sort Direction",
+            Tooltip = "切换排序方向",
         };
 
         textInputNode = new TextInputNode {
             IsVisible = true,
-            PlaceholderString = "Search . . .",
+            PlaceholderString = "搜索……",
         };
         textInputNode.SeString = searchText;
 

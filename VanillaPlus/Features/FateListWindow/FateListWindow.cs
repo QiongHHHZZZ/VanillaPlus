@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Game.ClientState.Fates;
 using Dalamud.Game.ClientState.Keys;
@@ -10,15 +10,15 @@ using VanillaPlus.NativeElements.Addons;
 namespace VanillaPlus.Features.FateListWindow;
 
 public class FateListWindow : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Fate List Window",
-        Description = "Displays a list of all fates that are currently active in the current zone",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "Fate列表",
+        Description = "显示当前区域正在进行的所有 FATE，便于快速查看。",
         Type = ModificationType.NewWindow,
         Authors = ["MidoriKami"],
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Now sorts by time remaining"),
-            new ChangeLogInfo(3, "Added `/fatelist` command to open window"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "按剩余时间排序"),
+            new ChangeLogInfo(3, "新增 `/fatelist` 指令以打开窗口"),
         ],
     };
 
@@ -31,7 +31,7 @@ public class FateListWindow : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 400.0f),
             InternalName = "FateList",
-            Title = "Fate List",
+            Title = "Fate列表",
             OpenCommand = "/fatelist",
             UpdateListFunction = UpdateList,
         };
@@ -71,3 +71,5 @@ public class FateListWindow : GameModification {
         return left.Fate.TimeRemaining.CompareTo(right.Fate.TimeRemaining);
     }
 }
+
+

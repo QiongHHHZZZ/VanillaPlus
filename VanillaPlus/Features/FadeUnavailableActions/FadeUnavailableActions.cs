@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Hooking;
@@ -13,14 +13,14 @@ using ActionBarSlotNumberArray = FFXIVClientStructs.FFXIV.Client.UI.Arrays.Actio
 namespace VanillaPlus.Features.FadeUnavailableActions;
 
 public unsafe class FadeUnavailableActions : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Fade Unavailable Actions",
-        Description = "Fades hotbar slots when the action is not able to be cast due to missing resources, out of range, or just on cooldown.\n\n" +
-                      "Additionally fades actions that are not available because you are sync'd down.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "不可用技能淡化",
+        Description = "当技能因资源不足、距离或冷却无法施放时，自动淡化对应热键。\n\n" +
+                      "对于因降同步而不可用的技能也会进行淡化处理。",
         Authors = ["MidoriKami"],
         Type = ModificationType.UserInterface,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
+            new ChangeLogInfo(1, "初始实现"),
         ],
         CompatibilityModule = new SimpleTweaksCompatibilityModule("UiAdjustments@FadeUnavailableActions"),
     };
@@ -42,18 +42,18 @@ public unsafe class FadeUnavailableActions : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(400.0f, 250.0f),
             InternalName = "FadeUnavailableConfig",
-            Title = "Fade Unavailable Actions Config",
+            Title = "技能淡化设置",
             Config = config,
         };
 
-        configWindow.AddCategory("Style Settings")
-            .AddIntSlider("Fade Percentage", 0, 90, nameof(config.FadePercentage))
-            .AddIntSlider("Redden Percentage", 5, 100,  nameof(config.ReddenPercentage));
+        configWindow.AddCategory("样式设置")
+            .AddIntSlider("淡化百分比", 0, 90, nameof(config.FadePercentage))
+            .AddIntSlider("变红程度", 5, 100,  nameof(config.ReddenPercentage));
 
-        configWindow.AddCategory("Feature Toggles")
-            .AddCheckbox("Apply Transparency to Frame", nameof(config.ApplyToFrame))
-            .AddCheckbox("Apply Only to Sync'd Actions", nameof(config.ApplyToSyncActions))
-            .AddCheckbox("Redden Skills out of Range", nameof(config.ReddenOutOfRange));
+        configWindow.AddCategory("功能开关")
+            .AddCheckbox("对技能框体也应用透明度", nameof(config.ApplyToFrame))
+            .AddCheckbox("仅影响降同步技能", nameof(config.ApplyToSyncActions))
+            .AddCheckbox("距离不足时转为红色", nameof(config.ReddenOutOfRange));
         
         OpenConfigAction = configWindow.Toggle;
 
@@ -78,7 +78,7 @@ public unsafe class FadeUnavailableActions : GameModification {
             ProcessHotBarSlot(hotBarSlotData, numberArray, numberArrayIndex);
         }
         catch (Exception e) {
-            Services.PluginLog.Error(e, "Something went wrong in FadeUnavailableActions, let MidoriKami know!");
+            Services.PluginLog.Error(e, "处理 FadeUnavailableActions 时发生异常，请联系 MidoriKami。");
         } finally {
             onHotBarSlotUpdateHook!.Original(addon, hotBarSlotData, numberArray, stringArray, numberArrayIndex, stringArrayIndex);
         }
@@ -176,3 +176,5 @@ public unsafe class FadeUnavailableActions : GameModification {
         CraftAction = 0x36,
     }
 }
+
+

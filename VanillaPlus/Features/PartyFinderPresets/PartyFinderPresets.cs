@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
@@ -12,13 +12,13 @@ using VanillaPlus.NativeElements.Addons;
 namespace VanillaPlus.Features.PartyFinderPresets;
 
 public unsafe class PartyFinderPresets : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Party Finder Presets",
-        Description = "Allows you to save an use presets for the Party Finder Recruitment window",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "组队搜索预设",
+        Description = "为招募信息窗口提供可保存、可复用的预设配置",
         Type = ModificationType.GameBehavior,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -40,7 +40,7 @@ public unsafe class PartyFinderPresets : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 215.0f),
             InternalName = "LookingForGroupPreset",
-            Title = "Party Finder Preset",
+            Title = "组队搜索预设",
             Subtitle = "Vanilla Plus",
             DepthLayer = 5,
         };
@@ -49,7 +49,7 @@ public unsafe class PartyFinderPresets : GameModification {
             NativeController = System.NativeController,
             Size = new Vector2(300.0f, 400.0f),
             InternalName = "PresetEditorAddon",
-            Title = "Preset Editor",
+            Title = "预设管理器",
             UpdateListFunction = UpdateList,
         };
 
@@ -64,8 +64,8 @@ public unsafe class PartyFinderPresets : GameModification {
                 Position = new Vector2(406.0f, 605.0f),
                 Size = new Vector2(160.0f, 28.0f),
                 IsVisible = true,
-                String = "Save Preset",
-                Tooltip = "[VanillaPlus]: Save current settings to a preset",
+                String = "保存为预设",
+                Tooltip = "[VanillaPlus]: 将当前招募设置保存为预设",
                 OnClick = SavePreset,
             };
             System.NativeController.AttachNode(savePresetButton, addon->RootNode);
@@ -139,7 +139,7 @@ public unsafe class PartyFinderPresets : GameModification {
                 renameWindow ??= new RenameAddon {
                     NativeController = System.NativeController,
                     InternalName = "PresetRenameWindow",
-                    Title = "Preset Rename Window",
+                    Title = "重命名预设",
                     Size = new Vector2(300.0f, 200.0f),
                 };
                 
@@ -193,11 +193,13 @@ public unsafe class PartyFinderPresets : GameModification {
             presetDropDown.IsEnabled = anyPresets;
 
             if (anyPresets) {
-                presetDropDown.Tooltip = "[VanillaPlus]: Select a preset";
+                presetDropDown.Tooltip = "[VanillaPlus]: 请选择要应用的预设";
             }
             else {
-                presetDropDown.Tooltip = "[VanillaPlus]: No presets saved";
+                presetDropDown.Tooltip = "[VanillaPlus]: 当前没有保存的预设";
             }
         }
     }
 }
+
+

@@ -1,16 +1,16 @@
-﻿using VanillaPlus.Classes;
+using VanillaPlus.Classes;
 
 namespace VanillaPlus.Features.SaddlebagSearchBar;
 
 public class SaddlebagSearchBar : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Saddlebag Search Bar",
-        Description = "Adds a search bar to the saddlebag window.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "鞍囊搜索栏",
+        Description = "为陆行鸟鞍囊窗口添加搜索栏，快捷查找物品。",
         Type = ModificationType.UserInterface,
         SubType = ModificationSubType.Inventory,
         Authors = [ "MidoriKami" ],
         ChangeLog = [
-            new ChangeLogInfo(1, "InitialChangelog"),
+            new ChangeLogInfo(1, "初始版本"),
         ],
     };
 
@@ -27,3 +27,5 @@ public class SaddlebagSearchBar : GameModification {
         saddlebagInventoryController = null;
     }
 }
+
+

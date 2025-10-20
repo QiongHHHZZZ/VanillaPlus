@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using Dalamud.Utility;
 using KamiToolKit.Addons.Interfaces;
@@ -19,7 +19,7 @@ public class CurrencySetting : IInfoNodeData {
     public bool IsNodeMoveable;
 
     public string GetLabel()
-        => ItemId is 0 ? "Currency Not Set" : Services.DataManager.GetItem(ItemId).Name.ToString();
+        => ItemId is 0 ? "未选择货币" : Services.DataManager.GetItem(ItemId).Name.ToString();
 
     public string GetSubLabel()
         => Services.DataManager.GetItem(ItemId).ItemSearchCategory.Value.Name.ToString().FirstCharToUpper();
@@ -32,7 +32,7 @@ public class CurrencySetting : IInfoNodeData {
 
     public int Compare(IInfoNodeData other, string sortingMode) {
         return sortingMode switch {
-            "Alphabetical" => string.CompareOrdinal(GetLabel(), other.GetLabel()),
+            "按名称排序" => string.CompareOrdinal(GetLabel(), other.GetLabel()),
             _ => 0,
         };
     }

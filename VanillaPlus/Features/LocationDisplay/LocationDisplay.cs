@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Game.Text;
@@ -12,14 +12,14 @@ using VanillaPlus.Classes;
 namespace VanillaPlus.Features.LocationDisplay;
 
 public unsafe class LocationDisplay : GameModification {
-    public override ModificationInfo ModificationInfo => new() {
-        DisplayName = "Location Display",
-        Description = "Displays your current location in the server information bar.",
+    protected override ModificationInfo CreateModificationInfo => new() {
+        DisplayName = "位置栏信息扩展",
+        Description = "在服务器信息栏显示当前所在位置。",
         Authors = [ "MidoriKami" ],
         Type = ModificationType.UserInterface,
         ChangeLog = [
-            new ChangeLogInfo(1, "Initial Implementation"),
-            new ChangeLogInfo(2, "Fix instance id not updating when it should"),
+            new ChangeLogInfo(1, "初始实现"),
+            new ChangeLogInfo(2, "修复实例编号未及时更新的问题"),
         ],
         CompatibilityModule = new PluginCompatibilityModule("WhereAmIAgain"),
     };
@@ -54,7 +54,7 @@ public unsafe class LocationDisplay : GameModification {
         configWindow.AddToWindowSystem();
         OpenConfigAction = configWindow.Toggle;
         
-        dtrBarEntry = Services.DtrBar.Get("VanillaPlus - LocationDisplay");
+        dtrBarEntry = Services.DtrBar.Get("VanillaPlus - 位置栏信息扩展");
         dtrBarEntry.OnClick = _ => configWindow.Toggle();
 
         locationChanged = true;
@@ -211,7 +211,7 @@ public unsafe class LocationDisplay : GameModification {
 
 		if (lastHousingWard != ward) {
 			lastHousingWard = ward;
-			currentWard = $"Ward {ward}";
+			currentWard = $"第 {ward} 区";
 			locationChanged = true;
 		}
 	}
@@ -249,18 +249,18 @@ public unsafe class LocationDisplay : GameModification {
 		var room = housingManager->GetCurrentRoom();
 		var division = housingManager->GetCurrentDivision();
 
-		strings.Add($"Ward {ward}");
-		if (division == 2 || plot is >= 30 or -127) strings.Add($"Subdivision");
+		strings.Add($"第 {ward} 区");
+		if (division == 2 || plot is >= 30 or -127) strings.Add("分区");
 
 		switch (plot) {
 			case < -1:
-				strings.Add($"Apartment {(room == 0 ? $"Lobby" : $"{room}")}");
+				strings.Add(room == 0 ? "公寓大厅" : $"公寓 {room}");
 				break;
 
 			case > -1:
-				strings.Add($"Plot {plot + 1}");
+				strings.Add($"第 {plot + 1} 号地");
 				if (room > 0) {
-					strings.Add($"Room {room}");
+					strings.Add($"第 {room} 号房");
 				}
 				break;
 		}
@@ -280,3 +280,5 @@ public unsafe class LocationDisplay : GameModification {
 		}
 	}
 }
+
+

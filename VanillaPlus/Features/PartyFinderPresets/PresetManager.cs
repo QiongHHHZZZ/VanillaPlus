@@ -10,8 +10,8 @@ using VanillaPlus.Utilities;
 namespace VanillaPlus.Features.PartyFinderPresets;
 
 public static unsafe class PresetManager {
-    public const string DefaultString = "No Presets Saved";
-    public const string DontUseString = "Don't Use Preset";
+    public const string DefaultString = "暂无已保存的预设";
+    public const string DontUseString = "不使用预设";
 
     public static List<string> GetPresetNames() {
         var directory = GetPresetDirectory();

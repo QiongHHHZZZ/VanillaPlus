@@ -7,12 +7,12 @@ public abstract class GameModificationData<T> where T : GameModificationData<T>,
     public static T Load() {
         var configFileName = new T().FileName;
         
-        Services.PluginLog.Debug($"Loading Data {configFileName}");
+        Services.PluginLog.Debug($"正在加载数据 {configFileName}");
         return Data.LoadData<T>(configFileName);
     } 
     
     public void Save() {
-        Services.PluginLog.Debug($"Saving Data {FileName}");
+        Services.PluginLog.Debug($"正在保存数据 {FileName}");
         Data.SaveData(this, FileName);
     }
 }
